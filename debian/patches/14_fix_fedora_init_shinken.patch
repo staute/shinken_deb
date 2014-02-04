@@ -25,11 +25,11 @@ index 56e3249..ce5fb50 100644
          ;;
      status)
 -        status $prog
-+        status -p pidfile
++        status -p $pidfile
          ;;
      try-restart|condrestart)
 -        if status $prog >/dev/null ; then
-+        if status -p pidfile >/dev/null ; then
++        if status -p $pidfile >/dev/null ; then
              restart
          fi
  	;;
@@ -60,11 +60,11 @@ index 1da5475..1669fe3 100644
          ;;
      status)
 -        status $prog
-+        status -p pidfile
++        status -p $pidfile
          ;;
      try-restart|condrestart)
 -        if status $prog >/dev/null ; then
-+        if status -p pidfile >/dev/null ; then
++        if status -p $pidfile >/dev/null ; then
              restart
          fi
  	;;
@@ -95,11 +95,11 @@ index 057b081..25f63fe 100644
          ;;
      status)
 -        status $prog
-+        status -p pidfile
++        status -p $pidfile
          ;;
      try-restart|condrestart)
 -        if status $prog >/dev/null ; then
-+        if status -p pidfile >/dev/null ; then
++        if status -p $pidfile >/dev/null ; then
              restart
          fi
  	;;
@@ -130,11 +130,11 @@ index bc24653..5e7d92f 100644
          ;;
      status)
 -        status $prog
-+        status -p pidfile
++        status -p $pidfile
          ;;
      try-restart|condrestart)
 -        if status $prog >/dev/null ; then
-+        if status -p pidfile >/dev/null ; then
++        if status -p $pidfile >/dev/null ; then
              restart
          fi
  	;;
@@ -165,11 +165,11 @@ index 3590ed4..9d2ae90 100644
          ;;
      status)
 -        status $prog
-+        status -p pidfile
++        status -p $pidfile
          ;;
      try-restart|condrestart)
 -        if status $prog >/dev/null ; then
-+        if status -p pidfile >/dev/null ; then
++        if status -p $pidfile >/dev/null ; then
              restart
          fi
  	;;
@@ -200,11 +200,11 @@ index 16c0460..2ba053a 100644
          ;;
      status)
 -        status $prog
-+        status -p pidfile
++        status -p $pidfile
          ;;
      try-restart|condrestart)
 -        if status $prog >/dev/null ; then
-+        if status -p pidfile >/dev/null ; then
++        if status -p $pidfile >/dev/null ; then
              restart
          fi
  	;;
