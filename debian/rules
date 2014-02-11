@@ -10,3 +10,7 @@ override_dh_clean:
 
 override_dh_installinit:
 	dh_installinit --no-start --name=shinken
+
+override_dh_installdocs:
+	make --directory=doc html
+	dh_installdocs
