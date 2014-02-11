@@ -17,6 +17,7 @@ Depends: shinken-common (= ${binary:Version}), ${misc:Depends},
  shinken-module-broker-webui-cfgpassword (= ${binary:Version}),
  shinken-module-broker-webui-sqlitedb (= ${binary:Version}),
  shinken-module-retention-picklefile (= ${binary:Version}),
+Suggests: shinken-doc
 Description: Flexible monitoring tool - Meta-package
  This meta-package install a minimal and fully functionnal monitoring solution
  based on Shinken and its WebUI module.
@@ -39,6 +40,16 @@ Recommends: nagios-plugins-basic, bsd-mailx | mailx,
  shinken-module-retention-picklefile (= ${binary:Version}),
 Description: Flexible monitoring tool - Common files
  Common files for shinken monitoring.
+ .
+ Shinken is a new, Nagios compatible monitoring tool, written in Python. The
+ main goal of Shinken is to allow users to have a fully flexible architecture
+ for their monitoring system that can easily scale to large environments.
+
+Package: shinken-doc
+Section: doc
+Architecture: all
+Description: Flexible monitoring tool - Documentation
+ Shinken documentation.
  .
  Shinken is a new, Nagios compatible monitoring tool, written in Python. The
  main goal of Shinken is to allow users to have a fully flexible architecture
