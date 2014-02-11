@@ -1,12 +1,5 @@
 #!/usr/bin/make -f
 
-
-ETC=/etc/shinken/
-VAR=/var/lib/shinken/
-SCRIPTS_BIN=/usr/share/pyshared/shinken/bin/
-RUN=/var/run/shinken/
-LOG=/var/log/shinken/
-
 %:
 	dh $@ --with python2 --install-layout=deb,quilt
 
@@ -15,36 +8,5 @@ override_dh_clean:
 	rm -rf ./Shinken.egg-info
 	dh_clean
 
-override_dh_install:
-	# INSTALL
-	dh_install
-	# Fixups
-	rm debian/shinken-module-broker-webui/usr/share/shinken/htdocs/js/jquery.js
-	rm debian/shinken-module-broker-webui/usr/share/shinken/htdocs/font/FontAwesome.otf
-	rm debian/shinken-module-broker-webui/usr/share/shinken/htdocs/font/fontawesome-webfont.ttf
-	sed -i -r 's/^# Default-Start:     2 3 4 5/# Default-Start:/g' debian/shinken-common/etc/init.d/shinken
-	mkdir -p debian/shinken-common/etc/default/
-	cp debian/shinken-common.default debian/shinken-common/etc/default/shinken
-	sed -i "s|\$$ETC\\$$|$(ETC)|g" debian/shinken-common/etc/default/shinken
-	sed -i "s|\$$VAR\\$$|$(VAR)|g" debian/shinken-common/etc/default/shinken
-	sed -i "s|\$$SCRIPTS_BIN\\$$|$(SCRIPTS_BIN)|g" debian/shinken-common/etc/default/shinken
-	sed -i "s|\$$RUN\\$$|$(RUN)|g" debian/shinken-common/etc/default/shinken
-	sed -i "s|\$$LOG\\$$|$(LOG)|g" debian/shinken-common/etc/default/shinken
-
 override_dh_installinit:
 	dh_installinit --no-start --name=shinken
-
-override_dh_fixperms:
-	dh_fixperms
-	## shinken-module-broker-webui
-	find debian/shinken-module-broker-webui/usr/share/shinken/htdocs/ \
-	  \( -name "*.png" \
-	  -o -name "*.css" \
-	  -o -name "*.ttf" \
-	  -o -name "*.eot" \
-	  -o -name "*.woff" \
-	  -o -name "*.gif" \
-	  -o -name "*.ico" \
-	  -o -name "*.svg" \
-	  -o -name "*.otf" \) \
-	  -exec chmod -x {} \;
