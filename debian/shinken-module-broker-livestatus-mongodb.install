@@ -1,2 +1,0 @@
-debian/etc/shinken-specific/broker-livestatus-mongodb.cfg etc/shinken/shinken-specific/
-shinken/modules/logstore_mongodb.py /usr/lib/python2.7/dist-packages/shinken/modules

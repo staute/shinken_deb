@@ -1,2 +1,0 @@
-debian/etc/shinken-specific/broker-livestatus.cfg etc/shinken/shinken-specific/
-shinken/modules/livestatus_broker /usr/lib/python2.7/dist-packages/shinken/modules

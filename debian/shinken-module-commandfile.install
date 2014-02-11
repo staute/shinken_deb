@@ -1,2 +1,0 @@
-debian/etc/shinken-specific/commandfile.cfg etc/shinken/shinken-specific/
-shinken/modules/named_pipe.py /usr/lib/python2.7/dist-packages/shinken/modules

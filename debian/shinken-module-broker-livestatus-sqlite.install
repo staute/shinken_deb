@@ -1,2 +1,0 @@
-debian/etc/shinken-specific/broker-livestatus-sqlite.cfg etc/shinken/shinken-specific/
-shinken/modules/logstore_sqlite.py /usr/lib/python2.7/dist-packages/shinken/modules
