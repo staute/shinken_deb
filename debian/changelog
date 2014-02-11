@@ -1,3 +1,9 @@
+shinken (2.0~0git-1) UNRELEASED; urgency=medium
+
+  * New upstream snapshot
+
+ -- Mathieu Parent <sathieu@debian.org>  Tue, 11 Feb 2014 15:49:04 +0100
+
 shinken (1.4-3) unstable; urgency=low
 
   * Delete useless debconf files. Closes: #736395
