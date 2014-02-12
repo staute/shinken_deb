@@ -1,0 +1,67 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Fri, 14 Feb 2014 11:40:11 +0100
+Subject: Init script: shinken.default is not needed anymore
+
+---
+ bin/default/.gitignore |  1 -
+ bin/default/shinken.in |  0
+ contrib/install        | 10 ----------
+ setup.py               |  5 -----
+ 4 files changed, 16 deletions(-)
+ delete mode 100644 bin/default/.gitignore
+ delete mode 100644 bin/default/shinken.in
+
+diff --git a/bin/default/.gitignore b/bin/default/.gitignore
+deleted file mode 100644
+index bec56f2..0000000
+--- a/bin/default/.gitignore
++++ /dev/null
+@@ -1 +0,0 @@
+-shinken
+diff --git a/bin/default/shinken.in b/bin/default/shinken.in
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/contrib/install b/contrib/install
+index 82dae3e..d49dab2 100755
+--- a/contrib/install
++++ b/contrib/install
+@@ -743,16 +743,6 @@ function relocate(){
+     #    cecho " > Processing $fic" green;
+     #    setdirectives "$directives" $fic $TARGET
+     #done
+-    # relocate default file
+-    cd $TARGET/bin/default
+-    sed -e 's#LOG\=\(.*\)$#LOG='$TARGET'/var#g' \
+-        -e 's#RUN\=\(.*\)$#RUN='$TARGET'/var#g' \
+-        -e 's#ETC\=\(.*\)$#ETC='$ETC'#g' \
+-        -e 's#VAR\=\(.*\)$#VAR='$TARGET'/var#g' \
+-        -e 's#BIN\=\(.*\)$#BIN='$TARGET'/bin#g' \
+-        $TARGET/bin/default/shinken.in \
+-        > $TARGET/bin/default/shinken
+-    rm $TARGET/bin/default/shinken.in
+     # relocate init file
+     sed -e "s#\#export PYTHONPATH=.*#export PYTHONPATH="$TARGET"#g" \
+         $TARGET/bin/init.d/shinken.in
+diff --git a/setup.py b/setup.py
+index 24287b5..ee0156b 100644
+--- a/setup.py
++++ b/setup.py
+@@ -208,7 +208,6 @@ class build_config(Command):
+             # The default file must have good values for the directories:
+             # etc, var and where to push scripts that launch the app.
+             self.generate_shinken_file("bin/init.d/shinken.in", os.path.join(self.build_base, "bin/init.d/shinken"))
+-            self.generate_shinken_file("bin/default/shinken.in", os.path.join(self.build_base, "bin/default/shinken"))
+             self.update_configfiles()
+             self.copy_objects_file()
+ 
+@@ -588,10 +587,6 @@ data_files = [
+ if not is_update:
+ 
+     data_files.append(
+-        (os.path.join(etc_root, 'default',),
+-         ['build/bin/default/shinken']
+-         ))
+-    data_files.append(
+         (os.path.join(etc_root, 'init.d',),
+          ['build/bin/init.d/shinken']
+          ))

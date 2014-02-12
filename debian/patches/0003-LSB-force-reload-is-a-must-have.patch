@@ -1,0 +1,22 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Thu, 30 Jan 2014 11:34:18 +0100
+Subject: LSB: force-reload is a must-have
+
+---
+ bin/init.d/shinken | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/bin/init.d/shinken b/bin/init.d/shinken
+index 2625f73..a7a9c3d 100755
+--- a/bin/init.d/shinken
++++ b/bin/init.d/shinken
+@@ -526,6 +526,9 @@ do_cmd_on() {
+ ############################
+ ## Main:
+ 
++if [ "$CMD" = 'force-reload' ]; then
++    CMD=restart
++fi
+ case "$CMD" in
+     start|stop|restart|status)
+         do_cmd_on "$CMD" "$SUBMODULES"

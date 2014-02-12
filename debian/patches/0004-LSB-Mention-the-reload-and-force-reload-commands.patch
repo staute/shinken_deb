@@ -1,0 +1,21 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Thu, 30 Jan 2014 11:39:16 +0100
+Subject: LSB: Mention the reload and force-reload commands
+
+---
+ bin/init.d/shinken | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bin/init.d/shinken b/bin/init.d/shinken
+index a7a9c3d..4951d9a 100755
+--- a/bin/init.d/shinken
++++ b/bin/init.d/shinken
+@@ -122,7 +122,7 @@ SUBMODULES=""
+ 
+ usage() {
+     cat << END
+-Usage: $SCRIPTNAME [ -d ] {start|stop|restart|status|check} $_usage_mods_
++Usage: $SCRIPTNAME [ -d ] {start|stop|status|restart|reload|force-reload|check} $_usage_mods_
+ 
+  -d  start requested module(s) in debug mode, only useful with start|restart
+ 

@@ -17,3 +17,8 @@ override_dh_installdocs:
 	# embedded-javascript-library (replaced by symlinks with dh_link)
 	rm $(CURDIR)/debian/shinken-doc/usr/share/doc/shinken-doc/html/_static/jquery.js
 	rm $(CURDIR)/debian/shinken-doc/usr/share/doc/shinken-doc/html/_static/underscore.js
+
+make_dfsg:
+	find windows -name '*.exe' -o -name '*.dll' -delete
+	rm doc.old/architecture.fla
+	rm doc.old/architecture.swf
