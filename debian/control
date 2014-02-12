@@ -48,6 +48,7 @@ Description: Flexible monitoring tool - Common files
 Package: shinken-doc
 Section: doc
 Architecture: all
+Depends: ${misc:Depends}
 Description: Flexible monitoring tool - Documentation
  Shinken documentation.
  .
