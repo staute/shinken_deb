@@ -11,7 +11,7 @@ Build-Depends: python, debhelper (>= 9), quilt, python-setuptools, po-debconf
 Homepage: http://www.shinken-monitoring.org
 
 Package: shinken
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, shinken-common (= ${binary:Version})
 Suggests: shinken-doc
 Description: Flexible monitoring tool - Meta-package
@@ -23,7 +23,7 @@ Description: Flexible monitoring tool - Meta-package
  for their monitoring system that can easily scale to large environments.
 
 Package: shinken-common
-Architecture: any
+Architecture: all
 Breaks: shinken-core (<< 1.4), shinken (<< 1.4)
 Replaces: shinken-arbiter, shinken-broker, shinken-discovery,
  shinken-poller, shinken-reactionner, shinken-receiver,
