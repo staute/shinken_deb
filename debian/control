@@ -15,7 +15,7 @@ Architecture: all
 Depends: ${misc:Depends}, shinken-common (= ${binary:Version})
 Suggests: shinken-doc
 Description: Flexible monitoring tool - Meta-package
- This meta-package install a minimal and fully functionnal monitoring solution
+ This metapackage install a minimal and fully functionnal monitoring solution
  based on Shinken and its WebUI module.
  .
  Shinken is a new, Nagios compatible monitoring tool, written in Python. The
