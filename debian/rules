@@ -14,3 +14,6 @@ override_dh_installinit:
 override_dh_installdocs:
 	make --directory=doc html
 	dh_installdocs
+	# embedded-javascript-library (replaced by symlinks with dh_link)
+	rm $(CURDIR)/debian/shinken-doc/usr/share/doc/shinken-doc/html/_static/jquery.js
+	rm $(CURDIR)/debian/shinken-doc/usr/share/doc/shinken-doc/html/_static/underscore.js
