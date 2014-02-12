@@ -12,11 +12,7 @@ Homepage: http://www.shinken-monitoring.org
 
 Package: shinken
 Architecture: any
-Depends: shinken-common (= ${binary:Version}), ${misc:Depends},
- shinken-module-broker-webui (= ${binary:Version}),
- shinken-module-broker-webui-cfgpassword (= ${binary:Version}),
- shinken-module-broker-webui-sqlitedb (= ${binary:Version}),
- shinken-module-retention-picklefile (= ${binary:Version}),
+Depends: ${misc:Depends}, shinken-common (= ${binary:Version})
 Suggests: shinken-doc
 Description: Flexible monitoring tool - Meta-package
  This meta-package install a minimal and fully functionnal monitoring solution
@@ -32,12 +28,8 @@ Breaks: shinken-core (<< 1.4), shinken (<< 1.4)
 Replaces: shinken-arbiter, shinken-broker, shinken-discovery,
  shinken-poller, shinken-reactionner, shinken-receiver,
  shinken-scheduler, shinken-core
-Depends: ${python:Depends}, pyro | python2-pyro4, ${misc:Depends}, adduser
-Recommends: nagios-plugins-basic, bsd-mailx | mailx,
- shinken-module-broker-webui (= ${binary:Version}),
- shinken-module-broker-webui-cfgpassword (= ${binary:Version}),
- shinken-module-broker-webui-sqlitedb (= ${binary:Version}),
- shinken-module-retention-picklefile (= ${binary:Version}),
+Depends: ${misc:Depends}, ${python:Depends}, pyro | python2-pyro4, adduser
+Recommends: nagios-plugins-basic, bsd-mailx | mailx
 Description: Flexible monitoring tool - Common files
  Common files for shinken monitoring.
  .
