@@ -25,4 +25,4 @@ usr/lib/python2.7/dist-packages/shinken/misc/*
 usr/lib/python2.7/dist-packages/shinken/objects/*
 usr/lib/python2.7/dist-packages/shinken/daemons/*
 usr/lib/python2.7/dist-packages/shinken/discovery/*
-usr/bin/shinken-*
+usr/bin/shinken*
