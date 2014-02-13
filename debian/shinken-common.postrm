@@ -24,7 +24,6 @@ case "$1" in
     ;;
     purge)
         ## No need init.d autostart anymore
-        update-rc.d -f shinken remove > /dev/null
         for daemon_ in arbiter scheduler poller broker reactionner receiver; do
             update-rc.d -f shinken-$daemon_ remove > /dev/null
         done

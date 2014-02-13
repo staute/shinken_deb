@@ -43,12 +43,6 @@ case "$1" in
             fi
         done
 
-        # We don't need the shinken script
-        # TODO: find a better solution
-        # Maybe move the shinken script in an other folder ?
-        update-rc.d -f shinken defaults > /dev/null
-        update-rc.d -f shinken remove > /dev/null
-
         ## Ensure shinken starts automatically
         for daemon_ in arbiter scheduler poller broker reactionner receiver; do
             update-rc.d -f shinken-$daemon_ defaults > /dev/null
