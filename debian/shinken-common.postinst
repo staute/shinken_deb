@@ -3,8 +3,6 @@
 
 set -e
 
-. /usr/share/debconf/confmodule
-
 case "$1" in
   configure)
     # Configure this package.  If the package must prompt the user for

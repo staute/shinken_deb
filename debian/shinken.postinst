@@ -3,8 +3,6 @@
 
 set -e
 
-. /usr/share/debconf/confmodule
-
 case "$1" in
   configure)
 
@@ -14,8 +12,6 @@ case "$1" in
         update-rc.d -f shinken-$daemon_ defaults > /dev/null
     done
 
-    db_get shinken/instructions
-    db_reset shinken/instructions || true
     ;;
   abort-upgrade)
     # Back out of an attempt to upgrade this package FROM THIS VERSION
