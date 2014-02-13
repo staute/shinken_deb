@@ -7,7 +7,7 @@ case "$1" in
   configure)
 
     # Update-rc
-    all_daemons='arbiter scheduler poller broker reactionner'
+    all_daemons='arbiter scheduler poller broker reactionner receiver'
     for daemon_ in $all_daemons; do
         update-rc.d -f shinken-$daemon_ defaults > /dev/null
     done
