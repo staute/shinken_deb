@@ -31,21 +31,11 @@ case "$1" in
         id -Gn shinken |grep -E '(^|[[:blank:]])nagios($|[[:blank:]])' >/dev/null ||
             adduser shinken nagios
 
-        ## Ensure /var/lib/shinken is ready
-        mkdir -p /var/lib/shinken
-        chown -R shinken:shinken /var/lib/shinken
-
-        ## Ensure /var/run/shinken is ready
-        mkdir -p /var/run/shinken
-        chown -R shinken:shinken /var/run/shinken
-
-        ## Ensure /var/log/shinken is ready
-        mkdir -p /var/log/shinken
-        chown -R shinken:shinken /var/log/shinken
-
-        ## Override directory permissions
+        ## Create directories with proper permissions
         for i in /var/run/shinken /var/log/shinken /var/lib/shinken
         do
+            mkdir -p $i
+            chown -R shinken:shinken $i
             # only do something when no setting exists
             if ! dpkg-statoverride --list $i >/dev/null 2>&1
             then
@@ -53,19 +43,16 @@ case "$1" in
             fi
         done
 
-        # We don't we the shinken script
+        # We don't need the shinken script
         # TODO: find a better solution
         # Maybe move the shinken script in an other folder ?
         update-rc.d -f shinken defaults > /dev/null
         update-rc.d -f shinken remove > /dev/null
 
         ## Ensure shinken starts automatically
-        update-rc.d -f shinken-arbiter defaults > /dev/null
-        update-rc.d -f shinken-scheduler defaults > /dev/null
-        update-rc.d -f shinken-poller defaults > /dev/null
-        update-rc.d -f shinken-broker defaults > /dev/null
-        update-rc.d -f shinken-reactionner defaults > /dev/null
-        update-rc.d -f shinken-receiver defaults > /dev/null
+        for daemon_ in arbiter scheduler poller broker reactionner receiver; do
+            update-rc.d -f shinken-$daemon_ defaults > /dev/null
+        done
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

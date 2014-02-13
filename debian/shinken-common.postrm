@@ -25,12 +25,9 @@ case "$1" in
     purge)
         ## No need init.d autostart anymore
         update-rc.d -f shinken remove > /dev/null
-        update-rc.d -f shinken-arbiter remove > /dev/null
-        update-rc.d -f shinken-scheduler remove > /dev/null
-        update-rc.d -f shinken-poller remove > /dev/null
-        update-rc.d -f shinken-broker remove > /dev/null
-        update-rc.d -f shinken-reactionner remove > /dev/null
-        update-rc.d -f shinken-receiver remove > /dev/null
+        for daemon_ in arbiter scheduler poller broker reactionner receiver; do
+            update-rc.d -f shinken-$daemon_ remove > /dev/null
+        done
         ## Removes directory permissions
         for i in /var/run/shinken /var/log/shinken /var/lib/shinken
         do

@@ -20,8 +20,7 @@ set -e
 
 case "$1" in
     configure)
-        all_daemons='arbiter scheduler poller broker reactionner receiver'
-        for daemon_ in $all_daemons; do
+        for daemon_ in arbiter scheduler poller broker reactionner receiver; do
             update-rc.d -f shinken-$daemon_ defaults > /dev/null
         done
     ;;
