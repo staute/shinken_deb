@@ -8,6 +8,10 @@ override_dh_clean:
 	rm -rf ./Shinken.egg-info
 	dh_clean
 
+override_dh_installdirs:
+	dh_installdirs
+	install $(CURDIR)/debian/placeholder $(CURDIR)/debian/shinken-common/etc/shinken/modules/.placeholder
+
 override_dh_installinit:
 	dh_installinit --no-start --name=shinken
 
