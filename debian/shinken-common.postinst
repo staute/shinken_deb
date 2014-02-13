@@ -20,6 +20,16 @@ set -e
 
 case "$1" in
     configure)
+        if id shinken >/dev/null 2>&1 ; then
+            # We have a shinken user.
+            if [ `id shinken -g -n` != "shinken" ] ; then
+                groupadd --system shinken || true
+                #this can fail sometimes (i.e. with LDAP) so ignore it
+                usermod -g shinken shinken || true
+            fi
+        else
+            useradd --system --home-dir /var/lib/shinken shinken || true
+        fi
         ## Gets some innocent playground
         TMP=$(mktemp -d)
         chown root:root $TMP
