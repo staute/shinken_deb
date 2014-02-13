@@ -13,7 +13,7 @@ Homepage: http://www.shinken-monitoring.org
 Package: shinken
 Architecture: all
 Depends: ${misc:Depends}, shinken-common (= ${binary:Version})
-Suggests: shinken-doc
+Suggests: shinken-doc, shinken-mod, shinken-pack
 Description: Flexible monitoring tool - Meta-package
  This metapackage install a minimal and fully functionnal monitoring solution
  based on Shinken and its WebUI module.
