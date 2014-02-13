@@ -20,39 +20,20 @@ set -e
 
 case "$1" in
     configure)
-        if id shinken >/dev/null 2>&1 ; then
-            # We have a shinken user.
-            if [ `id shinken -g -n` != "shinken" ] ; then
-                groupadd --system shinken || true
-                #this can fail sometimes (i.e. with LDAP) so ignore it
-                usermod -g shinken shinken || true
-            fi
-        else
-            useradd --system --home-dir /var/lib/shinken shinken || true
-        fi
-        ## Gets some innocent playground
-        TMP=$(mktemp -d)
-        chown root:root $TMP
+        ## Create user and group
+        # Note: if the user exists, it's properties won't be changed (gid, home, shell)
+        adduser  --quiet --system --home /var/lib/shinken --no-create-home --group shinken
 
-        ## Adds shinken group
-        chgrp shinken $TMP 2>/dev/null ||
-          addgroup --system shinken
+        ## Create nagios group
+        addgroup --system nagios
 
-        ## Adds nagios group
-        chgrp nagios $TMP 2>/dev/null ||
-          addgroup --system nagios
+        ## Add shinken to nagios group
+        id -Gn shinken |grep -E '(^|[[:blank:]])nagios($|[[:blank:]])' >/dev/null ||
+            adduser shinken nagios
 
         ## Ensure /var/lib/shinken is ready
         mkdir -p /var/lib/shinken
         chown -R shinken:shinken /var/lib/shinken
-
-        ## Add shinken to nagios group
-        id -Gn shinken |grep -E '(^|[[:blank:]])nagios($|[[:blank:]])' >/dev/null ||
-          usermod -a -G nagios shinken
-
-        ## No need anymore temporary vars
-        rm -rf $TMP
-        unset TMP
 
         ## Ensure /var/run/shinken is ready
         mkdir -p /var/run/shinken
