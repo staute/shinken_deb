@@ -52,13 +52,15 @@ case "$1" in
         mkdir -p /var/log/shinken
         chown -R shinken:shinken /var/log/shinken
 
-        ## Checks rights
-        dpkg-statoverride --remove /var/run/shinken/ >/dev/null 2>&1 || true
-        dpkg-statoverride --update --add shinken shinken 02750 /var/run/shinken/ >/dev/null 2>&1 || true
-        dpkg-statoverride --remove /var/log/shinken/ >/dev/null 2>&1 || true
-        dpkg-statoverride --update --add shinken shinken 02750 /var/log/shinken/ >/dev/null 2>&1 || true
-        dpkg-statoverride --remove /var/lib/shinken/ >/dev/null 2>&1 || true
-        dpkg-statoverride --update --add shinken shinken 02750 /var/lib/shinken/ >/dev/null 2>&1 || true
+        ## Override directory permissions
+        for i in /var/run/shinken /var/log/shinken /var/lib/shinken
+        do
+            # only do something when no setting exists
+            if ! dpkg-statoverride --list $i >/dev/null 2>&1
+            then
+                dpkg-statoverride --update --add shinken shinken 02750 $i
+            fi
+        done
 
         # We don't we the shinken script
         # TODO: find a better solution

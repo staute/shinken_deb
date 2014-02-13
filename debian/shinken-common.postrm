@@ -21,11 +21,6 @@ set -e
 
 case "$1" in
     remove)
-        ## Removes directory stat
-        dpkg-statoverride --remove /var/run/shinken
-        dpkg-statoverride --remove /var/log/shinken
-        dpkg-statoverride --remove /var/lib/shinken
-
         ## Ensure /var/run/shinken is removed
         rm -rf /var/run/shinken || return 0
         rm -rf /var/lib/shinken || return 0
@@ -39,6 +34,14 @@ case "$1" in
         update-rc.d -f shinken-broker remove > /dev/null
         update-rc.d -f shinken-reactionner remove > /dev/null
         update-rc.d -f shinken-receiver remove > /dev/null
+        ## Removes directory permissions
+        for i in /var/run/shinken /var/log/shinken /var/lib/shinken
+        do
+          if dpkg-statoverride --list $i >/dev/null 2>&1
+          then
+            dpkg-statoverride --remove $i
+          fi
+        done
     ;;
     upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
