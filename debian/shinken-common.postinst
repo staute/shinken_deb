@@ -32,7 +32,7 @@ case "$1" in
             adduser shinken nagios
 
         ## Create directories with proper permissions
-        for i in /var/run/shinken /var/log/shinken /var/lib/shinken
+        for i in /var/run/shinken /var/log/shinken /var/lib/shinken /var/lib/shinken/modules
         do
             mkdir -p $i
             chown -R shinken:shinken $i
