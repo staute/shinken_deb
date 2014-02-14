@@ -1,5 +1,6 @@
 etc/init.d/*
 etc/shinken
+usr/lib/python2.7/dist-packages/*.egg-info
 usr/lib/python2.7/dist-packages/shinken/*.py
 usr/lib/python2.7/dist-packages/shinken/clients/*
 usr/lib/python2.7/dist-packages/shinken/daemons/*
