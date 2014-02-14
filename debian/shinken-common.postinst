@@ -44,9 +44,13 @@ case "$1" in
         done
 
         ## Ensure shinken starts automatically
-        for daemon_ in arbiter scheduler poller broker reactionner receiver; do
-            update-rc.d -f shinken-$daemon_ defaults > /dev/null
-        done
+        update-rc.d -f shinken-arbiter defaults > /dev/null
+        update-rc.d -f shinken-scheduler defaults > /dev/null
+        update-rc.d -f shinken-poller defaults > /dev/null
+        update-rc.d -f shinken-broker defaults > /dev/null
+        update-rc.d -f shinken-reactionner defaults > /dev/null
+        update-rc.d -f shinken-receiver defaults > /dev/null
+        update-rc.d -f shinken defaults > /dev/null
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
