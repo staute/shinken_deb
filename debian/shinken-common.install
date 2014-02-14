@@ -9,3 +9,5 @@ usr/lib/python2.7/dist-packages/shinken/misc/*
 usr/lib/python2.7/dist-packages/shinken/objects/*
 usr/lib/python2.7/dist-packages/shinken/webui/*
 usr/bin/shinken*
+var/lib/shinken/share/images usr/share/shinken
+var/lib/shinken/share/templates usr/share/shinken
