@@ -1,6 +1,44 @@
 shinken (2.0~0git-1) UNRELEASED; urgency=medium
 
   * New upstream snapshot
+  * Init script are already installed by setup.py, remove from
+    shinken-common.install
+  * Install files from setup.py
+  * Removing all patches (integrated upstream, except 11_shinken_init.patch
+  * Remove modules, they are now in separate git repos
+  * Remove in d/rules things done by setup.py
+  * Move doc to a separate package
+  * Compile doc (html, txt) and install it
+  * Move to dh compat 9
+  * Lintian: W: shinken source: debhelper-but-no-misc-depends shinken-doc
+  * Set pkg-shinken-maint as Maintainer, and add me as Uploader
+  * Don't require any module
+  * Everything is arch:all
+  * update copyright format URL
+  * Lintian: I: shinken: capitalization-error-in-description meta-package
+    metapackage
+  * Add shinken-doc.doc-base
+  * Remove shinken-common.default (not needed anymore)
+  * Replace embedded JS libraries in -doc by symlinks
+  * init script patches
+  * Suggests shinken-mod and shinken-pack virtual packages
+  * Install the shinken bin
+  * Remove debconf question as shinken/instructions doesn't exist
+  * Start the receiver on boot too (as stated in LSB headers)
+  * Clean up maintscripts
+  * Fix dpkg-statoverride usage
+  * Purge directories on purge (and not on remove)
+  * useradd/adduser is usually done in postinst
+  * Use adduser/addgroup instead of useradd usermod
+  * More refactoring
+  * Remove duplicate call update-rc.d
+  * Don't manage the shinken init script
+  * Install webui
+  * Create the /var/lib/shinken/modules dir
+  * Use upstream config
+  * Create an empty /etc/shinken/modules dir
+  * Install egg-info
+  * Stop lintian from complaining about updaterc.d
 
  -- Mathieu Parent <sathieu@debian.org>  Tue, 11 Feb 2014 15:49:04 +0100
 
