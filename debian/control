@@ -1,6 +1,6 @@
 Source: shinken
-Maintainer: Thibault Cohen <thibault.cohen@savoirfairelinux.com>
-Uploaders: Mathieu Parent <math.parent@gmail.com>
+Maintainer: Shinken Debian packages maintainers <pkg-shinken-maint@lists.alioth.debian.org>
+Uploaders: Thibault Cohen <thibault.cohen@savoirfairelinux.com>, Mathieu Parent <sathieu@debian.org>
 Section: net
 Priority: extra
 Vcs-Git: git://anonscm.debian.org/collab-maint/shinken.git
