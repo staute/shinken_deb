@@ -16,3 +16,5 @@
 0016-Refactoring.patch
 0017-Init-script-Be-explicit-of-supported-commands.patch
 0018-Do-not-start-stop-shinken-service-on-boot.patch
+0019-Fix-nagios-plugin-directory-path.patch
+0020-Fix-modules_dir.patch

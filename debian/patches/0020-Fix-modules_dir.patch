@@ -1,0 +1,21 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Thu, 20 Feb 2014 13:43:46 +0100
+Subject: Fix modules_dir
+
+---
+ etc/shinken.cfg | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/etc/shinken.cfg b/etc/shinken.cfg
+index 79c34a2..56e0cde 100644
+--- a/etc/shinken.cfg
++++ b/etc/shinken.cfg
+@@ -115,7 +115,7 @@ shinken_user=shinken
+ shinken_group=shinken
+ 
+ # The path to the modules directory
+-modules_dir=/var/lib/shinken/modules
++modules_dir=/usr/share/shinken/modules
+ 
+ # Set to 0 if you want to make this daemon (arbiter) NOT run
+ daemon_enabled=1
