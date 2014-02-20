@@ -3,9 +3,74 @@ Date: Thu, 20 Feb 2014 13:43:46 +0100
 Subject: Fix modules_dir
 
 ---
- etc/shinken.cfg | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ etc/daemons/brokerd.ini      | 1 +
+ etc/daemons/pollerd.ini      | 1 +
+ etc/daemons/reactionnerd.ini | 1 +
+ etc/daemons/receiverd.ini    | 1 +
+ etc/daemons/schedulerd.ini   | 1 +
+ etc/shinken.cfg              | 2 +-
+ 6 files changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/etc/daemons/brokerd.ini b/etc/daemons/brokerd.ini
+index 17cc365..0e8fb0f 100644
+--- a/etc/daemons/brokerd.ini
++++ b/etc/daemons/brokerd.ini
+@@ -3,6 +3,7 @@
+ # The daemon will chdir into the directory workdir when launched
+ workdir = /var/run/shinken
+ logdir  = /var/log/shinken
++modules_dir=/usr/share/shinken/modules
+ 
+ pidfile=%(workdir)s/brokerd.pid
+ 
+diff --git a/etc/daemons/pollerd.ini b/etc/daemons/pollerd.ini
+index ee975ae..54bbe01 100644
+--- a/etc/daemons/pollerd.ini
++++ b/etc/daemons/pollerd.ini
+@@ -12,6 +12,7 @@ daemon_enabled=1
+ # using default values for following config variables value:
+ workdir = /var/run/shinken
+ logdir  = /var/log/shinken
++modules_dir=/usr/share/shinken/modules
+ pidfile=%(workdir)s/pollerd.pid
+ 
+ #-- Network configuration
+diff --git a/etc/daemons/reactionnerd.ini b/etc/daemons/reactionnerd.ini
+index 110f49e..39df9dc 100644
+--- a/etc/daemons/reactionnerd.ini
++++ b/etc/daemons/reactionnerd.ini
+@@ -3,6 +3,7 @@
+ # The daemon will chdir into the directory workdir when launched
+ workdir = /var/run/shinken
+ logdir  = /var/log/shinken
++modules_dir=/usr/share/shinken/modules
+ 
+ pidfile=%(workdir)s/reactionnerd.pid
+ 
+diff --git a/etc/daemons/receiverd.ini b/etc/daemons/receiverd.ini
+index 5a5d724..7fd3753 100644
+--- a/etc/daemons/receiverd.ini
++++ b/etc/daemons/receiverd.ini
+@@ -3,6 +3,7 @@
+ # The daemon will chdir into the directory workdir when launched
+ workdir = /var/run/shinken
+ logdir  = /var/log/shinken
++modules_dir=/usr/share/shinken/modules
+ 
+ pidfile=%(workdir)s/receiverd.pid
+ 
+diff --git a/etc/daemons/schedulerd.ini b/etc/daemons/schedulerd.ini
+index 1f176d2..43d57d4 100644
+--- a/etc/daemons/schedulerd.ini
++++ b/etc/daemons/schedulerd.ini
+@@ -3,6 +3,7 @@
+ # The daemon will chdir into the directory workdir when launched
+ workdir = /var/run/shinken
+ logdir  = /var/log/shinken
++modules_dir=/usr/share/shinken/modules
+ 
+ pidfile=%(workdir)s/schedulerd.pid
+ 
 diff --git a/etc/shinken.cfg b/etc/shinken.cfg
 index 79c34a2..56e0cde 100644
 --- a/etc/shinken.cfg
