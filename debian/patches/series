@@ -18,3 +18,4 @@
 0018-Do-not-start-stop-shinken-service-on-boot.patch
 0019-Fix-nagios-plugin-directory-path.patch
 0020-Fix-modules_dir.patch
+0021-broker-master.cfg-Try-to-load-modules-Livestatus-Sim.patch
