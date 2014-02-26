@@ -25,6 +25,7 @@
 import pycurl
 import os
 import sys
+import stat
 import json
 import tempfile
 import tarfile
@@ -80,7 +81,7 @@ def create_archive(to_pack):
     def tar_exclude_filter(f):
         # if the file start with .git, we bail out
         # Also ending with ~ (Thanks emacs...)
-        if f.startswith('./.git'):
+        if f.startswith('./.git') or f.startswith('.git'):
             return True
         if f.endswith('~'):
             return True
@@ -105,8 +106,8 @@ def publish_archive(archive):
     # Ok we will push the file with a 10s timeout
     c = pycurl.Curl()
     c.setopt(c.POST, 1)
-    c.setopt(c.CONNECTTIMEOUT, 10)
-    c.setopt(c.TIMEOUT, 10)
+    c.setopt(c.CONNECTTIMEOUT, 30)
+    c.setopt(c.TIMEOUT, 300)
     if proxy:
         c.setopt(c.PROXY, proxy)
     c.setopt(c.URL, "http://shinken.io/push")
@@ -151,8 +152,8 @@ def search(look_at):
     # Ok we will push the file with a 10s timeout
     c = pycurl.Curl()
     c.setopt(c.POST, 0)
-    c.setopt(c.CONNECTTIMEOUT, 10)
-    c.setopt(c.TIMEOUT, 10)
+    c.setopt(c.CONNECTTIMEOUT, 30)
+    c.setopt(c.TIMEOUT, 300)
     if proxy:
         c.setopt(c.PROXY, proxy)
 
@@ -280,6 +281,18 @@ def _copytree(src, dst, symlinks=False, ignore=None):
         else:
             shutil.copy2(s, d)
 
+# Do a chmod -R +x
+def _chmodplusx(d):
+    for item in os.listdir(d):
+        p = os.path.join(d, item)
+        if os.path.isdir(p):
+            _chmodplusx(p)
+        else:
+            st = os.stat(p)
+            os.chmod(p, st.st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
+
+
+
 
 
 def grab_package(pname):
@@ -290,11 +303,11 @@ def grab_package(pname):
     proxy = CONFIG['shinken.io']['proxy']
     api_key = CONFIG['shinken.io']['api_key']
 
-    # Ok we will push the file with a 10s timeout
+    # Ok we will push the file with a 5m timeout
     c = pycurl.Curl()
     c.setopt(c.POST, 0)
-    c.setopt(c.CONNECTTIMEOUT, 10)
-    c.setopt(c.TIMEOUT, 10)
+    c.setopt(c.CONNECTTIMEOUT, 30)
+    c.setopt(c.TIMEOUT, 300)
     if proxy:
         c.setopt(c.PROXY, proxy)
 
@@ -361,6 +374,9 @@ def grab_local(d):
 
 def install_package(pname, raw):
     logger.debug("Installing the package %s (size:%d)" % (pname, len(raw)))
+    if len(raw) == 0:
+        logger.error('The package %s cannot be found' % pname)
+        return
     tmpdir = os.path.join(tempfile.gettempdir(), pname)
     logger.debug("Unpacking the package into %s" % tmpdir)
 
@@ -404,6 +420,7 @@ def install_package(pname, raw):
     etc_dir     = CONFIG['paths']['etc']
     doc_dir     = CONFIG['paths']['doc']
     inventory_dir     = CONFIG['paths']['inventory']
+    libexec_dir     = CONFIG['paths'].get('libexec', os.path.join(CONFIG['paths']['lib'], 'libexec'))
     test_dir   = CONFIG['paths'].get('test', '/__DONOTEXISTS__')
     for d in (modules_dir, share_dir, packs_dir, doc_dir, inventory_dir):
         if not os.path.exists(d):
@@ -474,6 +491,18 @@ def install_package(pname, raw):
         logger.debug("COPYING %s into %s" % (p_tests, test_dir))
         _copytree(p_tests, test_dir)
         logger.info("Copy done in the test directory %s" % test_dir)
+
+    # Now install the libexec things from $TMP$/libexec/* to $LIBEXEC$/*
+    # but also chmod a+x the plugins copied
+    p_libexec = os.path.join(tmpdir, 'libexec')
+    if os.path.exists(p_libexec) and os.path.exists(libexec_dir):
+        logger.info("Merging the libexec package data into your libexec directory")
+        logger.debug("COPYING %s into %s" % (p_libexec, libexec_dir))
+        # Before be sure all files in there are +x
+        _chmodplusx(p_libexec)
+        _copytree(p_libexec, libexec_dir)
+        logger.info("Copy done in the libexec directory %s" % libexec_dir)
+
 
     # then samve the package.json into the inventory dir
     p_inv = os.path.join(inventory_dir, pname)
