@@ -43,10 +43,10 @@ index 82dae3e..d49dab2 100755
      sed -e "s#\#export PYTHONPATH=.*#export PYTHONPATH="$TARGET"#g" \
          $TARGET/bin/init.d/shinken.in
 diff --git a/setup.py b/setup.py
-index 24287b5..ee0156b 100644
+index fce7d28..65fcf2c 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -208,7 +208,6 @@ class build_config(Command):
+@@ -209,7 +209,6 @@ class build_config(Command):
              # The default file must have good values for the directories:
              # etc, var and where to push scripts that launch the app.
              self.generate_shinken_file("bin/init.d/shinken.in", os.path.join(self.build_base, "bin/init.d/shinken"))
@@ -54,7 +54,7 @@ index 24287b5..ee0156b 100644
              self.update_configfiles()
              self.copy_objects_file()
  
-@@ -588,10 +587,6 @@ data_files = [
+@@ -592,10 +591,6 @@ package_data = ['*.py', 'modules/*.py', 'modules/*/*.py']
  if not is_update:
  
      data_files.append(

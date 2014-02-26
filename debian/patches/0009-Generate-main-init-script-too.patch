@@ -6,8 +6,8 @@ Subject: Generate main init script too
  bin/init.d/shinken    | 523 --------------------------------------------------
  bin/init.d/shinken.in | 523 ++++++++++++++++++++++++++++++++++++++++++++++++++
  contrib/install       |  13 +-
- setup.py              |   9 +-
- 4 files changed, 541 insertions(+), 527 deletions(-)
+ setup.py              |   7 +-
+ 4 files changed, 540 insertions(+), 526 deletions(-)
  delete mode 100755 bin/init.d/shinken
  create mode 100755 bin/init.d/shinken.in
 
@@ -1096,10 +1096,10 @@ index c4ef9ec..82dae3e 100755
      cd $ETC
  
 diff --git a/setup.py b/setup.py
-index 41d782b..24287b5 100644
+index 598e1b2..fce7d28 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -207,6 +207,7 @@ class build_config(Command):
+@@ -208,6 +208,7 @@ class build_config(Command):
          if not is_update:
              # The default file must have good values for the directories:
              # etc, var and where to push scripts that launch the app.
@@ -1107,21 +1107,16 @@ index 41d782b..24287b5 100644
              self.generate_shinken_file("bin/default/shinken.in", os.path.join(self.build_base, "bin/default/shinken"))
              self.update_configfiles()
              self.copy_objects_file()
-@@ -567,11 +568,11 @@ webui_files = [s.replace('shinken/webui/', 'webui/') for s in full_path_webui_fi
- package_data = ['*.py', 'modules/*.py', 'modules/*/*.py']
- package_data.extend(webui_files)
- 
--#By default we add all init.d scripts and some dummy files
-+#By default we add all init.d scripts except the main one
- data_files = [
-     (
-         os.path.join('/etc', 'init.d'),
--        ['bin/init.d/shinken',
-+        [
-          'bin/init.d/shinken-arbiter',
-          'bin/init.d/shinken-broker',
-          'bin/init.d/shinken-receiver',
-@@ -590,6 +591,10 @@ if not is_update:
+@@ -495,7 +496,7 @@ elif 'linux' in sys.platform or 'sunos5' in sys.platform:
+     data_files = [
+         (
+             os.path.join('/etc', 'init.d'),
+-            ['bin/init.d/shinken',
++            [
+              'bin/init.d/shinken-arbiter',
+              'bin/init.d/shinken-broker',
+              'bin/init.d/shinken-receiver',
+@@ -594,6 +595,10 @@ if not is_update:
          (os.path.join(etc_root, 'default',),
           ['build/bin/default/shinken']
           ))
@@ -1129,6 +1124,6 @@ index 41d782b..24287b5 100644
 +        (os.path.join(etc_root, 'init.d',),
 +         ['build/bin/init.d/shinken']
 +         ))
-     
-     # Also add modules to the var directory
-     for p in gen_data_files('modules'):
+ 
+     for (dname, dfile) in daemon_ini_files:
+         data_files.append(

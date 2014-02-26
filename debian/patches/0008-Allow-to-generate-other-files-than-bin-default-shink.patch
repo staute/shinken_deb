@@ -7,10 +7,10 @@ Subject: Allow to generate other files than bin/default/shinken
  1 file changed, 4 insertions(+), 8 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index 6326bfa..41d782b 100644
+index bd4a882..598e1b2 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -205,17 +205,13 @@ class build_config(Command):
+@@ -206,17 +206,13 @@ class build_config(Command):
              self.mkpath(self.build_dir)
          # We generate the conf files only for a full install
          if not is_update:
