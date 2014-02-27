@@ -523,7 +523,8 @@ else:
 
 required_pkgs = ['pycurl']
 
-etc_root = default_paths['etc']
+# Should be /etc, not the /etc/shinken !
+etc_root = os.path.dirname(default_paths['etc'])
 var_root = default_paths['var']
 
 # nagios/shinken global config
@@ -601,7 +602,7 @@ if not is_update:
 
     for (dname, dfile) in daemon_ini_files:
         data_files.append(
-        (os.path.join(default_paths['etc'], 'demons',),
+        (os.path.join(default_paths['etc'], 'daemons',),
          ['build/etc/'+dfile]
          ))
     
