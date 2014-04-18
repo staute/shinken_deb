@@ -40,6 +40,27 @@ from shinken.util import sort_by_ids
 from shinken.log import logger
 from shinken.external_command import ExternalCommand
 from shinken.http_client import HTTPClient, HTTPExceptions
+from shinken.daemon import Daemon, Interface
+
+class IStats(Interface):
+    """ 
+    Interface for various stats about broker activity
+    """
+    
+    doc = 'Get raw stats from the daemon'
+    def get_raw_stats(self):
+        app = self.app
+        res = {}
+
+        insts = [inst for inst in app.modules_manager.instances if inst.is_external]
+        for inst in insts:
+            try:
+                res.append( {'module_name':inst.get_name(), 'queue_size':inst.to_q.qsize()})
+            except Exception, exp:
+                res.append( {'module_name':inst.get_name(), 'queue_size':0})
+        
+        return res
+    get_raw_stats.doc = doc
 
 
 # Our main APP class
@@ -81,6 +102,8 @@ class Broker(BaseSatellite):
 
         self.timeout = 1.0
 
+        self.istats = IStats(self)
+        
 
     # Schedulers have some queues. We can simplify the call by adding
     # elements into the proper queue just by looking at their type
@@ -171,9 +194,8 @@ class Broker(BaseSatellite):
         running_id = links[id]['running_id']
         # DBG: print "Running id before connection", running_id
         uri = links[id]['uri']
-
         try:
-            con = links[id]['con'] = HTTPClient(uri=uri)
+            con = links[id]['con'] = HTTPClient(uri=uri, strong_ssl=links[id]['hard_ssl_name_check'])
         except HTTPExceptions, exp:
             # But the multiprocessing module is not compatible with it!
             # so we must disable it immediately after
@@ -386,7 +408,10 @@ class Broker(BaseSatellite):
             if s['name'] in g_conf['satellitemap']:
                 s = dict(s)  # make a copy
                 s.update(g_conf['satellitemap'][s['name']])
-            uri = 'http://%s:%s/' % (s['address'], s['port'])
+            proto = 'http'
+            if s['use_ssl']:
+                 proto = 'https'
+            uri = '%s://%s:%s/' % (proto, s['address'], s['port'])
             self.schedulers[sched_id]['uri'] = uri
 
             self.schedulers[sched_id]['broks'] = broks
@@ -412,7 +437,11 @@ class Broker(BaseSatellite):
             if a['name'] in g_conf['satellitemap']:
                 a = dict(a)  # make a copy
                 a.update(g_conf['satellitemap'][a['name']])
-            uri = 'http://%s:%s/' % (a['address'], a['port'])
+
+            proto = 'http'
+            if a['use_ssl']:
+                 proto = 'https'
+            uri = '%s://%s:%s/' % (proto, a['address'], a['port'])
             self.arbiters[arb_id]['uri'] = uri
 
             self.arbiters[arb_id]['broks'] = broks
@@ -441,7 +470,12 @@ class Broker(BaseSatellite):
             if p['name'] in g_conf['satellitemap']:
                 p = dict(p)  # make a copy
                 p.update(g_conf['satellitemap'][p['name']])
-            uri = 'http://%s:%s/' % (p['address'], p['port'])
+
+            proto = 'http'
+            if p['use_ssl']:
+                 proto = 'https'
+
+            uri = '%s://%s:%s/' % (proto, p['address'], p['port'])
             self.pollers[pol_id]['uri'] = uri
 
             self.pollers[pol_id]['broks'] = broks
@@ -472,7 +506,11 @@ class Broker(BaseSatellite):
             if r['name'] in g_conf['satellitemap']:
                 r = dict(r)  # make a copy
                 r.update(g_conf['satellitemap'][r['name']])
-            uri = 'http://%s:%s/' % (r['address'], r['port'])
+
+            proto = 'http'
+            if r['use_ssl']:
+                 proto = 'https'
+            uri = '%s://%s:%s/' % (proto, r['address'], r['port'])
             self.reactionners[rea_id]['uri'] = uri
 
             self.reactionners[rea_id]['broks'] = broks
@@ -664,6 +702,8 @@ class Broker(BaseSatellite):
             
             self.uri2 = self.http_daemon.register(self.interface)#, "ForArbiter")
             logger.debug("The Arbiter uri it at %s" % self.uri2)
+
+            self.uri3 = self.http_daemon.register(self.istats)
 
             #  We wait for initial conf
             self.wait_for_initial_conf()

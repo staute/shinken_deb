@@ -2,6 +2,7 @@
 
     \newpage
 
+.. _gettingstarted/index:
 
 Getting Started
 ===============
@@ -11,15 +12,10 @@ Getting Started
     \newpage
 
 .. toctree::
+   :maxdepth: 2
 
-    gettingstarted-beginners
-    gettingstarted-quickstart
-    installations/index
-    ch07
-    gettingstarted-monitoring-windows
-    gettingstarted-monitoring-linux
-    gettingstarted-monitoring-printers
-    gettingstarted-monitoring-routers
-    gettingstarted-monitoring-publicservices
-    shinken_plugins
+   beginners
+   quickstart
+   installations/index
+   upgrading-shinken
 

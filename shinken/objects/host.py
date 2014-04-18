@@ -126,6 +126,7 @@ class Host(SchedulingItem):
         'maintenance_period':   StringProp(default='', brok_transformation=to_name_if_possible, fill_brok=['full_status']),
         'time_to_orphanage':    IntegerProp(default='300', fill_brok=['full_status']),
         'service_overrides':    ListProp(default='', merging='duplicate', split_on_coma=False),
+        'service_excludes':     ListProp(default='', merging='duplicate'),
         'labels':               ListProp(default='', fill_brok=['full_status'], merging='join'),
 
         # BUSINESS CORRELATOR PART
@@ -223,6 +224,8 @@ class Host(SchedulingItem):
         'last_problem_id':      IntegerProp(default=0, fill_brok=['full_status', 'check_result'], retention=True),
         'current_problem_id':   IntegerProp(default=0, fill_brok=['full_status', 'check_result'], retention=True),
         'execution_time':       FloatProp(default=0.0, fill_brok=['full_status', 'check_result'], retention=True),
+        'u_time':               FloatProp(default=0.0),
+        's_time':               FloatProp(default=0.0),
         'last_notification':    FloatProp(default=0.0, fill_brok=['full_status'], retention=True),
         'current_notification_number': IntegerProp(default=0, fill_brok=['full_status'], retention=True),
         'current_notification_id': IntegerProp(default=0, fill_brok=['full_status'], retention=True),
@@ -1108,6 +1111,8 @@ class Hosts(Items):
             if not h.is_tpl() and hasattr(h, 'host_name'):
                 hname = h.host_name
                 if hasattr(h, 'hostgroups'):
+                    if isinstance(h.hostgroups, list):
+                        h.hostgroups = ','.join(h.hostgroups)
                     hgs = h.hostgroups.split(',')
                     for hg in hgs:
                         hostgroups.add_member(hname, hg.strip())
@@ -1184,7 +1189,7 @@ class Hosts(Items):
             if h.is_tpl() and hasattr(h, 'name') and h.name.strip() == tpl_name:
                 tpl = h
 
-        # If we find none, we sould manually lookup all hosts to find this 'tag'
+        # If we find none, we should manually lookup all hosts to find this 'tag'
         if tpl is None:
             for h in self:
                 if not hasattr(h, 'host_name') or h.is_tpl():
@@ -1193,7 +1198,7 @@ class Hosts(Items):
                 tnames = strip_and_uniq(getattr(h, 'use', '').split(','))
                 if tpl_name in tnames:
                     res.add(h.host_name)
-                
+
             return list(res)
 
         # Ok, we find the tpl. We should find its father template too

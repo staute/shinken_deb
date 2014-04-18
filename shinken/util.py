@@ -29,6 +29,7 @@ import copy
 import sys
 #import shutil
 import os
+import json
 try:
     from ClusterShell.NodeSet import NodeSet, NodeSetParseRangeError
 except ImportError:
@@ -115,6 +116,60 @@ def split_semicolon(line, maxsplit=None):
 
     return splitted_line
 
+
+
+# Json-ify the objects
+def jsonify_r(obj):
+    res = {}
+    cls = obj.__class__
+    if not hasattr(cls, 'properties'):
+        try:
+            json.dumps(obj)
+            return obj
+        except Exception, exp:
+            return None
+    properties = cls.properties.keys()
+    if hasattr(cls, 'running_properties'):
+        properties += cls.running_properties.keys()
+    for prop in properties:
+        if not hasattr(obj, prop):
+            continue
+        v = getattr(obj, prop)
+        # Maybe the property is not jsonable
+        try:
+            if isinstance(v, set):
+                v = list(v)
+            json.dumps(v)
+            res[prop] = v
+        except Exception, exp:
+            if isinstance(v, list):
+                lst = []
+                for _t in v:
+                    t = getattr(_t.__class__, 'my_type', '')
+                    if t == 'CommandCall':
+                        try:
+                            lst.append(_t.call)
+                        except:
+                            pass
+                        continue
+                    if t and hasattr(_t, t+'_name'):
+                        lst.append(getattr(_t, t+'_name'))
+                    else:
+                        print "CANNOT MANAGE OBJECT", _t, type(_t), t
+                res[prop] = lst
+            else:
+                t = getattr(v.__class__, 'my_type', '')
+                if t == 'CommandCall':
+                    try:
+                        res[prop] = v.call
+                    except:
+                        pass
+                    continue
+                if t and hasattr(v, t+'_name'):
+                    res[prop] = getattr(v, t+'_name')
+                else:
+                    print "CANNOT MANAGE OBJECT", v, type(v), t
+    return res
 
 ################################### TIME ##################################
 # @memoized
@@ -702,6 +757,17 @@ def filter_host_by_group(group):
     return inner_filter
 
 
+def filter_host_by_template(tpl):
+
+    def inner_filter(host):
+        if host is None:
+            return False
+        return tpl in [t.strip() for t in host.use]
+
+    return inner_filter
+
+
+
 def filter_service_by_name(name):
 
     def inner_filter(service):
@@ -750,6 +816,17 @@ def filter_service_by_hostgroup_name(group):
         if service is None or service.host is None:
             return False
         return group in [g.hostgroup_name for g in service.host.hostgroups]
+
+    return inner_filter
+
+
+def filter_service_by_host_template_name(tpl):
+
+    def inner_filter(service):
+        if service is None or service.host is None:
+            return False
+        return tpl in [t.strip() for t in service.host.use]
+        
 
     return inner_filter
 

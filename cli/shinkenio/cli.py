@@ -441,7 +441,15 @@ def install_package(pname, raw):
             logger.error("The installation directory %s is missing!" % d)
             return
 
+    # Now install the package from $TMP$/share/* to $SHARE$/*
     p_share  = os.path.join(tmpdir, 'share')
+    logger.debug("TMPDIR:%s aahre_dir:%s pname:%s" %(tmpdir, share_dir, pname))
+    if os.path.exists(p_share):
+        logger.info("Installing the share package data")
+        # shutil will do the create dir
+        _copytree(p_share, share_dir)
+        logger.info("Copy done in the share directory %s" % share_dir)
+
 
     logger.debug("TMPDIR:%s modules_dir:%s pname:%s" %(tmpdir, modules_dir, pname))
     # Now install the package from $TMP$/module/* to $MODULES$/pname/*
@@ -528,6 +536,13 @@ def install_package(pname, raw):
     cont.write(json.dumps(package_content))
     cont.close()
     
+    # We now clean (rm) the tmpdir we don't need any more
+    try:
+        shutil.rmtree(tmpdir, ignore_errors=True)
+        # cannot remove? not a crime
+    except OSError:
+        pass
+
     # THE END, output all is OK :D
     cprint('OK ', 'green', end='')
     cprint('%s' % pname)
@@ -536,13 +551,25 @@ def install_package(pname, raw):
 
 
 
-def do_install(pname, local):
+def do_install(pname, local, download_only):
     raw = ''
     if local:
         pname, raw = grab_local(pname)
 
     if not local:
         raw = grab_package(pname)
+
+    if download_only:
+        tmpf = os.path.join(tempfile.gettempdir(), pname+'.tar.gz')
+        try:
+            f = open(tmpf, 'wb')
+            f.write(raw)
+            f.close()
+            cprint('Download OK: %s' %  tmpf, 'green')
+        except Exception, exp:
+            logger.error("Package save fail: %s" % exp)
+        return
+
     install_package(pname, raw)
 
 
@@ -566,6 +593,7 @@ exports = {
         'args': [
             {'name' : 'pname', 'description':'Package to install'},
             {'name' : '--local', 'description':'Use a local directory instead of the shinken.io version', 'type': 'bool'},
+            {'name' : '--download-only', 'description':'Only download the package', 'type': 'bool'},
             ],
         'description' : 'Grab and install a package from shinken.io'
         },

@@ -36,6 +36,8 @@ import threading
 import inspect
 import traceback
 import cStringIO
+import logging
+import inspect
 
 # Try to see if we are in an android device or not
 is_android = True
@@ -71,8 +73,6 @@ try:
     def get_cur_group():
         return grp.getgrgid(os.getgid()).gr_name
 except ImportError, exp:  # Like in nt system or Android
-
-
     # temporary workaround:
     def get_cur_user():
         return "shinken"
@@ -80,6 +80,7 @@ except ImportError, exp:  # Like in nt system or Android
 
     def get_cur_group():
         return "shinken"
+
 
 ##########################   DAEMON PART    ###############################
 # The standard I/O file descriptors are redirected to /dev/null by default.
@@ -100,28 +101,88 @@ class Interface(object):
         self.app = app
         self.running_id = "%d.%d" % (time.time(), random.random())
 
+    
+    doc = 'Test the connexion to the daemon. Returns: pong'
     def ping(self):
         return "pong"
     ping.need_lock = False
+    ping.doc = doc
 
+
+    doc = 'Get the current running id of the daemon (scheduler)'
     def get_running_id(self):
         return self.running_id
     get_running_id.need_lock = False
+    get_running_id.doc = doc
 
+
+    doc = 'Send a new configuration to the daemon (internal)'
     def put_conf(self, conf):
         self.app.new_conf = conf
     put_conf.method = 'post'
+    put_conf.doc = doc
 
+
+    doc = 'Ask the daemon to wait a new conf'
     def wait_new_conf(self):
         self.app.cur_conf = None
     wait_new_conf.need_lock = False
+    wait_new_conf.doc = doc
 
+
+    doc = 'Does the daemon got an active configuration'
     def have_conf(self):
         return self.app.cur_conf is not None
     have_conf.need_lock = False
+    have_conf.doc = doc
 
+    
+    doc = 'Set the current log level in [NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL, UNKNOWN]'
     def set_log_level(self, loglevel):
         return logger.set_level(loglevel)
+    set_log_level.doc = doc
+
+
+    doc = 'Get the current log level in [NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL, UNKNOWN]'
+    def get_log_level(self):
+        return {logging.NOTSET: 'NOTSET', logging.DEBUG:'DEBUG',
+                logging.INFO: 'INFO', logging.WARNING: 'WARNING',
+                logging.ERROR : 'ERROR', logging.CRITICAL : 'CRITICAL'}.get(logger._level, 'UNKNOWN')
+    get_log_level.doc = doc
+
+    doc = 'List the methods available on the daemon'
+    def api(self):
+        return self.app.http_daemon.registered_fun_names
+    api.doc = doc
+
+
+    doc = 'List the api methods and their parameters'
+    def api_full(self):
+        res = {}
+        for (fname, f) in self.app.http_daemon.registered_fun.iteritems():
+            fclean = fname.replace('_', '-')
+            argspec = inspect.getargspec(f)
+            args = [a for a in argspec.args if a != 'self']
+            defaults = self.app.http_daemon.registered_fun_defaults.get(fname, {})
+            e = {}
+            # Get a string about the args and co
+            _s_nondef_args = ', '.join([a for a in args if a not in defaults])
+            _s_def_args = ', '.join( ['%s=%s' % (k,v) for (k,v) in defaults.iteritems()] )
+            _s_args = ''
+            if _s_nondef_args:
+                _s_args +=_s_nondef_args
+            if _s_def_args:
+                _s_args += ', '+_s_def_args
+            e['proto'] = '%s(%s)' % (fclean, _s_args)
+            e['need_lock'] = getattr(f, 'need_lock', True)
+            e['method'] = getattr(f, 'method', 'GET').upper()
+            e['encode'] = getattr(f, 'encode', 'json')
+            doc = getattr(f, 'doc', '')
+            if doc:
+                e['doc'] = doc
+            res[fclean] = e
+        return res
+    api.doc = doc
 
 
 # If we are under android, we can't give parameters
@@ -307,7 +368,7 @@ class Daemon(object):
         self.modules_manager.set_max_queue_size(getattr(self, 'max_queue_size', 0))
         # And make the module manager load the sub-process Queue() manager
         self.modules_manager.load_manager(self.manager)
-        
+
 
 
     def change_to_workdir(self):
@@ -514,7 +575,7 @@ class Daemon(object):
         # Force the debug level if the daemon is said to start with such level
         if self.debug:
             logger.set_level('DEBUG')
-        
+
         # Then start to log all in the local file if asked so
         self.register_local_log()
         if self.is_daemon:
@@ -535,19 +596,24 @@ class Daemon(object):
         else:
             # The Manager is a sub-process, so we must be sure it won't have
             # a socket of your http server alive
-            self.manager = SyncManager()
+            self.manager = SyncManager(('127.0.0.1',0))
             def close_http_daemon(daemon):
+                try:
+                    # Be sure to release the lock so there won't be lock in shutdown phase
+                    daemon.lock.release()
+                except Exception, exp:
+                    pass
                 daemon.shutdown()
             # Some multiprocessing lib got problems with start() that cannot take args
             # so we must look at it before
             startargs = inspect.getargspec(self.manager.start)
             # startargs[0] will be ['self'] if old multiprocessing lib
             # and ['self', 'initializer', 'initargs'] in newer ones
-            if len(startargs[0]) > 1:
+            # note: windows do not like pickle http_daemon...
+            if os.name != 'nt' and len(startargs[0]) > 1:
                 self.manager.start(close_http_daemon, initargs=(self.http_daemon,))
             else:
                 self.manager.start()
-                logger.warning('Your multiprocessing library seems too old or strange, please use a vanilla python version instead')
             # Keep this daemon in the http_daemn module
         # Will be add to the modules manager later
 
@@ -560,7 +626,7 @@ class Daemon(object):
             # Don't lock the main thread just because of the http thread
             self.http_thread.daemon = True
             self.http_thread.start()
-        
+
 
     # TODO: we do not use pyro anymore, change the function name....
     def setup_pyro_daemon(self):
@@ -594,8 +660,13 @@ class Daemon(object):
         self.http_daemon = HTTPDaemon(self.host, self.port, http_backend, use_ssl, ca_cert, ssl_key, ssl_cert, ssl_conf.hard_ssl_name_check, self.daemon_thread_pool_size)
         http_daemon.daemon_inst = self.http_daemon
 
-
+    # Global loop part
     def get_socks_activity(self, socks, timeout):
+        # some os are not managing void socks list, so catch this
+        # and just so a simple sleep instead
+        if socks == []:
+            time.sleep(timeout)
+            return []
         try:
             ins, _, _ = select.select(socks, [], [], timeout)
         except select.error, e:
@@ -678,7 +749,7 @@ class Daemon(object):
         if uid is None or gid is None:
             logger.error("uid or gid is none. Exiting")
             sys.exit(2)
-            
+
         # Maybe the os module got the initgroups function. If so, try to call it.
         # Do this when we are still root
         if hasattr(os, 'initgroups'):
@@ -800,7 +871,7 @@ class Daemon(object):
             self.do_stop()
             # Hard mode exit from a thread
             os._exit(2)
-            
+
 
     # Wait up to timeout to handle the pyro daemon requests.
     # If suppl_socks is given it also looks for activity on that list of fd.

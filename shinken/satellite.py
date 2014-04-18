@@ -83,6 +83,7 @@ class NotWorkerMod(Exception):
 # It gives us our conf
 class IForArbiter(Interface):
 
+    doc = 'Remove a scheduler connexion (internal)'
     # Arbiter ask us to do not manage a scheduler_id anymore
     # I do it and don't ask why
     def remove_from_conf(self, sched_id):
@@ -90,14 +91,19 @@ class IForArbiter(Interface):
             del self.app.schedulers[sched_id]
         except KeyError:
             pass
-
+    remove_from_conf.doc = doc
+    
+    
+    doc = 'Return the managed configuration ids (internal)'
     # Arbiter ask me which sched_id I manage, If it is not ok with it
     # It will ask me to remove one or more sched_id
     def what_i_managed(self):
         logger.debug("The arbiter asked me what I manage. It's %s" % self.app.what_i_managed())
         return self.app.what_i_managed()
     what_i_managed.need_lock = False
-
+    what_i_managed.doc = doc
+    
+    doc = 'Ask the daemon to drop its configuration and wait for a new one'
     # Call by arbiter if it thinks we are running but we must do not (like
     # if I was a spare that take a conf but the master returns, I must die
     # and wait a new conf)
@@ -109,8 +115,10 @@ class IForArbiter(Interface):
         logger.debug("Arbiter wants me to wait for a new configuration")
         self.app.schedulers.clear()
         self.app.cur_conf = None
+    wait_new_conf.doc = doc
 
 
+    doc = 'Push broks objects to the daemon (internal)'
     # NB: following methods are only used by broker
     # Used by the Arbiter to push broks to broker
     def push_broks(self, broks):
@@ -119,8 +127,10 @@ class IForArbiter(Interface):
     push_broks.method = 'post'
     # We are using a Lock just for NOT lock this call from the arbiter :)
     push_broks.need_lock = False
+    push_broks.doc = doc
     
-
+    
+    doc = 'Get the external commands from the daemon (internal)'
     # The arbiter ask us our external commands in queue
     # Same than push_broks, we will not using Global lock here,
     # and only lock for external_commands
@@ -130,17 +140,23 @@ class IForArbiter(Interface):
             raw = cPickle.dumps(cmds)
         return raw
     get_external_commands.need_lock = False
+    get_external_commands.doc = doc
 
+    
+    doc = 'Does the daemon got configuration (receiver)'
     ### NB: only useful for receiver
     def got_conf(self):
         return self.app.cur_conf is not None
     got_conf.need_lock = False
+    got_conf.doc = doc
 
 
+    doc = 'Push hostname/scheduler links (receiver in direct routing)'
     # Use by the receivers to got the host names managed by the schedulers
     def push_host_names(self, sched_id, hnames):
         self.app.push_host_names(sched_id, hnames)
     push_host_names.method = 'post'
+    push_host_names.doc = doc
 
 
 class ISchedulers(Interface):
@@ -148,19 +164,22 @@ class ISchedulers(Interface):
     If we are passive, they connect to this and send/get actions
 
     """
-
+    
+    doc = 'Push new actions to the scheduler (internal)'
     # A Scheduler send me actions to do
     def push_actions(self, actions, sched_id):
-        # logger.debug("[%s] A scheduler sent me action : %s") % (self.name, actions)
         self.app.add_actions(actions, sched_id)
     push_actions.method = 'post'
+    push_actions.doc = doc
 
+    doc = 'Get the returns of the actions (internal)'
     # A scheduler ask us the action return value
     def get_returns(self, sched_id):
         #print "A scheduler ask me the returns", sched_id
         ret = self.app.get_return_for_passive(sched_id)
         #print "Send mack", len(ret), "returns"
         return cPickle.dumps(ret)
+    get_returns.doc = doc
 
 
 class IBroks(Interface):
@@ -170,10 +189,40 @@ class IBroks(Interface):
 
     """
 
+    doc = 'Get broks from the daemon'
     # poller or reactionner ask us actions
     def get_broks(self, bname):
         res = self.app.get_broks()
         return base64.b64encode(zlib.compress(cPickle.dumps(res), 2))
+    get_broks.doc = doc
+
+
+class IStats(Interface):
+    """ 
+    Interface for various stats about poller/reactionner activity
+    """
+
+    doc = 'Get raw stats from the daemon'
+    def get_raw_stats(self):
+        app = self.app
+        res = {}
+        
+        for sched_id in app.schedulers:
+            sched = app.schedulers[sched_id]
+            lst = []
+            res[sched_id] = lst
+            for mod in app.q_by_mod:
+                # In workers we've got actions send to queue - queue size
+                for (i, q) in app.q_by_mod[mod].items():
+                    lst.append( {'scheduler_name' : sched['name'],
+                                 'module' : mod,
+                                 'queue_number' : i,
+                                 'queue_size' :q.qsize(),
+                                 'return_queue_len' : app.get_returns_queue_len() } )
+        return res
+    get_raw_stats.doc = doc
+
+
 
 
 class BaseSatellite(Daemon):
@@ -187,6 +236,7 @@ class BaseSatellite(Daemon):
 
         # Now we create the interfaces
         self.interface = IForArbiter(self)
+        self.istats = IStats(self)
 
         # Can have a queue of external_commands given by modules
         # will be taken by arbiter to process
@@ -271,7 +321,7 @@ class Satellite(BaseSatellite):
         logger.info("[%s] Init connection with %s at %s" % (self.name, sname, uri))
 
         try:
-            sch_con = sched['con'] = HTTPClient(uri=uri)
+            sch_con = sched['con'] = HTTPClient(uri=uri, strong_ssl=sched['hard_ssl_name_check'])
         except HTTPExceptions, exp:
             logger.warning("[%s] Scheduler %s is not initialized or has network problem: %s" % (self.name, sname, str(exp)))
             sched['con'] = None
@@ -353,7 +403,6 @@ class Satellite(BaseSatellite):
                     con = sched['con']
                     if con is not None:  # None = not initialized
                         send_ok = con.post('put_results', {'results':ret})
-                        print "SEND OK"*20, send_ok
 
                 # Not connected or sched is gone
                 except (HTTPExceptions, KeyError), exp:
@@ -812,6 +861,7 @@ class Satellite(BaseSatellite):
         self.uri2 = self.http_daemon.register(self.interface)#, "ForArbiter")
         self.uri3 = self.http_daemon.register(self.brok_interface)#, "Broks")
         self.uri4 = self.http_daemon.register(self.scheduler_interface)#, "Schedulers")
+        self.uri5 = self.http_daemon.register(self.istats)
 
         # self.s = Queue() # Global Master -> Slave
         # We can open the Queue for fork AFTER
@@ -880,7 +930,10 @@ class Satellite(BaseSatellite):
 
             if s['name'] in g_conf['satellitemap']:
                 s.update(g_conf['satellitemap'][s['name']])
-            uri = 'http://%s:%s/' % (s['address'], s['port'])
+            proto = 'http'
+            if s['use_ssl']:
+                proto = 'https'
+            uri = '%s://%s:%s/' % (proto, s['address'], s['port'])
 
             self.schedulers[sched_id]['uri'] = uri
             if already_got:

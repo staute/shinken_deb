@@ -87,6 +87,7 @@ class CherryPyServer(bottle.ServerAdapter):
 class CherryPyBackend(object):
     def __init__(self, host, port, use_ssl, ca_cert, ssl_key, ssl_cert, hard_ssl_name_check, daemon_thread_pool_size):
         self.port = port
+        self.use_ssl = use_ssl
         try:
             self.srv = bottle.run(host=host, port=port, server=CherryPyServer, quiet=False, use_ssl=use_ssl, ca_cert=ca_cert, ssl_key=ssl_key, ssl_cert=ssl_cert, daemon_thread_pool_size=daemon_thread_pool_size)
         except socket.error, exp:
@@ -104,6 +105,9 @@ class CherryPyBackend(object):
 
     # We stop our processing, but also try to hard close our socket as cherrypy is not doing it...
     def stop(self):
+        #TODO: find why, but in ssl mode the stop() is locking, so bailout before
+        if self.use_ssl:
+            return
         try:
             self.srv.stop()
         except Exception, exp:
@@ -239,7 +243,10 @@ class HTTPDaemon(object):
             if self.port == 0:
                 return
 
-            self.registered_fun = []
+            self.use_ssl = use_ssl
+            
+            self.registered_fun = {}
+            self.registered_fun_names = []
             self.registered_fun_defaults = {}
 
             protocol = 'http'
@@ -278,7 +285,7 @@ class HTTPDaemon(object):
 
         def register(self, obj):
             methods = inspect.getmembers(obj, predicate=inspect.ismethod)
-            merge = [fname for (fname, f) in methods if fname in self.registered_fun ]
+            merge = [fname for (fname, f) in methods if fname in self.registered_fun_names ]
             if merge != []:
                 methods_in = [m.__name__ for m in obj.__class__.__dict__.values() if inspect.isfunction(m)]
                 methods = [m for m in methods if m[0] in methods_in]
@@ -305,12 +312,15 @@ class HTTPDaemon(object):
                 if 'self' in args:
                     args.remove('self')
                 print "Registering", fname, args, obj
-                self.registered_fun.append(fname)
+                self.registered_fun_names.append(fname)
+                self.registered_fun[fname] = (f)
                 # WARNING : we MUST do a 2 levels function here, or the f_wrapper
                 # will be uniq and so will link to the last function again
                 # and again
                 def register_callback(fname, args, f, obj, lock):
                     def f_wrapper():
+                        t0 = time.time()
+                        args_time = aqu_lock_time = calling_time = json_time = 0
                         need_lock = getattr(f, 'need_lock', True)
 
                         # Warning : put the bottle.response set inside the wrapper
@@ -334,21 +344,34 @@ class HTTPDaemon(object):
                                     raise Exception('Missing argument %s' % aname)
                                 v = default_args[aname]
                             d[aname] = v
+                        args_time = time.time() - t0
+
                         if need_lock:
                             logger.debug("HTTP: calling lock for %s" % fname)
                             lock.acquire()
-
-                        ret = f(**d)
-
-                        # Ok now we can release the lock
-                        if need_lock:
-                            lock.release()
-
+                        aqu_lock_time = time.time() - t0
+                        
+                        try:
+                            ret = f(**d)
+                        # Always call the lock release if need
+                        finally:
+                            # Ok now we can release the lock
+                            if need_lock:
+                                lock.release()
+                        calling_time = time.time() - t0
                         encode = getattr(f, 'encode', 'json').lower()
                         j = json.dumps(ret)
+                        json_time = time.time() - t0
+                        logger.debug("Debug perf: %s [args:%s] [aqu_lock:%s] [calling:%s] [json:%s]" % (
+                                fname, args_time, aqu_lock_time, calling_time, json_time) )
+                        
                         return j
                     # Ok now really put the route in place
                     bottle.route('/'+fname, callback=f_wrapper, method=getattr(f, 'method', 'get').upper())
+                    # and the name with - instead of _ if need
+                    fname_dash = fname.replace('_', '-')
+                    if fname_dash != fname:
+                        bottle.route('/'+fname_dash, callback=f_wrapper, method=getattr(f, 'method', 'get').upper())
                 register_callback(fname, args, f, obj, self.lock)
 
             # Add a simple / page

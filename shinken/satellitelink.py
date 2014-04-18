@@ -62,6 +62,7 @@ class SatelliteLink(Item):
         'realm':              StringProp(default='', fill_brok=['full_status'], brok_transformation=get_obj_name_two_args_and_void),
         'satellitemap':       DictProp(default=None, elts_prop=AddrProp, to_send=True, override=True),
         'use_ssl':            BoolProp(default='0', fill_brok=['full_status']),
+        'hard_ssl_name_check':BoolProp(default='0', fill_brok=['full_status']),
     })
 
     running_properties = Item.running_properties.copy()
@@ -95,13 +96,14 @@ class SatelliteLink(Item):
                 - satellitemap attribute of SatelliteLink is the map defined IN THE satellite configuration
                   but for creating connections, we need the have the satellitemap of the Arbiter
         """
-        self.arb_satmap = {'address': self.address, 'port': self.port}
+        self.arb_satmap = {'address': self.address, 'port': self.port, 'use_ssl':self.use_ssl, 'hard_ssl_name_check':self.hard_ssl_name_check}
         self.arb_satmap.update(satellitemap)
 
 
     def create_connection(self):
         self.con = HTTPClient(address=self.arb_satmap['address'], port=self.arb_satmap['port'],
-                              timeout=self.timeout, data_timeout=self.data_timeout, use_ssl=self.use_ssl
+                              timeout=self.timeout, data_timeout=self.data_timeout, use_ssl=self.use_ssl,
+                              strong_ssl=self.hard_ssl_name_check
                               )
         self.uri = self.con.uri
         
@@ -116,6 +118,7 @@ class SatelliteLink(Item):
 
         try:
             #pyro.set_timeout(self.con, self.data_timeout)
+            self.con.get('ping')
             self.con.post('put_conf', {'conf':conf}, wait='long')
             #pyro.set_timeout(self.con, self.timeout)
             print "PUT CONF SUCESS", self.get_name()
@@ -409,6 +412,8 @@ class SatelliteLink(Item):
     def give_satellite_cfg(self):
         return {'port': self.port,
                 'address': self.address,
+                'use_ssl':self.use_ssl,
+                'hard_ssl_name_check':self.hard_ssl_name_check,
                 'name': self.get_name(),
                 'instance_id': self.id,
                 'active': True,

@@ -42,12 +42,14 @@ from shinken.daemon import Daemon, Interface
 from shinken.log import logger
 from shinken.brok import Brok
 from shinken.external_command import ExternalCommand
-
+from shinken.util import jsonify_r
 
 # Interface for the other Arbiter
 # It connects, and together we decide who's the Master and who's the Slave, etc.
 # Here is a also a function to get a new conf from the master
 class IForArbiter(Interface):
+    
+    doc = 'Does the daemon got a configuration (internal)'
     def have_conf(self, magic_hash):
         # Beware, we got an str in entry, not an int
         magic_hash = int(magic_hash)
@@ -56,20 +58,26 @@ class IForArbiter(Interface):
             return True
         else:  # I've no conf or a bad one
             return False
+    have_conf.doc = doc
 
-
+    
+    doc = 'Put a new configuration to the daemon'
     # The master Arbiter is sending us a new conf in a pickle way. Ok, we take it
     def put_conf(self, conf):
         conf = cPickle.loads(conf)
         super(IForArbiter, self).put_conf(conf)
         self.app.must_run = False
     put_conf.method = 'POST'
+    put_conf.doc = doc
 
 
+    doc = 'Get the managed configuration (internal)'
     def get_config(self):
         return self.app.conf
+    get_config.doc = doc
 
 
+    doc = 'Ask the daemon to do not run'
     # The master arbiter asks me not to run!
     def do_not_run(self):
         # If I'm the master, ignore the command
@@ -81,66 +89,78 @@ class IForArbiter(Interface):
             self.app.last_master_speack = time.time()
             self.app.must_run = False
     do_not_run.need_lock = False
+    do_not_run.doc = doc
 
 
-    # Here a function called by check_shinken to get daemon status
-    def get_satellite_status(self, daemon_type, daemon_name):
-        daemon_name_attr = daemon_type + "_name"
-        daemons = self.app.get_daemons(daemon_type)
-        if daemons:
-            for dae in daemons:
-                if hasattr(dae, daemon_name_attr) and getattr(dae, daemon_name_attr) == daemon_name:
-                    if hasattr(dae, 'alive') and hasattr(dae, 'spare'):
-                        return {'alive': dae.alive, 'spare': dae.spare}
-        return None
-
+    doc = 'Get the satellite names sort by type'
     # Here a function called by check_shinken to get daemons list
-    def get_satellite_list(self, daemon_type):
-        satellite_list = []
-        daemon_name_attr = daemon_type + "_name"
-        daemons = self.app.get_daemons(daemon_type)
-        if daemons:
+    def get_satellite_list(self, daemon_type=''):
+        res = {}
+        for t in ['arbiter', 'scheduler', 'poller', 'reactionner', 'receiver',
+                  'broker']:
+            if daemon_type and daemon_type != t:
+                continue
+            satellite_list = []
+            res[t] = satellite_list
+            daemon_name_attr = t + "_name"
+            daemons = self.app.get_daemons(t)
             for dae in daemons:
                 if hasattr(dae, daemon_name_attr):
                     satellite_list.append(getattr(dae, daemon_name_attr))
-                else:
-                    # If one daemon has no name... ouch!
-                    return None
-            return satellite_list
-        return None
+        return res
+    get_satellite_list.doc = doc
 
 
+    doc = 'Dummy call for the arbiter'
     # Dummy call. We are the master, we manage what we want
     def what_i_managed(self):
         return {}
     what_i_managed.need_lock = False
+    what_i_managed.doc = doc
 
-
+    
+    doc = 'Return all the data of the satellites'
+    # We will try to export all data from our satellites, but only the json-able fields
     def get_all_states(self):
-        res = {'arbiter': self.app.conf.arbiters,
-               'scheduler': self.app.conf.schedulers,
-               'poller': self.app.conf.pollers,
-               'reactionner': self.app.conf.reactionners,
-               'receiver': self.app.conf.receivers,
-               'broker': self.app.conf.brokers}
-        return res
-
-
+        res = {}
+        for t in ['arbiter', 'scheduler', 'poller', 'reactionner', 'receiver',
+                  'broker']:
+            lst = []
+            res[t] = lst
+            for d in getattr(self.app.conf, t+'s'):
+                cls = d.__class__
+                e = {}
+                ds = [cls.properties, cls.running_properties]
+                for _d in ds:
+                    for prop in _d:
+                        if hasattr(d, prop):
+                            v = getattr(d, prop)
+                            # give a try to a json able object
+                            try:
+                                json.dumps(v)
+                                e[prop] = v
+                            except Exception, exp:
+                                print exp
+                    lst.append(e)
+                        
+        return lst
+    get_all_states.doc = doc
+    
+    
     # Try to give some properties of our objects
-    def get_objects_properties(self, table, properties=[]):
-        logger.debug('ASK:: table= %s, properties= %s' % (str(table), str(properties)))
-        objs = getattr(self.conf, table, None)
+    doc = 'Dump all objects of the type in [hosts, services, contacts, commands, hostgroups, servicegroups]'
+    def get_objects_properties(self, table):
+        logger.debug('ASK:: table= %s' % str(table))
+        objs = getattr(self.app.conf, table, None)
         logger.debug("OBJS:: %s" % str(objs))
-        if not objs:
-            return ''
+        if objs is None or len(objs) == 0:
+            return []
         res = []
         for obj in objs:
-            l = []
-            for prop in properties:
-                v = getattr(obj, prop, '')
-                l.append(v)
+            l = jsonify_r(obj)
             res.append(l)
-        return "OKIIIII"
+        return res
+    get_objects_properties.doc = doc
 
 
 # Main Arbiter Class
@@ -382,6 +402,14 @@ class Arbiter(Daemon):
 
         # Pythonize values
         self.conf.pythonize()
+
+        # Removes service exceptions based on host configuration
+        count = self.conf.remove_exclusions()
+
+        if count > 0:
+            # We removed excluded services, and so we must recompute the
+            # search lists
+            self.conf.create_reversed_list()
 
         # Linkify objects to each other
         self.conf.linkify()
@@ -736,7 +764,6 @@ class Arbiter(Daemon):
         timeout = 1.0
 
         while self.must_run and not self.interrupted:
-
             elapsed, ins, _ = self.handleRequests(timeout, suppl_socks)
 
             # If FIFO, read external command
