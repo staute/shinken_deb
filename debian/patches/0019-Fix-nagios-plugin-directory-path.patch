@@ -7,15 +7,13 @@ Subject: Fix nagios plugin directory path
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/etc/resource.d/paths.cfg b/etc/resource.d/paths.cfg
-index 0b11fb1..9b38e46 100644
+index a332b25..a243e26 100644
 --- a/etc/resource.d/paths.cfg
 +++ b/etc/resource.d/paths.cfg
-@@ -1,6 +1,6 @@
- # Nagios legacy macros
--$USER1$=/var/lib/shinken/libexec
-+$USER1$=/usr/lib/nagios/plugins
- 
+@@ -3,5 +3,5 @@ $USER1$=$NAGIOSPLUGINSDIR$
+ $NAGIOSPLUGINSDIR$=/usr/lib/nagios/plugins
  
  #-- Location of the plugins for Shinken
 -$PLUGINSDIR$=/var/lib/shinken/libexec
-+$PLUGINSDIR$=/usr/lib/nagios/plugins
++$PLUGINSDIR$=/usr/lib/shinken/libexec
+ 

@@ -4,9 +4,7 @@ Subject: Init script: shinken.default is not needed anymore
 
 ---
  bin/default/.gitignore |  1 -
- bin/default/shinken.in |  0
  contrib/install        | 10 ----------
- setup.py               |  5 -----
  4 files changed, 16 deletions(-)
  delete mode 100644 bin/default/.gitignore
  delete mode 100644 bin/default/shinken.in
@@ -18,9 +16,6 @@ index bec56f2..0000000
 +++ /dev/null
 @@ -1 +0,0 @@
 -shinken
-diff --git a/bin/default/shinken.in b/bin/default/shinken.in
-deleted file mode 100644
-index e69de29..0000000
 diff --git a/contrib/install b/contrib/install
 index 82dae3e..d49dab2 100755
 --- a/contrib/install
@@ -42,26 +37,3 @@ index 82dae3e..d49dab2 100755
      # relocate init file
      sed -e "s#\#export PYTHONPATH=.*#export PYTHONPATH="$TARGET"#g" \
          $TARGET/bin/init.d/shinken.in
-diff --git a/setup.py b/setup.py
-index fce7d28..65fcf2c 100644
---- a/setup.py
-+++ b/setup.py
-@@ -209,7 +209,6 @@ class build_config(Command):
-             # The default file must have good values for the directories:
-             # etc, var and where to push scripts that launch the app.
-             self.generate_shinken_file("bin/init.d/shinken.in", os.path.join(self.build_base, "bin/init.d/shinken"))
--            self.generate_shinken_file("bin/default/shinken.in", os.path.join(self.build_base, "bin/default/shinken"))
-             self.update_configfiles()
-             self.copy_objects_file()
- 
-@@ -592,10 +591,6 @@ package_data = ['*.py', 'modules/*.py', 'modules/*/*.py']
- if not is_update:
- 
-     data_files.append(
--        (os.path.join(etc_root, 'default',),
--         ['build/bin/default/shinken']
--         ))
--    data_files.append(
-         (os.path.join(etc_root, 'init.d',),
-          ['build/bin/init.d/shinken']
-          ))

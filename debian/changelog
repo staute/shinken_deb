@@ -1,4 +1,10 @@
-shinken (2.0~0git-1) UNRELEASED; urgency=medium
+shinken (2.0.1-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Fri, 18 Apr 2014 10:24:04 -0400
+
+shinken (2.0~0git-1) unstable; urgency=medium
 
   * New upstream snapshot
   * Init script are already installed by setup.py, remove from
