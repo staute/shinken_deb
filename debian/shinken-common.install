@@ -1,5 +1,25 @@
 etc/init.d/*
-etc/shinken
+etc/default/shinken
+debian/etc/daemons/brokerd.ini etc/shinken/daemons/
+debian/etc/daemons/pollerd.ini etc/shinken/daemons/
+debian/etc/daemons/reactionnerd.ini etc/shinken/daemons/
+debian/etc/daemons/receiverd.ini etc/shinken/daemons/
+debian/etc/daemons/schedulerd.ini etc/shinken/daemons/
+debian/etc/shinken-specific/arbiter.cfg etc/shinken/shinken-specific/
+debian/etc/shinken-specific/broker.cfg etc/shinken/shinken-specific/
+debian/etc/shinken-specific/poller.cfg etc/shinken/shinken-specific/
+debian/etc/shinken-specific/reactionner.cfg etc/shinken/shinken-specific/
+debian/etc/shinken-specific/realms.cfg etc/shinken/shinken-specific/
+debian/etc/shinken-specific/receiver.cfg etc/shinken/shinken-specific/
+debian/etc/shinken-specific/scheduler.cfg etc/shinken/shinken-specific/
+debian/etc/shinken.cfg etc/shinken/
+debian/etc/resource.cfg etc/shinken/
+debian/etc/commands.cfg etc/shinken/
+debian/etc/contacts.cfg etc/shinken/
+debian/etc/templates.cfg etc/shinken/
+debian/etc/timeperiods.cfg etc/shinken/
+debian/etc/hosts etc/shinken/
+debian/etc/packs etc/shinken/
 usr/lib/python2.7/dist-packages/*.egg-info
 usr/lib/python2.7/dist-packages/shinken/*.py
 usr/lib/python2.7/dist-packages/shinken/clients/*

@@ -31,7 +31,7 @@ index ee975ae..54bbe01 100644
  # using default values for following config variables value:
  workdir = /var/run/shinken
  logdir  = /var/log/shinken
-+modules_dir=/usr/share/shinken/modules
++modules_dir=/usr/share/pyshared/shinken/modules
  pidfile=%(workdir)s/pollerd.pid
  
  #-- Network configuration

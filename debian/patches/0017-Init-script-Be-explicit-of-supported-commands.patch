@@ -65,7 +65,7 @@ index 563ff41..394d4aa 100755
 -"$curdir/shinken" $@ "$SHORTNAME"
 -
 -exit $?
-+case "$&" in
++case "$1" in
 +    start|stop|reload|restart|force-reload|status|check|checkconfig)
 +        "$curdir/shinken" $@ "$SHORTNAME"
 +        exit $?
