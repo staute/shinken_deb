@@ -51,6 +51,17 @@ case "$1" in
         update-rc.d -f shinken-reactionner defaults > /dev/null
         update-rc.d -f shinken-receiver defaults > /dev/null
         update-rc.d -f shinken defaults > /dev/null
+
+        # Move old config files
+        if dpkg-maintscript-helper supports mv_conffile 2>/dev/null; then
+            dpkg-maintscript-helper mv_conffile /etc/shinken/shinken-specific/arbiter.cfg /etc/shinken/arbiters/arbiter.cfg 1.4.2-1 -- "$@"
+            dpkg-maintscript-helper mv_conffile /etc/shinken/shinken-specific/broker.cfg /etc/shinken/brokers/broker.cfg 1.4.2-1 -- "$@"
+            dpkg-maintscript-helper mv_conffile /etc/shinken/shinken-specific/poller.cfg /etc/shinken/pollers/poller.cfg 1.4.2-1 -- "$@"
+            dpkg-maintscript-helper mv_conffile /etc/shinken/shinken-specific/scheduler.cfg /etc/shinken/schedulers/scheduler.cfg 1.4.2-1 -- "$@"
+            dpkg-maintscript-helper mv_conffile /etc/shinken/shinken-specific/reactionner.cfg /etc/shinken/reactionners/reactionner.cfg 1.4.2-1 -- "$@"
+            dpkg-maintscript-helper mv_conffile /etc/shinken/shinken-specific/receiver.cfg /etc/shinken/receivers/receiver.cfg 1.4.2-1 -- "$@"
+            dpkg-maintscript-helper mv_conffile /etc/shinken/shinken-specific/realms.cfg /etc/shinken/realms/realms.cfg 1.4.2-1 -- "$@"
+        fi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
