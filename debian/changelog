@@ -1,3 +1,9 @@
+shinken (2.0.2-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Tue, 29 Apr 2014 00:24:57 -0400
+
 shinken (2.0.1-1) unstable; urgency=medium
 
   * New upstream version
