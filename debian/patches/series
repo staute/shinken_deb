@@ -21,3 +21,4 @@
 0020-Fix-modules_dir.patch
 #0021-broker-master.cfg-Try-to-load-modules-Livestatus-Sim.patch
 #0022-Add-missing-service-templates-referenced-by-discrove.patch
+0023-shinken-cli.patch
