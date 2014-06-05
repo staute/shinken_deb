@@ -168,7 +168,7 @@ class ISchedulers(Interface):
     doc = 'Push new actions to the scheduler (internal)'
     # A Scheduler send me actions to do
     def push_actions(self, actions, sched_id):
-        self.app.add_actions(actions, sched_id)
+        self.app.add_actions(actions, int(sched_id))
     push_actions.method = 'post'
     push_actions.doc = doc
 
@@ -176,7 +176,7 @@ class ISchedulers(Interface):
     # A scheduler ask us the action return value
     def get_returns(self, sched_id):
         #print "A scheduler ask me the returns", sched_id
-        ret = self.app.get_return_for_passive(sched_id)
+        ret = self.app.get_return_for_passive(int(sched_id))
         #print "Send mack", len(ret), "returns"
         return cPickle.dumps(ret)
     get_returns.doc = doc
@@ -595,6 +595,7 @@ class Satellite(BaseSatellite):
                 # if so, just delete if from q_by_mod
                 except NotWorkerMod:
                     to_del.append(mod)
+                    break
             """
             # Try to really adjust load if necessary
             if self.get_max_q_len(mod) > self.max_q_size:
