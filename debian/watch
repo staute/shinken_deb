@@ -1,2 +1,2 @@
 version=3
-http://www.shinken-monitoring.org/pub/ shinken-(\d[\d\.]+).tar.gz
+https://pypi.python.org/packages/source/S/Shinken/Shinken-(\d[\d\.]+).tar.gz
