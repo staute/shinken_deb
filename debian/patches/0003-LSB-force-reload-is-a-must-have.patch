@@ -6,11 +6,11 @@ Subject: LSB: force-reload is a must-have
  bin/init.d/shinken | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/bin/init.d/shinken b/bin/init.d/shinken
-index 2625f73..a7a9c3d 100755
---- a/bin/init.d/shinken
-+++ b/bin/init.d/shinken
-@@ -526,6 +526,9 @@ do_cmd_on() {
+Index: shinken/bin/init.d/shinken
+===================================================================
+--- shinken.orig/bin/init.d/shinken
++++ shinken/bin/init.d/shinken
+@@ -538,6 +538,9 @@ do_cmd_on() {
  ############################
  ## Main:
  

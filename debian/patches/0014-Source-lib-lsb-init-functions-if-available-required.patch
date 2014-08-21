@@ -12,10 +12,10 @@ Subject: Source /lib/lsb/init-functions if available (required)
  bin/init.d/shinken.in          | 4 +++-
  7 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/bin/init.d/shinken-arbiter b/bin/init.d/shinken-arbiter
-index 1a850d2..e39d14d 100755
---- a/bin/init.d/shinken-arbiter
-+++ b/bin/init.d/shinken-arbiter
+Index: shinken/bin/init.d/shinken-arbiter
+===================================================================
+--- shinken.orig/bin/init.d/shinken-arbiter
++++ shinken/bin/init.d/shinken-arbiter
 @@ -23,6 +23,10 @@ curdir=$(dirname "$0")
  
  export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
@@ -27,10 +27,10 @@ index 1a850d2..e39d14d 100755
  "$curdir/shinken" $@ arbiter
  
  exit $?
-diff --git a/bin/init.d/shinken-broker b/bin/init.d/shinken-broker
-index 77b0ada..3aa9477 100755
---- a/bin/init.d/shinken-broker
-+++ b/bin/init.d/shinken-broker
+Index: shinken/bin/init.d/shinken-broker
+===================================================================
+--- shinken.orig/bin/init.d/shinken-broker
++++ shinken/bin/init.d/shinken-broker
 @@ -29,6 +29,10 @@ curdir=$(dirname "$0")
  
  export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
@@ -42,10 +42,10 @@ index 77b0ada..3aa9477 100755
  "$curdir/shinken" $@ broker
  
  exit $?
-diff --git a/bin/init.d/shinken-poller b/bin/init.d/shinken-poller
-index e5ec0c4..b442136 100755
---- a/bin/init.d/shinken-poller
-+++ b/bin/init.d/shinken-poller
+Index: shinken/bin/init.d/shinken-poller
+===================================================================
+--- shinken.orig/bin/init.d/shinken-poller
++++ shinken/bin/init.d/shinken-poller
 @@ -30,6 +30,10 @@ curdir=$(dirname "$0")
  
  export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
@@ -57,10 +57,10 @@ index e5ec0c4..b442136 100755
  "$curdir/shinken" $@ poller
  
  exit $?
-diff --git a/bin/init.d/shinken-reactionner b/bin/init.d/shinken-reactionner
-index feedb01..660696a 100755
---- a/bin/init.d/shinken-reactionner
-+++ b/bin/init.d/shinken-reactionner
+Index: shinken/bin/init.d/shinken-reactionner
+===================================================================
+--- shinken.orig/bin/init.d/shinken-reactionner
++++ shinken/bin/init.d/shinken-reactionner
 @@ -29,6 +29,10 @@ curdir=$(dirname "$0")
  
  export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
@@ -72,10 +72,10 @@ index feedb01..660696a 100755
  "$curdir/shinken" $@ reactionner
  
  exit $?
-diff --git a/bin/init.d/shinken-receiver b/bin/init.d/shinken-receiver
-index 7c7f385..ef71f70 100755
---- a/bin/init.d/shinken-receiver
-+++ b/bin/init.d/shinken-receiver
+Index: shinken/bin/init.d/shinken-receiver
+===================================================================
+--- shinken.orig/bin/init.d/shinken-receiver
++++ shinken/bin/init.d/shinken-receiver
 @@ -29,6 +29,10 @@ curdir=$(dirname "$0")
  
  export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
@@ -87,10 +87,10 @@ index 7c7f385..ef71f70 100755
  "$curdir/shinken" $@ receiver
  
  exit $?
-diff --git a/bin/init.d/shinken-scheduler b/bin/init.d/shinken-scheduler
-index c487d7b..4f7f567 100755
---- a/bin/init.d/shinken-scheduler
-+++ b/bin/init.d/shinken-scheduler
+Index: shinken/bin/init.d/shinken-scheduler
+===================================================================
+--- shinken.orig/bin/init.d/shinken-scheduler
++++ shinken/bin/init.d/shinken-scheduler
 @@ -29,6 +29,10 @@ curdir=$(dirname "$0")
  
  export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
@@ -102,11 +102,11 @@ index c487d7b..4f7f567 100755
  "$curdir/shinken" $@ scheduler
  
  exit $?
-diff --git a/bin/init.d/shinken.in b/bin/init.d/shinken.in
-index 5b52f4f..80da86a 100755
---- a/bin/init.d/shinken.in
-+++ b/bin/init.d/shinken.in
-@@ -213,7 +213,9 @@ echo_failure() {
+Index: shinken/bin/init.d/shinken.in
+===================================================================
+--- shinken.orig/bin/init.d/shinken.in
++++ shinken/bin/init.d/shinken.in
+@@ -170,7 +170,9 @@ echo_failure() {
  # Source function library.
  [ -f /etc/rc.d/init.d/functions ] && . /etc/rc.d/init.d/functions
  

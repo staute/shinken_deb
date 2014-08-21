@@ -11,10 +11,10 @@ Subject: Fix modules_dir
  etc/shinken.cfg              | 2 +-
  6 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/etc/daemons/brokerd.ini b/etc/daemons/brokerd.ini
-index 17cc365..0e8fb0f 100644
---- a/etc/daemons/brokerd.ini
-+++ b/etc/daemons/brokerd.ini
+Index: shinken/etc/daemons/brokerd.ini
+===================================================================
+--- shinken.orig/etc/daemons/brokerd.ini
++++ shinken/etc/daemons/brokerd.ini
 @@ -3,6 +3,7 @@
  # The daemon will chdir into the directory workdir when launched
  workdir = /var/run/shinken
@@ -23,10 +23,10 @@ index 17cc365..0e8fb0f 100644
  
  pidfile=%(workdir)s/brokerd.pid
  
-diff --git a/etc/daemons/pollerd.ini b/etc/daemons/pollerd.ini
-index ee975ae..54bbe01 100644
---- a/etc/daemons/pollerd.ini
-+++ b/etc/daemons/pollerd.ini
+Index: shinken/etc/daemons/pollerd.ini
+===================================================================
+--- shinken.orig/etc/daemons/pollerd.ini
++++ shinken/etc/daemons/pollerd.ini
 @@ -12,6 +12,7 @@ daemon_enabled=1
  # using default values for following config variables value:
  workdir = /var/run/shinken
@@ -35,10 +35,10 @@ index ee975ae..54bbe01 100644
  pidfile=%(workdir)s/pollerd.pid
  
  #-- Network configuration
-diff --git a/etc/daemons/reactionnerd.ini b/etc/daemons/reactionnerd.ini
-index 110f49e..39df9dc 100644
---- a/etc/daemons/reactionnerd.ini
-+++ b/etc/daemons/reactionnerd.ini
+Index: shinken/etc/daemons/reactionnerd.ini
+===================================================================
+--- shinken.orig/etc/daemons/reactionnerd.ini
++++ shinken/etc/daemons/reactionnerd.ini
 @@ -3,6 +3,7 @@
  # The daemon will chdir into the directory workdir when launched
  workdir = /var/run/shinken
@@ -47,10 +47,10 @@ index 110f49e..39df9dc 100644
  
  pidfile=%(workdir)s/reactionnerd.pid
  
-diff --git a/etc/daemons/receiverd.ini b/etc/daemons/receiverd.ini
-index 5a5d724..7fd3753 100644
---- a/etc/daemons/receiverd.ini
-+++ b/etc/daemons/receiverd.ini
+Index: shinken/etc/daemons/receiverd.ini
+===================================================================
+--- shinken.orig/etc/daemons/receiverd.ini
++++ shinken/etc/daemons/receiverd.ini
 @@ -3,6 +3,7 @@
  # The daemon will chdir into the directory workdir when launched
  workdir = /var/run/shinken
@@ -59,10 +59,10 @@ index 5a5d724..7fd3753 100644
  
  pidfile=%(workdir)s/receiverd.pid
  
-diff --git a/etc/daemons/schedulerd.ini b/etc/daemons/schedulerd.ini
-index 1f176d2..43d57d4 100644
---- a/etc/daemons/schedulerd.ini
-+++ b/etc/daemons/schedulerd.ini
+Index: shinken/etc/daemons/schedulerd.ini
+===================================================================
+--- shinken.orig/etc/daemons/schedulerd.ini
++++ shinken/etc/daemons/schedulerd.ini
 @@ -3,6 +3,7 @@
  # The daemon will chdir into the directory workdir when launched
  workdir = /var/run/shinken
@@ -71,11 +71,11 @@ index 1f176d2..43d57d4 100644
  
  pidfile=%(workdir)s/schedulerd.pid
  
-diff --git a/etc/shinken.cfg b/etc/shinken.cfg
-index cea4e79..1423897 100644
---- a/etc/shinken.cfg
-+++ b/etc/shinken.cfg
-@@ -115,7 +115,7 @@ shinken_user=shinken
+Index: shinken/etc/shinken.cfg
+===================================================================
+--- shinken.orig/etc/shinken.cfg
++++ shinken/etc/shinken.cfg
+@@ -116,7 +116,7 @@ shinken_user=shinken
  shinken_group=shinken
  
  # The path to the modules directory

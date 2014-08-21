@@ -7,11 +7,11 @@ sleep only takes one integer
  bin/init.d/shinken | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bin/init.d/shinken b/bin/init.d/shinken
-index 9b80701..7fca3be 100755
---- a/bin/init.d/shinken
-+++ b/bin/init.d/shinken
-@@ -301,7 +301,7 @@ do_stop() {
+Index: shinken/bin/init.d/shinken
+===================================================================
+--- shinken.orig/bin/init.d/shinken
++++ shinken/bin/init.d/shinken
+@@ -302,7 +302,7 @@ do_stop() {
      }
      if [ ! -z "$pid" ]; then
          kill "$pid"
