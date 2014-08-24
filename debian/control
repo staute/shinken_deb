@@ -13,9 +13,9 @@ Homepage: http://www.shinken-monitoring.org
 Package: shinken
 Architecture: all
 Depends: ${misc:Depends}, shinken-common (= ${binary:Version}),
- shinken-module-webui, shinken-module-pickle-retention-file-generic,
- shinken-module-sqlitedb, shinken-module-auth-cfg-password 
-Suggests: shinken-doc, shinken-mod, shinken-pack
+ shinken-mod-webui, shinken-mod-pickle-retention-file-generic,
+ shinken-mod-sqlitedb, shinken-mod-auth-cfg-password 
+Suggests: shinken-doc
 Description: Flexible monitoring tool - Meta-package
  This metapackage install a minimal and fully functionnal monitoring solution
  based on Shinken and its WebUI module.
