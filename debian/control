@@ -14,7 +14,7 @@ Package: shinken
 Architecture: all
 Depends: ${misc:Depends}, shinken-common (= ${binary:Version}),
  shinken-mod-webui, shinken-mod-pickle-retention-file-generic,
- shinken-mod-sqlitedb, shinken-mod-auth-cfg-password 
+ shinken-mod-sqlitedb, shinken-mod-auth-cfg-password
 Suggests: shinken-doc
 Description: Flexible monitoring tool - Meta-package
  This metapackage install a minimal and fully functionnal monitoring solution
@@ -31,7 +31,7 @@ Replaces: shinken-arbiter, shinken-broker, shinken-discovery,
  shinken-poller, shinken-reactionner, shinken-receiver,
  shinken-scheduler, shinken-core
 Depends: ${misc:Depends}, ${python:Depends}, python-pycurl, adduser
-Recommends: nagios-plugins-basic, bsd-mailx | mailx
+Recommends: monitoring-plugins-basic, bsd-mailx | mailx
 Description: Flexible monitoring tool - Common files
  Common files for shinken monitoring.
  .
