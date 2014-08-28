@@ -64,7 +64,7 @@ shinken (2.0.3-1) experimental; urgency=medium
   * Update debian watch
   * Update module names
 
- -- Mathieu Parent <sathieu@debian.org>  Thu, 28 Aug 2014 21:57:52 +0200
+ -- Mathieu Parent <sathieu@debian.org>  Thu, 28 Aug 2014 22:26:37 +0200
 
 shinken (1.4-3) unstable; urgency=low
 
