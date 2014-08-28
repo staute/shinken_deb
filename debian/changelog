@@ -1,24 +1,6 @@
-shinken (2.0.3-1) unstable; urgency=medium
+shinken (2.0.3-1) experimental; urgency=medium
 
-  * New upstream version
-
- -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Wed, 04 Jun 2014 23:53:43 -0400
-
-shinken (2.0.2-1) unstable; urgency=medium
-
-  * New upstream version
-
- -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Tue, 29 Apr 2014 00:24:57 -0400
-
-shinken (2.0.1-1) unstable; urgency=medium
-
-  * New upstream version
-
- -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Fri, 18 Apr 2014 10:24:04 -0400
-
-shinken (2.0~0git-1) unstable; urgency=medium
-
-  * New upstream snapshot
+  [ Mathieu Parent ]
   * Init script are already installed by setup.py, remove from
     shinken-common.install
   * Install files from setup.py
@@ -53,12 +35,33 @@ shinken (2.0~0git-1) unstable; urgency=medium
   * Don't manage the shinken init script
   * Install webui
   * Create the /var/lib/shinken/modules dir
-  * Use upstream config
   * Create an empty /etc/shinken/modules dir
   * Install egg-info
   * Stop lintian from complaining about updaterc.d
+  * Lintian: W: shinken-common: executable-not-elf-or-script etc/shinken/modules/.placeholder
+  * Install images + templates
+  * Fix nagios plugin directory path and modules_dir
+  * Fix modules_dir for all daemons
+  * Fix Vcs-*, and move to Priority: optional
+  * broker-master.cfg: Try to load modules Livestatus, Simple-log, WebUI by default
+  * Recommends: shinken-module-livestatus, shinken-module-simple-log, shinken-module-webui
+  * Add missing service templates referenced by discrovery rules
 
- -- Mathieu Parent <sathieu@debian.org>  Tue, 11 Feb 2014 15:49:04 +0100
+  [ Thibault Cohen ]
+  * New upstream version (Closes: #745458)
+    - Refresh patches
+    - Fix build-dependencies
+  * Fix Python-Version (Closes: #755347)
+  * Change config folder structure
+  * Add manpages
+  * Update dependencies of the shinken package
+  * Clean up README
+  * Fix dependencies
+  * Fix shinken cli
+  * Update debian watch
+  * Update module names
+
+ -- Mathieu Parent <sathieu@debian.org>  Thu, 28 Aug 2014 21:57:52 +0200
 
 shinken (1.4-3) unstable; urgency=low
 
