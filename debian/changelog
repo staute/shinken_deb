@@ -38,13 +38,16 @@ shinken (2.0.3-1) experimental; urgency=medium
   * Create an empty /etc/shinken/modules dir
   * Install egg-info
   * Stop lintian from complaining about updaterc.d
-  * Lintian: W: shinken-common: executable-not-elf-or-script etc/shinken/modules/.placeholder
+  * Lintian: W: shinken-common: executable-not-elf-or-script
+    etc/shinken/modules/.placeholder
   * Install images + templates
   * Fix nagios plugin directory path and modules_dir
   * Fix modules_dir for all daemons
   * Fix Vcs-*, and move to Priority: optional
-  * broker-master.cfg: Try to load modules Livestatus, Simple-log, WebUI by default
-  * Recommends: shinken-module-livestatus, shinken-module-simple-log, shinken-module-webui
+  * broker-master.cfg: Try to load modules Livestatus, Simple-log, WebUI by
+    default
+  * Recommends: shinken-module-livestatus, shinken-module-simple-log,
+    shinken-module-webui
   * Add missing service templates referenced by discrovery rules
 
   [ Thibault Cohen ]
