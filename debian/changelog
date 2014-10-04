@@ -1,3 +1,9 @@
+shinken (2.0.3-2) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- Mathieu Parent <sathieu@debian.org>  Sat, 04 Oct 2014 07:37:21 +0200
+
 shinken (2.0.3-1) experimental; urgency=medium
 
   [ Mathieu Parent ]
