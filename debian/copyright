@@ -4,10 +4,18 @@ Source: http://www.shinken-monitoring.org/
 
 
 Files: *
-Copyright: 2010-2011 Jean Gabes
-           2010-2011 Gerhard Lausser
-           Please see /usr/share/shinken/CONTRIBUTORS for full list of contributors
-License: GNU-AGPL
+Copyright:
+ 2009-2014 Jean Gabes <naparuba@gmail.com>
+ 2009-2012 Gerhard Lausser <Gerhard.Lausser@consol.de>
+ 2014 Gregory Starck <g.starck@gmail.com>
+ 2014 Hartmut Goebel <h.goebel@goebel-consult.de>
+ Please see THANKS for full list of contributors
+License: AGPL-3.0+
+
+
+Files: contrib/clients/TSCA/python/PythonClient.py
+Copyright: unknown
+License: Apache-2.0
 
 
 Files: debian/*
@@ -29,106 +37,7 @@ Copyright: 2010 Jan Kaliszewski (zuo)
 License: MIT
 
 
-Files: shinken/webui/htdocs/js/bootstrap*
-       shinken/webui/htdocs/css/bootstrap*
-Copyright: 2012 Twitter, Inc.
-License: Apache-2.0
-
-
-Files: shinken/webui/htdocs/js/google-code-prettify/*
-Copyright: 2006-2011 Google Inc.
-           2011 Martin S.
-           2009 Onno Hommes
-           2011 Patrick Wied
-           2011 Zimin A.V.
-License: Apache-2.0
-
-
-Files: shinken/webui/htdocs/js/html5.js
-Copyright: 2011 Alexander Farkas <info@corrupt-system.de>
-           2011 Jonathan Neal <jonathantneal@hotmail.com>
-License: MIT or GPL-2
-
-
-Files: shinken/webui/htdocs/js/jquery-ui-1.8.17.custom.min.js
-Copyright: 2008 Paul Bakaus (ui.jquery.com)
-  Brandon Aaron
-  David Bolter
-  Rich Caloggero
-  Chi Cheng (cloudream@gmail.com)
-  Colin Clark (http://colin.atrc.utoronto.ca/)
-  Michelle D'Souza
-  Aaron Eisenberger (aaronchi@gmail.com)
-  Ariel Flesler
-  Bohdan Ganicky
-  Scott González
-  Marc Grabanski (m@marcgrabanski.com)
-  Klaus Hartl (stilbuero.de)
-  Scott Jehl
-  Cody Lindley
-  Eduardo Lundgren (eduardolundgren@gmail.com)
-  Todd Parker
-  John Resig
-  Patty Toland
-  Ca-Phun Ung (yelotofu.com)
-  Keith Wood (kbwood@virginbroadband.com.au)
-  Maggie Costello Wachs
-  Richard D. Worth (rdworth.org)
-  Jörn Zaefferer (bassistance.de)
-License: GPL-2 or MIT
-
-
-Files: shinken/webui/htdocs/js/jquery.mobile-1.1.0.min.js
-       shinken/webui/htdocs/css/jquery.mobile-1.1.0.min.css
-       shinken/webui/htdocs/js/jquery-1.6.4.min.js
-Copyright: 2011, jQuery Project
-License: GPL-2 or MIT
-
-
-Files: shinken/webui/htdocs/js/jquery.hotkeys.js
-Copyright: 2010, John Resig
-License: GPL-2 or MIT
-
-
-Files: shinken/webui/htdocs/js/jquery-jsonp-2.2.1.min.js
-Copyright: 2012, Julian Aubourg
-License: MIT
-
-
-Files: shinken/webui/htdocs/js/spin.min.js
-Copyright: 2011 Felix Gnass
-License: MIT
-
-
-Files: shinken/webui/htdocs/js/jquery.meow.js
-Copyright: Zachary Stewart
-License:
- Permission is hereby granted, free of charge, to any person obtaining
- a copy of this software and associated documentation files (the
- "Software"), to deal in the Software without restriction, including
- without limitation the rights to use, copy, modify, merge, publish,
- distribute, sublicense, and/or sell copies of the Software, and to
- permit persons to whom the Software is furnished to do so, subject to
- the following conditions:
- . 
- The above copyright notice and this permission notice shall be
- included in all copies or substantial portions of the Software.
- .
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-Files: shinken/webui/htdocs/js/jquery.pageslide.js
-Copyright: 2011 Scott Robbin
-License: GPL-2 or MIT
-
-
-Files: shinken/webui/htdocs/css/font-awesome*
+Files: doc/theme/sphinx_rtd_theme/static/font/fontawesome_*
 Copyright: Dave Gandy
 License: MIT
 
@@ -136,28 +45,6 @@ License: MIT
 Files: shinken/webui/htdocs/font/*
 Copyright: Dave Gandy
 License: OFL
-
-
-Files: shinken/webui/htdocs/js/jquery-stupidtable.min.js
-Copyright: 2012 Joseph McCullough
-License:
- Permission is hereby granted, free of charge, to any person obtaining a copy   
- of this software and associated documentation files (the "Software"), to deal   
- in the Software without restriction, including without limitation the rights   
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell   
- copies of the Software, and to permit persons to whom the Software is   
- furnished to do so, subject to the following conditions:  
- . 
- The above copyright notice and this permission notice shall be included in all  
- copies or substantial portions of the Software.  
- .
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
- SOFTWARE.
 
 
 License: BSD
@@ -587,7 +474,7 @@ License: OFL
  University.edu is a renowed educational institution with a strong design department...
 
 
-License: GNU-AGPL
+License: AGPL-3.0+
                      GNU AFFERO GENERAL PUBLIC LICENSE
                         Version 3, 19 November 2007
  .
