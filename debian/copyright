@@ -21,7 +21,7 @@ License: Apache-2.0
 Files: debian/*
 Copyright: 2011 Arthur Gautier <superbaloo+debian@superbaloo.net>
            2011 Bruno Clermont <bruno@sologroup.gs>
-License: BSD
+License: BSD-3-clause
 
 
 Files: debian/*
@@ -42,7 +42,7 @@ Copyright: Dave Gandy
 License: MIT
 
 
-License: BSD
+License: BSD-3-clause
  Copyright (c) The Regents of the University of California.
  All rights reserved.
  .
