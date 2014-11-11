@@ -42,6 +42,7 @@ case "$1" in
         ## Purge directories
         rm -rf /var/run/shinken || return 0
         rm -rf /var/lib/shinken || return 0
+        rm -rf /var/log/shinken || return 0
     ;;
     upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
