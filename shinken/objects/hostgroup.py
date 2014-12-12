@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #    Gregory Starck, g.starck@gmail.com
@@ -26,7 +26,7 @@
 from itemgroup import Itemgroup, Itemgroups
 
 from shinken.util import get_obj_name
-from shinken.property import StringProp
+from shinken.property import StringProp, IntegerProp
 from shinken.log import logger
 
 
@@ -36,7 +36,7 @@ class Hostgroup(Itemgroup):
 
     properties = Itemgroup.properties.copy()
     properties.update({
-        'id':             StringProp(default=0, fill_brok=['full_status']),
+        'id':             IntegerProp(default=0, fill_brok=['full_status']),
         'hostgroup_name': StringProp(fill_brok=['full_status']),
         'alias':          StringProp(fill_brok=['full_status']),
         'notes':          StringProp(default='', fill_brok=['full_status']),
@@ -57,11 +57,14 @@ class Hostgroup(Itemgroup):
         return self.hostgroup_name
 
     def get_hosts(self):
-        return getattr(self, 'members', '')
+        if getattr(self, 'members', None) is not None:
+            return self.members
+        else:
+            return []
 
     def get_hostgroup_members(self):
         if self.has('hostgroup_members'):
-            return self.hostgroup_members.split(',')
+            return [m.strip() for m in self.hostgroup_members.split(',')]
         else:
             return []
 
@@ -78,7 +81,7 @@ class Hostgroup(Itemgroup):
         # so if True here, it must be a loop in HG
         # calls... not GOOD!
         if self.rec_tag:
-            logger.error("[hostgroup::%s] got a loop in hostgroup definition" % self.get_name())
+            logger.error("[hostgroup::%s] got a loop in hostgroup definition", self.get_name())
             return self.get_hosts()
 
         # Ok, not a loop, we tag it and continue
@@ -118,16 +121,15 @@ class Hostgroups(Itemgroups):
             mbrs = hg.get_hosts()
             # The new member list, in id
             new_mbrs = []
-
             for mbr in mbrs:
                 if mbr == '*':
                     new_mbrs.extend(hosts)
                 else:
-                    h = hosts.find_by_name(mbr)
+                    h = hosts.find_by_name(mbr.strip())
                     if h is not None:
                         new_mbrs.append(h)
                     else:
-                        hg.unknown_members.append(mbr)
+                        hg.add_string_unknown_member(mbr)
 
             # Make members uniq
             new_mbrs = list(set(new_mbrs))
@@ -159,7 +161,7 @@ class Hostgroups(Itemgroups):
             r = realms.find_by_name(hg.realm.strip())
             if r is not None:
                 hg.realm = r
-                logger.debug("[hostgroups] %s is in %s realm" % (hg.get_name(), r.get_name()))
+                logger.debug("[hostgroups] %s is in %s realm", hg.get_name(), r.get_name())
             else:
                 err = "the hostgroup %s got an unknown realm '%s'" % (hg.get_name(), hg.realm)
                 hg.configuration_errors.append(err)
@@ -170,13 +172,13 @@ class Hostgroups(Itemgroups):
                 if h is None:
                     continue
                 if h.realm is None or h.got_default_realm:  # default value not hasattr(h, 'realm'):
-                    logger.debug("[hostgroups] apply a realm %s to host %s from a hostgroup rule (%s)" % \
-                        (hg.realm.get_name(), h.get_name(), hg.get_name()))
+                    logger.debug("[hostgroups] apply a realm %s to host %s from a hostgroup rule (%s)",  \
+                        hg.realm.get_name(), h.get_name(), hg.get_name())
                     h.realm = hg.realm
                 else:
                     if h.realm != hg.realm:
-                        logger.warning("[hostgroups] host %s it not in the same realm than it's hostgroup %s" % \
-                            (h.get_name(), hg.get_name()))
+                        logger.warning("[hostgroups] host %s it not in the same realm than it's hostgroup %s",  \
+                            h.get_name(), hg.get_name())
 
     # Add a host string to a hostgroup member
     # if the host group do not exist, create it

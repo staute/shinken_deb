@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -31,7 +31,7 @@ class TestServiceWithPrintName(ShinkenTest):
 
     def test_service_with_print_as_name(self):
         svc = self.sched.services.find_srv_by_name_and_hostname("test_host_0", "print")
-        self.assert_(svc is not None)
+        self.assertIsNot(svc, None)
 
 
 if __name__ == '__main__':

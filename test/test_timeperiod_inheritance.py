@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -47,7 +47,7 @@ class TestConfig(ShinkenTest):
             print dr.__dict__
             if hasattr(dr, 'day') and dr.day == 'sunday':
                 got_sunday = True
-        self.assert_(got_sunday == True)
+        self.assertEqual(True, got_sunday)
 
 
 if __name__ == '__main__':

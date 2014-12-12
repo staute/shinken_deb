@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #     Gabes Jean, naparuba@gmail.com
 #     Gerhard Lausser, Gerhard.Lausser@consol.de
 #     Gregory Starck, g.starck@gmail.com
@@ -35,12 +35,11 @@ class ReactionnerLink(SatelliteLink):
     properties = SatelliteLink.properties.copy()
     properties.update({
         'reactionner_name': StringProp(fill_brok=['full_status'], to_send=True),
-        'port':             IntegerProp(default='7769', fill_brok=['full_status']),
-        'passive':          BoolProp(default='0', fill_brok=['full_status'], to_send=True),
-        'min_workers':      IntegerProp(default='1', fill_brok=['full_status'], to_send=True),
-        'max_workers':      IntegerProp(default='30', fill_brok=['full_status'], to_send=True),
-        'processes_by_worker': IntegerProp(default='256', fill_brok=['full_status'], to_send=True),
-        'reactionner_tags':      ListProp(default='None', to_send=True),
+        'port':             IntegerProp(default=7769, fill_brok=['full_status']),
+        'min_workers':      IntegerProp(default=1, fill_brok=['full_status'], to_send=True),
+        'max_workers':      IntegerProp(default=30, fill_brok=['full_status'], to_send=True),
+        'processes_by_worker': IntegerProp(default=256, fill_brok=['full_status'], to_send=True),
+        'reactionner_tags':      ListProp(default=['None'], to_send=True),
     })
 
     def get_name(self):

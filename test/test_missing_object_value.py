@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -48,7 +48,7 @@ class TestMissingObjectValue(ShinkenTest):
         svc.checks_in_progress = []
         svc.act_depend_of = []  # no hostchecks on critical checkresults
         # The service is mising a value for active_check_enabled, it's an error.
-        self.assert_(svc.is_correct() == False)
+        self.assertEqual(False, svc.is_correct())
 
 
 if __name__ == '__main__':

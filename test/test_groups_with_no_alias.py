@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -38,14 +38,14 @@ class TestGroupwithNoAlias(ShinkenTest):
         print "Get the hosts and services"
         now = time.time()
         hg = self.sched.hostgroups.find_by_name("NOALIAS")
-        self.assert_(hg is not None)
+        self.assertIsNot(hg, None)
         print hg.__dict__
-        self.assert_(hg.alias == "NOALIAS")
+        self.assertEqual("NOALIAS", hg.alias)
 
         sg = self.sched.servicegroups.find_by_name("NOALIAS")
-        self.assert_(sg is not None)
+        self.assertIsNot(sg, None)
         print sg.__dict__
-        self.assert_(sg.alias == "NOALIAS")
+        self.assertEqual("NOALIAS", sg.alias)
 
 
 if __name__ == '__main__':

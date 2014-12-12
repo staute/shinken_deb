@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #     Gabes Jean, naparuba@gmail.com
 #     Gerhard Lausser, Gerhard.Lausser@consol.de
 #     Gregory Starck, g.starck@gmail.com
@@ -24,10 +24,7 @@
 # along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-import socket
 
-import json
-import zlib
 import cPickle
 
 from shinken.util import get_obj_name_two_args_and_void
@@ -48,30 +45,31 @@ class SatelliteLink(Item):
 
     properties = Item.properties.copy()
     properties.update({
-        'address':         StringProp(fill_brok=['full_status']),
-        'timeout':         IntegerProp(default='3', fill_brok=['full_status']),
-        'data_timeout':    IntegerProp(default='120', fill_brok=['full_status']),
-        'check_interval':  IntegerProp(default='60', fill_brok=['full_status']),
-        'max_check_attempts': IntegerProp(default='3', fill_brok=['full_status']),
-        'spare':              BoolProp(default='0', fill_brok=['full_status']),
-        'manage_sub_realms':  BoolProp(default='1', fill_brok=['full_status']),
-        'manage_arbiters':    BoolProp(default='0', fill_brok=['full_status'], to_send=True),
-        'modules':            ListProp(default='', to_send=True),
-        'polling_interval':   IntegerProp(default='1', fill_brok=['full_status'], to_send=True),
+        'address':         StringProp(default='localhost', fill_brok=['full_status']),
+        'timeout':         IntegerProp(default=3, fill_brok=['full_status']),
+        'data_timeout':    IntegerProp(default=120, fill_brok=['full_status']),
+        'check_interval':  IntegerProp(default=60, fill_brok=['full_status']),
+        'max_check_attempts': IntegerProp(default=3, fill_brok=['full_status']),
+        'spare':              BoolProp(default=False, fill_brok=['full_status']),
+        'manage_sub_realms':  BoolProp(default=1, fill_brok=['full_status']),
+        'manage_arbiters':    BoolProp(default=0, fill_brok=['full_status'], to_send=True),
+        'modules':            ListProp(default=[''], to_send=True, split_on_coma=True),
+        'polling_interval':   IntegerProp(default=1, fill_brok=['full_status'], to_send=True),
         'use_timezone':       StringProp(default='NOTSET', to_send=True),
         'realm':              StringProp(default='', fill_brok=['full_status'], brok_transformation=get_obj_name_two_args_and_void),
-        'satellitemap':       DictProp(default=None, elts_prop=AddrProp, to_send=True, override=True),
-        'use_ssl':            BoolProp(default='0', fill_brok=['full_status']),
-        'hard_ssl_name_check':BoolProp(default='0', fill_brok=['full_status']),
+        'satellitemap':       DictProp(default={}, elts_prop=AddrProp, to_send=True, override=True),
+        'use_ssl':            BoolProp(default=False, fill_brok=['full_status']),
+        'hard_ssl_name_check':BoolProp(default=True, fill_brok=['full_status']),
+        'passive':            BoolProp(default=True, fill_brok=['full_status'], to_send=True),
     })
 
     running_properties = Item.running_properties.copy()
     running_properties.update({
         'con':                  StringProp(default=None),
-        'alive':                StringProp(default=True, fill_brok=['full_status']),
+        'alive':                BoolProp(default=True, fill_brok=['full_status']),
         'broks':                StringProp(default=[]),
         'attempt':              StringProp(default=0, fill_brok=['full_status']), # the number of failed attempt
-        'reachable':            StringProp(default=False, fill_brok=['full_status']), # can be network ask or not (dead or check in timeout or error)
+        'reachable':            BoolProp(default=False, fill_brok=['full_status']), # can be network ask or not (dead or check in timeout or error)
         'last_check':           IntegerProp(default=0, fill_brok=['full_status']),
         'managed_confs':        StringProp(default={}),
     })
@@ -85,7 +83,7 @@ class SatelliteLink(Item):
         if hasattr(self, 'port'):
             try:
                 self.arb_satmap['port'] = int(self.port)
-            except:
+            except Exception:
                 pass
 
     
@@ -117,15 +115,13 @@ class SatelliteLink(Item):
             return False
 
         try:
-            #pyro.set_timeout(self.con, self.data_timeout)
             self.con.get('ping')
             self.con.post('put_conf', {'conf':conf}, wait='long')
-            #pyro.set_timeout(self.con, self.timeout)
             print "PUT CONF SUCESS", self.get_name()
             return True
         except HTTPExceptions, exp:
             self.con = None
-            logger.error("Failed sending configuration for %s: %s" % (self.get_name(), str(exp)))
+            logger.error("Failed sending configuration for %s: %s", self.get_name(), str(exp))
             return False
             
 
@@ -150,6 +146,7 @@ class SatelliteLink(Item):
             b = self.get_update_status_brok()
             self.broks.append(b)
 
+
     def set_dead(self):
         was_alive = self.alive
         self.alive = False
@@ -158,9 +155,10 @@ class SatelliteLink(Item):
         # We are dead now. Must raise
         # a brok to say it
         if was_alive:
-            logger.warning("Setting the satellite %s to a dead state." % self.get_name())
+            logger.warning("Setting the satellite %s to a dead state.", self.get_name())
             b = self.get_update_status_brok()
             self.broks.append(b)
+
 
     # Go in reachable=False and add a failed attempt
     # if we reach the max, go dead
@@ -170,12 +168,13 @@ class SatelliteLink(Item):
         self.attempt = min(self.attempt, self.max_check_attempts)
         # Don't need to warn again and again if the satellite is already dead
         if self.alive:
-            logger.warning("Add failed attempt to %s (%d/%d) %s" % (self.get_name(), self.attempt, self.max_check_attempts, reason))
+            logger.warning("Add failed attempt to %s (%d/%d) %s", self.get_name(), self.attempt, self.max_check_attempts, reason)
 
         # check when we just go HARD (dead)
         if self.attempt == self.max_check_attempts:
             self.set_dead()
 
+    
     # Update satellite info each self.check_interval seconds
     # so we smooth arbiter actions for just useful actions
     # and not cry for a little timeout
@@ -204,11 +203,11 @@ class SatelliteLink(Item):
 
 
     def ping(self):
-        logger.debug("Pinging %s" % self.get_name())
+        logger.debug("Pinging %s", self.get_name())
         try:
             if self.con is None:
                 self.create_connection()
-            logger.debug(" (%s)" % (self.uri))
+            logger.debug(" (%s)", self.uri)
 
             # If the connection failed to initialize, bail out
             if self.con is None:
@@ -394,6 +393,15 @@ class SatelliteLink(Item):
         for prop, entry in properties.items():
             if entry.to_send:
                 self.cfg['global'][prop] = getattr(self, prop)
+        cls = self.__class__
+        # Also add global values
+        self.cfg['global']['api_key'] = cls.api_key
+        self.cfg['global']['secret']  = cls.secret
+        self.cfg['global']['http_proxy']  = cls.http_proxy
+        self.cfg['global']['statsd_host']  = cls.statsd_host
+        self.cfg['global']['statsd_port']  = cls.statsd_port
+        self.cfg['global']['statsd_prefix']  = cls.statsd_prefix
+        self.cfg['global']['statsd_enabled']  = cls.statsd_enabled
 
 
     # Some parameters for satellites are not defined in the satellites conf
@@ -419,7 +427,10 @@ class SatelliteLink(Item):
                 'active': True,
                 'passive': self.passive,
                 'poller_tags': getattr(self, 'poller_tags', []),
-                'reactionner_tags': getattr(self, 'reactionner_tags', [])}
+                'reactionner_tags': getattr(self, 'reactionner_tags', []),
+                'api_key': self.__class__.api_key,
+                'secret':  self.__class__.secret,
+                }
 
 
     # Call by pickle for dataify the downtime

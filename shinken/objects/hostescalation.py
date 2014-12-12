@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #    Gregory Starck, g.starck@gmail.com
@@ -39,11 +39,13 @@ class Hostescalation(Item):
         'hostgroup_name':        StringProp(),
         'first_notification':    IntegerProp(),
         'last_notification':     IntegerProp(),
-        'notification_interval': IntegerProp(default='30'), # like Nagios value
+        'notification_interval': IntegerProp(default=30), # like Nagios value
         'escalation_period':     StringProp(default=''),
-        'escalation_options':    ListProp(default='d,u,r,w,c'),
+        'escalation_options':    ListProp(default=['d','u','r','w','c']),
         'contacts':              StringProp(),
         'contact_groups':        StringProp(),
+        'first_notification_time': IntegerProp(),
+        'last_notification_time': IntegerProp(),
     })
 
     # For debugging purpose only (nice name)

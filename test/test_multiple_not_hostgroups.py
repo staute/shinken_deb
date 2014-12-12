@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -36,16 +36,16 @@ class TestMultipleNotHG(ShinkenTest):
             print "SERVICES", s.get_full_name()
         
         svc = self.sched.services.find_srv_by_name_and_hostname("hst_in_BIG", "THE_SERVICE")
-        self.assert_(svc is not None)
+        self.assertIsNot(svc, None)
 
         svc = self.sched.services.find_srv_by_name_and_hostname("hst_in_IncludeLast", "THE_SERVICE")
-        self.assert_(svc is not None)
+        self.assertIsNot(svc, None)
 
         svc = self.sched.services.find_srv_by_name_and_hostname("hst_in_NotOne", "THE_SERVICE")
-        self.assert_(svc is None)
+        self.assertIs(None, svc)
 
         svc = self.sched.services.find_srv_by_name_and_hostname("hst_in_NotTwo", "THE_SERVICE")
-        self.assert_(svc is None)
+        self.assertIs(None, svc)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -49,7 +49,8 @@ class TestConfig(ShinkenTest):
         if os.environ.get('HUDSON_URL', None):
             return
 
-        self.assert_(self.any_log_match(u'.*BADCOMMAND.*') or self.any_log_match('.*BADCOMMAND.*'))
+        self.assert_any_log_match('.*BADCOMMAND.*')
+        #self.assert_any_log_match(u'.*BADCOMMAND.*') or self.assert_any_log_match('.*BADCOMMAND.*')
 
 
 if __name__ == '__main__':

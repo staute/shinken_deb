@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -31,7 +31,7 @@ class TestBadSatRealmConf(ShinkenTest):
         self.setup_with_file('etc/shinken_bad_sat_realm_conf.cfg')
 
     def test_badconf(self):
-        self.assert_(not self.conf.conf_is_correct)
+        self.assertFalse(self.conf.conf_is_correct)
 
 
 if __name__ == '__main__':

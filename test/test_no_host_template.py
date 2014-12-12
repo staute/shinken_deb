@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -39,7 +39,7 @@ class TestNoHostTemplate(ShinkenTest):
         now = time.time()
         host = self.sched.hosts.find_by_name("my_host")
         b = host.is_correct()
-        self.assert_(b)
+        self.assertTrue(b)
 
 
 if __name__ == '__main__':

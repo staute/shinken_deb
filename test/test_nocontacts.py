@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -34,10 +34,10 @@ class TestNoContact(ShinkenTest):
     # and not error. Should do the same.
     def test_nocontact(self):
         host = self.sched.hosts.find_by_name("test_host_0")
-        self.assert_(host.contacts == [])
+        self.assertEqual([], host.contacts)
         svc = self.sched.services.find_srv_by_name_and_hostname("test_host_0", "test_ok_0")
-        self.assert_(svc.contacts == [])
-        self.assert_(self.sched.conf.is_correct)
+        self.assertEqual([], svc.contacts)
+        self.assertTrue(self.sched.conf.is_correct)
 
 
 if __name__ == '__main__':

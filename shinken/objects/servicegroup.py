@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #    Gregory Starck, g.starck@gmail.com
@@ -25,7 +25,7 @@
 
 from itemgroup import Itemgroup, Itemgroups
 
-from shinken.property import StringProp
+from shinken.property import StringProp, IntegerProp
 from shinken.log import logger
 
 
@@ -35,7 +35,7 @@ class Servicegroup(Itemgroup):
 
     properties = Itemgroup.properties.copy()
     properties.update({
-        'id':                StringProp(default=0, fill_brok=['full_status']),
+        'id':                IntegerProp(default=0, fill_brok=['full_status']),
         'servicegroup_name': StringProp(fill_brok=['full_status']),
         'alias':             StringProp(fill_brok=['full_status']),
         'notes':             StringProp(default='', fill_brok=['full_status']),
@@ -52,17 +52,17 @@ class Servicegroup(Itemgroup):
     }
 
     def get_services(self):
-        if self.has('members'):
+        if getattr(self, 'members', None) is not None:
             return self.members
         else:
-            return ''
+            return []
 
     def get_name(self):
         return self.servicegroup_name
 
     def get_servicegroup_members(self):
         if self.has('servicegroup_members'):
-            return self.servicegroup_members.split(',')
+            return [m.strip() for m in self.servicegroup_members.split(',')]
         else:
             return []
 
@@ -79,7 +79,7 @@ class Servicegroup(Itemgroup):
         # so if True here, it must be a loop in HG
         # calls... not GOOD!
         if self.rec_tag:
-            logger.error("[servicegroup::%s] got a loop in servicegroup definition" % self.get_name())
+            logger.error("[servicegroup::%s] got a loop in servicegroup definition", self.get_name())
             if self.has('members'):
                 return self.members
             else:
@@ -115,13 +115,12 @@ class Servicegroups(Itemgroups):
     def linkify_sg_by_srv(self, services):
         for sg in self:
             mbrs = sg.get_services()
-
             # The new member list, in id
             new_mbrs = []
             seek = 0
             host_name = ''
-            if (len(mbrs) == 1):
-                sg.unknown_members.append('%s' % mbrs[0])
+            if len(mbrs) == 1 and mbrs[0] != '':
+                sg.add_string_unknown_member('%s' % mbrs[0])
 
             for mbr in mbrs:
                 if seek % 2 == 0:
@@ -132,7 +131,7 @@ class Servicegroups(Itemgroups):
                     if find is not None:
                         new_mbrs.append(find)
                     else:
-                        sg.unknown_members.append('%s,%s' % (host_name, service_desc))
+                        sg.add_string_unknown_member('%s,%s' % (host_name, service_desc))
                 seek += 1
 
             # Make members uniq

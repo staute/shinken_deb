@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #    David GUENAULT, dguenault@monitoring-fr.org
@@ -33,10 +33,10 @@ def main(argv):
                 try:
                     exec("import " + a)
                     print "OK"
-                except:
+                except Exception:
                     print "KO"
                     ret = 2
-    except:
+    except Exception:
         ret = 1
     sys.exit(ret)
 

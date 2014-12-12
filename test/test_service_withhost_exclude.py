@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -35,10 +35,10 @@ class Testservice_withhost_exclude(ShinkenTest):
         # in the main config file
         #
         svc_exist = self.sched.services.find_srv_by_name_and_hostname("test_host_0", "NotEverywhere")
-        self.assert_(svc_exist is not None)
+        self.assertIsNot(svc_exist, None)
         svc_not_exist = self.sched.services.find_srv_by_name_and_hostname("test_router_0", "NotEverywhere")
-        self.assert_(svc_not_exist is None)
-        self.assert_(self.sched.conf.is_correct)
+        self.assertIs(None, svc_not_exist)
+        self.assertTrue(self.sched.conf.is_correct)
 
 
 if __name__ == '__main__':

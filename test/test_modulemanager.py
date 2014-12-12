@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -28,10 +28,9 @@ time_hacker.set_real_time()
 
 
 class TestModuleManager(ShinkenTest):
-    # Uncomment this is you want to use a specific configuration
-    # for your test
-    #def setUp(self):
-    #    self.setup_with_file('etc/shinken_1r_1h_1s.cfg')
+    def setUp(self):
+        self.setup_with_file('etc/shinken_1r_1h_1s.cfg')
+        time_hacker.set_real_time()
 
     # Try to see if the module manager can manage modules
     def test_modulemanager(self):
@@ -52,7 +51,7 @@ class TestModuleManager(ShinkenTest):
         print "Check alive?"
         print "Is alive?", ls.process.is_alive()
         # Should be dead
-        self.assert_(not ls.process.is_alive())
+        self.assertFalse(ls.process.is_alive())
         self.modulemanager.check_alive_instances()
         self.modulemanager.try_to_restart_deads()
 
@@ -60,7 +59,7 @@ class TestModuleManager(ShinkenTest):
 
         # Here the inst should still be dead
         print "Is alive?", ls.process.is_alive()
-        self.assert_(not ls.process.is_alive())
+        self.assertFalse(ls.process.is_alive())
 
         # So we lie
         ls.last_init_try = -5
@@ -71,22 +70,22 @@ class TestModuleManager(ShinkenTest):
 
         # Here the inst should be alive again
         print "Is alive?", ls.process.is_alive()
-        self.assert_(ls.process.is_alive())
+        self.assertTrue(ls.process.is_alive())
 
         # should be nothing more in to_restart of
         # the module manager
-        self.assert_(self.modulemanager.to_restart == [])
+        self.assertEqual([], self.modulemanager.to_restart)
 
         # Now we look for time restart so we kill it again
         ls._BaseModule__kill()
         time.sleep(1)
-        self.assert_(not ls.process.is_alive())
+        self.assertFalse(ls.process.is_alive())
 
         # Should be too early
         self.modulemanager.check_alive_instances()
         self.modulemanager.try_to_restart_deads()
         print "Is alive or not", ls.process.is_alive()
-        self.assert_(not ls.process.is_alive())
+        self.assertFalse(ls.process.is_alive())
         # We lie for the test again
         ls.last_init_try = -5
         self.modulemanager.check_alive_instances()
@@ -94,7 +93,7 @@ class TestModuleManager(ShinkenTest):
 
         # Here the inst should be alive again
         print "Is alive?", ls.process.is_alive()
-        self.assert_(ls.process.is_alive())
+        self.assertTrue(ls.process.is_alive())
 
         # And we clear all now
         print "Ask to die"

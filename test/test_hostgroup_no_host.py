@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -31,7 +31,7 @@ class TestHostGroupNoHost(ShinkenTest):
         self.setup_with_file('etc/shinken_hostgroup_no_host.cfg')
 
     def test_hostgroup_wit_no_host(self):
-        self.assert_(self.sched.conf.conf_is_correct)
+        self.assertTrue(self.sched.conf.conf_is_correct)
 
 
 if __name__ == '__main__':

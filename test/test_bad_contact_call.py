@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -34,7 +34,7 @@ class TestConfig(ShinkenTest):
         # The service got a unknow contact. It should raise an error
         svc = self.conf.services.find_srv_by_name_and_hostname("test_host_0", "test_ok_0")
         print "Contacts:", svc.contacts
-        self.assert_(svc.is_correct() == False)
+        self.assertEqual(False, svc.is_correct())
 
 
 if __name__ == '__main__':

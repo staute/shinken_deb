@@ -2,7 +2,7 @@
 #
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #    Gregory Starck, g.starck@gmail.com
@@ -33,7 +33,9 @@ import time
 from re import compile
 from multiprocessing import Queue, Process
 
+import shinken.http_daemon
 from shinken.log import logger
+from shinken.misc.common import setproctitle
 
 # TODO: use a class for defining the module "properties" instead of
 # plain dict??  Like:
@@ -78,11 +80,12 @@ class BaseModule(object):
     Modules can be used by the different shinken daemons/services
     for different tasks.
     Example of task that a shinken module can do:
-     - load additional configuration objects.
-     - recurrently save hosts/services status/perfdata
+
+    - load additional configuration objects.
+    - recurrently save hosts/services status/perfdata
        informations in different format.
-     - ...
-     """
+    - ...
+    """
 
     def __init__(self, mod_conf):
         """Instanciate a new module.
@@ -162,7 +165,7 @@ class BaseModule(object):
         if not self.is_external:
             return
         self.stop_process()
-        logger.info("Starting external process for instance %s" % (self.name))
+        logger.info("Starting external process for instance %s", self.name)
         p = Process(target=self._main, args=())
 
         # Under windows we should not call start() on an object that got
@@ -170,14 +173,14 @@ class BaseModule(object):
         # start
         try:
             del self.properties['process']
-        except:
+        except KeyError:
             pass
 
         p.start()
         # We save the process data AFTER the fork()
         self.process = p
         self.properties['process'] = p  # TODO: temporary
-        logger.info("%s is now started ; pid=%d" % (self.name, p.pid))
+        logger.info("%s is now started ; pid=%d", self.name, p.pid)
 
 
     def __kill(self):
@@ -199,13 +202,19 @@ class BaseModule(object):
     def stop_process(self):
         """Request the module process to stop and release it"""
         if self.process:
-            logger.info("I'm stopping module '%s' process pid:%s " %
-                       (self.get_name(), self.process.pid))
+            logger.info("I'm stopping module %r (pid=%s)",
+                       self.get_name(), self.process.pid)
             self.process.terminate()
             self.process.join(timeout=1)
             if self.process.is_alive():
-                logger.info("The process is still alive, I help it to die")
+                logger.warning("%r is still alive normal kill, I help it to die",
+                            self.get_name())
                 self.__kill()
+                self.process.join(1)
+                if self.process.is_alive():
+                    logger.error("%r still alive after brutal kill, I leave it.",
+                                 self.get_name())
+
             self.process = None
 
 
@@ -264,26 +273,23 @@ class BaseModule(object):
         raise NotImplementedError()
 
     def set_proctitle(self, name):
-        try:
-            from setproctitle import setproctitle
-            setproctitle("shinken-%s module: %s" % (self.loaded_into, name))
-        except:
-            pass
+        setproctitle("shinken-%s module: %s" % (self.loaded_into, name))
 
     def _main(self):
         """module "main" method. Only used by external modules."""
         self.set_proctitle(self.name)
 
-        from http_daemon import daemon_inst
-        if daemon_inst:
-            daemon_inst.shutdown()
+        # TODO: fix this hack:
+        if shinken.http_daemon.daemon_inst:
+            shinken.http_daemon.daemon_inst.shutdown()
         
         self.set_signal_handler()
-        logger.info("[%s[%d]]: Now running.." % (self.name, os.getpid()))
+        logger.info("[%s[%d]]: Now running..", self.name, os.getpid())
         # Will block here!
         self.main()
         self.do_stop()
-        logger.info("[%s]: exiting now.." % (self.name))
+        logger.info("[%s]: exiting now..", self.name)
+
 
     # TODO: apparently some modules would uses "work" as the main method??
     work = _main

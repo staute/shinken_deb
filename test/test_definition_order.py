@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -36,14 +36,14 @@ class TestDefinitionOrder(ShinkenTest):
         svc_specific = self.sched.services.find_srv_by_name_and_hostname("test_host_specific", "ZE-SERVICE")
         svc_generic  = self.sched.services.find_srv_by_name_and_hostname("test_host_generic", "ZE-SERVICE")
         
-        self.assert_(svc_specific is not None)
-        self.assert_(svc_generic is not None)
+        self.assertIsNot(svc_specific, None)
+        self.assertIsNot(svc_generic, None)
 
         print svc_generic.check_command.command.command_name
-        self.assert_(svc_generic.check_command.command.command_name == 'general')
+        self.assertEqual('general', svc_generic.check_command.command.command_name)
         
         print svc_specific.check_command.command.command_name
-        self.assert_(svc_specific.check_command.command.command_name == 'specific')
+        self.assertEqual('specific', svc_specific.check_command.command.command_name)
         
         
 

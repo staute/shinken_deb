@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #    Gregory Starck, g.starck@gmail.com
@@ -31,11 +31,12 @@ from shinken.property import PathProp, IntegerProp
 class Poller(Satellite):
     do_checks = True    # I do checks
     do_actions = False  # but no actions
-
+    my_type = 'poller'
+    
     properties = Satellite.properties.copy()
     properties.update({
         'pidfile':   PathProp(default='pollerd.pid'),
-        'port':      IntegerProp(default='7771'),
+        'port':      IntegerProp(default=7771),
         'local_log': PathProp(default='pollerd.log'),
     })
 

@@ -1,8 +1,7 @@
 #!/usr/bin/python
-
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #    Gregory Starck, g.starck@gmail.com
@@ -23,16 +22,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
 
-import time
 import os
 import re
+import traceback
 
 from shinken.objects.item import Item, Items
-from shinken.misc.perfdata import PerfDatas
-from shinken.property import BoolProp, IntegerProp, FloatProp, CharProp, StringProp, ListProp
+from shinken.property import BoolProp, StringProp
 from shinken.log import logger
-from shinken.trigger_functions import objs, trigger_functions
-#objs = {'hosts': [], 'services': []}
+from shinken.trigger_functions import objs, trigger_functions, set_value
 
 
 class Trigger(Item):
@@ -46,7 +43,7 @@ class Trigger(Item):
 
     running_properties = Item.running_properties.copy()
     running_properties.update({'code_bin': StringProp(default=None),
-                               'trigger_broker_raise_enabled': BoolProp(default='0')
+                               'trigger_broker_raise_enabled': BoolProp(default=False)
                                })
 
     # For debugging purpose only (nice name)
@@ -69,7 +66,12 @@ class Trigger(Item):
             locals()[n] = f
 
         code = myself.code_bin  # Comment? => compile(myself.code_bin, "<irc>", "exec")
-        exec code in dict(locals())
+        try:
+            exec code in dict(locals())
+        except Exception as err:
+            set_value(self, "UNKNOWN: Trigger error: %s" % err, "", 3)
+            logger.error('%s Trigger %s failed: %s ; %s' % (self.host_name, myself.trigger_name, err, traceback.format_exc()))
+
 
     def __getstate__(self):
         return {'trigger_name': self.trigger_name, 'code_src': self.code_src, 'trigger_broker_raise_enabled': self.trigger_broker_raise_enabled}
@@ -96,7 +98,7 @@ class Triggers(Items):
                         buf = fd.read()
                         fd.close()
                     except IOError, exp:
-                        logger.error("Cannot open trigger file '%s' for reading: %s" % (p, exp))
+                        logger.error("Cannot open trigger file '%s' for reading: %s", p, exp)
                         # ok, skip this one
                         continue
                     self.create_trigger(buf, file[:-5])

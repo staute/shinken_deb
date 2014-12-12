@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -36,7 +36,7 @@ class TestConfig(ShinkenTest):
         now = time.time()
         router = self.sched.hosts.find_by_name("test_router_0")
         print "router adress:", router.address
-        self.assert_(router.address == 'test_router_0')
+        self.assertEqual('test_router_0', router.address)
 
 if __name__ == '__main__':
     unittest.main()

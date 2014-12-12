@@ -2,7 +2,7 @@
 #
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2009-2012:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #    Gregory Starck, g.starck@gmail.com
@@ -41,8 +41,10 @@ class Brok:
         self.data = cPickle.dumps(data, cPickle.HIGHEST_PROTOCOL)
         self.prepared = False
 
+
     def __str__(self):
         return str(self.__dict__) + '\n'
+
 
     # We unserialize the data, and if some prop were
     # add after the serialize pass, we integer them in the data

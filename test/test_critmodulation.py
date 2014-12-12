@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -37,10 +37,10 @@ class TestCritMod(ShinkenTest):
         #
         print "Get our criticity modulation"
         cm = self.sched.conf.businessimpactmodulations.find_by_name('CritMod')
-        self.assert_(cm is not None)
+        self.assertIsNot(cm, None)
         svc = self.sched.services.find_srv_by_name_and_hostname("test_host_0", "test_ok_0")
         print svc.business_impact_modulations
-        self.assert_(cm in svc.business_impact_modulations)
+        self.assertIn(cm, svc.business_impact_modulations)
 
 
 

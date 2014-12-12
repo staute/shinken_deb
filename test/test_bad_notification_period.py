@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -32,7 +32,7 @@ class TestBadNotificationPeriod(ShinkenTest):
 
     # if a notif period is bad, should be catched!
     def test_bad_notification_period(self):
-        self.assert_(self.conf.conf_is_correct == False)
+        self.assertEqual(False, self.conf.conf_is_correct)
 
 
 if __name__ == '__main__':

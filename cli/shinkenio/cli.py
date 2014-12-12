@@ -48,7 +48,7 @@ def read_package_json(fd):
     try:
         package_json = json.loads(buf)
     except ValueError, exp:
-        logger.error("Bad package.json file : %s" % exp)
+        logger.error("Bad package.json file : %s", exp)
         sys.exit(2)
     if not package_json:
         logger.error("Bad package.json file")
@@ -62,12 +62,12 @@ def create_archive(to_pack):
     # First try to look if the directory we are trying to pack is valid
     to_pack = os.path.abspath(to_pack)
     if not os.path.exists(to_pack):
-        logger.error("Error : the directory to pack is missing %s" % to_pack)
+        logger.error("Error : the directory to pack is missing %s", to_pack)
         sys.exit(2)
-    logger.debug("Preparing to pack the directory %s" % to_pack)
+    logger.debug("Preparing to pack the directory %s", to_pack)
     package_json_p = os.path.join(to_pack, 'package.json')
     if not os.path.exists(package_json_p):
-        logger.error("Error : Missing file %s" % package_json_p)
+        logger.error("Error : Missing file %s", package_json_p)
         sys.exit(2)
     package_json = read_package_json(open(package_json_p))
 
@@ -94,7 +94,7 @@ def create_archive(to_pack):
     os.chdir(to_pack)
     tar.add(".",arcname='.', exclude=tar_exclude_filter)
     tar.close()
-    logger.debug("Saved file %s" % tmp_file)
+    logger.debug("Saved file %s", tmp_file)
     return tmp_file
 
 
@@ -122,25 +122,25 @@ def publish_archive(archive):
     try:
         c.perform()
     except pycurl.error, exp:
-        logger.error("There was a critical error : %s" % exp)
+        logger.error("There was a critical error : %s", exp)
         return
     r = c.getinfo(pycurl.HTTP_CODE)
     c.close()
     if r != 200:
-        logger.error("There was a critical error : %s" % response.getvalue())
+        logger.error("There was a critical error : %s", response.getvalue())
         sys.exit(2)
     else:
         ret  = json.loads(response.getvalue().replace('\\/', '/'))
         status = ret.get('status')
         text   = ret.get('text')
         if status == 200:
-            logger.log(text)
+            logger.info(text)
         else:
             logger.error(text)
 
 
 def do_publish(to_pack='.'):
-    logger.debug("WILL CALL PUBLISH.py with %s" % to_pack)
+    logger.debug("WILL CALL PUBLISH.py with %s", to_pack)
     archive = create_archive(to_pack)
     publish_archive(archive)
 
@@ -169,20 +169,20 @@ def search(look_at):
     try:
         c.perform()
     except pycurl.error, exp:
-        logger.error("There was a critical error : %s" % exp)
+        logger.error("There was a critical error : %s", exp)
         return
 
     r = c.getinfo(pycurl.HTTP_CODE)
     c.close()
     if r != 200:
-        logger.error("There was a critical error : %s" % response.getvalue())
+        logger.error("There was a critical error : %s", response.getvalue())
         sys.exit(2)
     else:
         ret  = json.loads(response.getvalue().replace('\\/', '/'))
         status = ret.get('status')
         result   = ret.get('result')
         if status != 200:
-            logger.log(result)
+            logger.info(result)
             return []
         return result
 
@@ -223,7 +223,7 @@ def do_search(*look_at):
         look_at = ('module',)
         matches += search(look_at)
     else:
-        logger.debug("CALL SEARCH WITH ARGS %s" % str(look_at))
+        logger.debug("CALL SEARCH WITH ARGS %s", str(look_at))
         matches = search(look_at)
     if matches == [] : print ('you are unlucky, use "shinken search all" for a complete list ')
     print_search_matches(matches)
@@ -239,7 +239,7 @@ def do_search(*look_at):
 def inventor(look_at):
     # Now really publish it
     inventory = CONFIG['paths']['inventory']
-    logger.debug("dumping inventory %s" % inventory)
+    logger.debug("dumping inventory %s", inventory)
     # get all sub-direcotries
  
     for d in os.listdir(inventory):
@@ -250,12 +250,12 @@ def inventor(look_at):
             if look_at or d in look_at:
                 content_p = os.path.join(inventory, d, 'content.json')
                 if not os.path.exists(content_p):
-                    logger.error('Missing %s file' % content_p)
+                    logger.error('Missing %s file', content_p)
                     continue
                 try:
                     j = json.loads(open(content_p, 'r').read())
                 except Exception, exp:
-                    logger.error('Bad %s file "%s"' % (content_p, exp))
+                    logger.error('Bad %s file "%s"', content_p, exp)
                     continue
                 for d in j:
                     s = ''
@@ -327,17 +327,17 @@ def grab_package(pname):
     try:
         c.perform()
     except pycurl.error, exp:
-        logger.error("There was a critical error : %s" % exp)
+        logger.error("There was a critical error : %s", exp)
         return ''
 
     r = c.getinfo(pycurl.HTTP_CODE)
     c.close()
     if r != 200:
-        logger.error("There was a critical error : %s" % response.getvalue())
+        logger.error("There was a critical error : %s", response.getvalue())
         sys.exit(2)
     else:
         ret = response.getvalue()
-        logger.debug("CURL result len : %d " % len(ret))
+        logger.debug("CURL result len : %d ", len(ret))
         return ret
 
 
@@ -352,7 +352,7 @@ def grab_local(d):
 
     package_json_p = os.path.join(to_pack, 'package.json')
     if not os.path.exists(package_json_p):
-        logger.error("Error : Missing file %s" % package_json_p)
+        logger.error("Error : Missing file %s", package_json_p)
         sys.exit(2)
     package_json = read_package_json(open(package_json_p))
 
@@ -386,18 +386,20 @@ def grab_local(d):
 
 
 
-def install_package(pname, raw):
-    logger.debug("Installing the package %s (size:%d)" % (pname, len(raw)))
+def install_package(pname, raw, update_only=False):
+    if update_only:
+        logger.debug('UPDATE ONLY ENABLED')
+    logger.debug("Installing the package %s (size:%d)", pname, len(raw))
     if len(raw) == 0:
-        logger.error('The package %s cannot be found' % pname)
+        logger.error('The package %s cannot be found', pname)
         return
     tmpdir = os.path.join(tempfile.gettempdir(), pname)
-    logger.debug("Unpacking the package into %s" % tmpdir)
+    logger.debug("Unpacking the package into %s", tmpdir)
 
     if os.path.exists(tmpdir):
-        logger.debug("Removing previous tmp dir %s" % tmpdir)
+        logger.debug("Removing previous tmp dir %s", tmpdir)
         shutil.rmtree(tmpdir)
-    logger.debug("Creating temporary dir %s" % tmpdir)
+    logger.debug("Creating temporary dir %s", tmpdir)
     os.mkdir(tmpdir)
 
     package_content = []
@@ -411,11 +413,11 @@ def install_package(pname, raw):
         if path == '.':
             continue
         if path.startswith('/') or '..' in path:
-            logger.error("SECURITY: the path %s seems dangerous!" % path)
+            logger.error("SECURITY: the path %s seems dangerous!", path)
             return
         # Adding all files into the package_content list
         package_content.append( {'name':i.name, 'mode':i.mode, 'type':i.type, 'size':i.size} )
-        logger.debug("\t%s" % path)
+        logger.debug("\t%s", path)
     # Extract all in the tmpdir
     tar_file.extractall(tmpdir)
     tar_file.close()
@@ -423,10 +425,10 @@ def install_package(pname, raw):
     # Now we look at the package.json that will give us our name and co
     package_json_p = os.path.join(tmpdir, 'package.json')
     if not os.path.exists(package_json_p):
-        logger.error("Error : bad archive : Missing file %s" % package_json_p)
+        logger.error("Error : bad archive : Missing file %s", package_json_p)
         return None
     package_json = read_package_json(open(package_json_p))
-    logger.debug("Package.json content %s " % package_json)
+    logger.debug("Package.json content %s ", package_json)
 
     modules_dir = CONFIG['paths']['modules']
     share_dir   = CONFIG['paths']['share']
@@ -438,70 +440,70 @@ def install_package(pname, raw):
     test_dir   = CONFIG['paths'].get('test', '/__DONOTEXISTS__')
     for d in (modules_dir, share_dir, packs_dir, doc_dir, inventory_dir):
         if not os.path.exists(d):
-            logger.error("The installation directory %s is missing!" % d)
+            logger.error("The installation directory %s is missing!", d)
             return
 
     # Now install the package from $TMP$/share/* to $SHARE$/*
     p_share  = os.path.join(tmpdir, 'share')
-    logger.debug("TMPDIR:%s aahre_dir:%s pname:%s" %(tmpdir, share_dir, pname))
+    logger.debug("TMPDIR:%s aahre_dir:%s pname:%s", tmpdir, share_dir, pname)
     if os.path.exists(p_share):
         logger.info("Installing the share package data")
         # shutil will do the create dir
         _copytree(p_share, share_dir)
-        logger.info("Copy done in the share directory %s" % share_dir)
+        logger.info("Copy done in the share directory %s", share_dir)
 
 
-    logger.debug("TMPDIR:%s modules_dir:%s pname:%s" %(tmpdir, modules_dir, pname))
+    logger.debug("TMPDIR:%s modules_dir:%s pname:%s", tmpdir, modules_dir, pname)
     # Now install the package from $TMP$/module/* to $MODULES$/pname/*
     p_module = os.path.join(tmpdir, 'module')
     if os.path.exists(p_module):
         logger.info("Installing the module package data")
         mod_dest = os.path.join(modules_dir, pname)
         if os.path.exists(mod_dest):
-            logger.info("Removing previous module install at %s" % mod_dest)
+            logger.info("Removing previous module install at %s", mod_dest)
 
             shutil.rmtree(mod_dest)
         # shutil will do the create dir
         shutil.copytree(p_module, mod_dest)
-        logger.info("Copy done in the module directory %s" % mod_dest)
+        logger.info("Copy done in the module directory %s", mod_dest)
 
 
     p_doc  = os.path.join(tmpdir, 'doc')
-    logger.debug("TMPDIR:%s doc_dir:%s pname:%s" %(tmpdir, doc_dir, pname))
+    logger.debug("TMPDIR:%s doc_dir:%s pname:%s", tmpdir, doc_dir, pname)
     # Now install the package from $TMP$/doc/* to $MODULES$/doc/source/89_packages/pname/*
     if os.path.exists(p_doc):
         logger.info("Installing the doc package data")
         doc_dest = os.path.join(doc_dir, 'source', '89_packages', pname)
         if os.path.exists(doc_dest):
-            logger.info("Removing previous doc install at %s" % doc_dest)
+            logger.info("Removing previous doc install at %s", doc_dest)
 
             shutil.rmtree(doc_dest)
         # shutil will do the create dir
         shutil.copytree(p_doc, doc_dest)
-        logger.info("Copy done in the doc directory %s" % doc_dest)
+        logger.info("Copy done in the doc directory %s", doc_dest)
 
+        
+    if not update_only:
+        # Now install the pack from $TMP$/pack/* to $PACKS$/pname/*
+        p_pack = os.path.join(tmpdir, 'pack')
+        if os.path.exists(p_pack):
+            logger.info("Installing the pack package data")
+            pack_dest = os.path.join(packs_dir, pname)
+            if os.path.exists(pack_dest):
+                logger.info("Removing previous pack install at %s", pack_dest)
+                shutil.rmtree(pack_dest)
+            # shutil will do the create dir
+            shutil.copytree(p_pack, pack_dest)
+            logger.info("Copy done in the pack directory %s", pack_dest)
 
-    # Now install the pack from $TMP$/pack/* to $PACKS$/pname/*
-    p_pack = os.path.join(tmpdir, 'pack')
-    if os.path.exists(p_pack):
-        logger.info("Installing the pack package data")
-        pack_dest = os.path.join(packs_dir, pname)
-        if os.path.exists(pack_dest):
-            logger.info("Removing previous pack install at %s" % pack_dest)
-            shutil.rmtree(pack_dest)
-        # shutil will do the create dir
-        shutil.copytree(p_pack, pack_dest)
-        logger.info("Copy done in the pack directory %s" % pack_dest)
-
-    # Now install the etc from $TMP$/etc/* to $ETC$/etc/*
-    p_etc = os.path.join(tmpdir, 'etc')
-    if os.path.exists(p_etc):
-        logger.info("Merging the etc package data into your etc directory")
-        # We don't use shutils because it NEED etc_dir to be non existant...
-        # Come one guys..... cp is not as terrible as this...
-        _copytree(p_etc, etc_dir)
-        logger.info("Copy done in the etc directory %s" % etc_dir)
-
+        # Now install the etc from $TMP$/etc/* to $ETC$/etc/*
+        p_etc = os.path.join(tmpdir, 'etc')
+        if os.path.exists(p_etc):
+            logger.info("Merging the etc package data into your etc directory")
+            # We don't use shutils because it NEED etc_dir to be non existant...
+            # Come one guys..... cp is not as terrible as this...
+            _copytree(p_etc, etc_dir)
+            logger.info("Copy done in the etc directory %s", etc_dir)
 
     # Now install the tests from $TMP$/tests/* to $TESTS$/tests/*
     # if the last one is specified on the configuration file (optionnal)
@@ -510,20 +512,20 @@ def install_package(pname, raw):
         logger.info("Merging the test package data into your test directory")
         # We don't use shutils because it NEED etc_dir to be non existant...
         # Come one guys..... cp is not as terrible as this...
-        logger.debug("COPYING %s into %s" % (p_tests, test_dir))
+        logger.debug("COPYING %s into %s", p_tests, test_dir)
         _copytree(p_tests, test_dir)
-        logger.info("Copy done in the test directory %s" % test_dir)
+        logger.info("Copy done in the test directory %s", test_dir)
 
     # Now install the libexec things from $TMP$/libexec/* to $LIBEXEC$/*
     # but also chmod a+x the plugins copied
     p_libexec = os.path.join(tmpdir, 'libexec')
     if os.path.exists(p_libexec) and os.path.exists(libexec_dir):
         logger.info("Merging the libexec package data into your libexec directory")
-        logger.debug("COPYING %s into %s" % (p_libexec, libexec_dir))
+        logger.debug("COPYING %s into %s", p_libexec, libexec_dir)
         # Before be sure all files in there are +x
         _chmodplusx(p_libexec)
         _copytree(p_libexec, libexec_dir)
-        logger.info("Copy done in the libexec directory %s" % libexec_dir)
+        logger.info("Copy done in the libexec directory %s", libexec_dir)
 
 
     # then samve the package.json into the inventory dir
@@ -567,10 +569,21 @@ def do_install(pname, local, download_only):
             f.close()
             cprint('Download OK: %s' %  tmpf, 'green')
         except Exception, exp:
-            logger.error("Package save fail: %s" % exp)
+            logger.error("Package save fail: %s", exp)
         return
 
     install_package(pname, raw)
+
+
+def do_update(pname, local):
+    raw = ''
+    if local:
+        pname, raw = grab_local(pname)
+
+    if not local:
+        raw = grab_package(pname)
+
+    install_package(pname, raw, update_only=True)
 
 
 
@@ -596,6 +609,14 @@ exports = {
             {'name' : '--download-only', 'description':'Only download the package', 'type': 'bool'},
             ],
         'description' : 'Grab and install a package from shinken.io'
+        },
+    do_update : {
+        'keywords': ['update'],
+        'args': [
+            {'name' : 'pname', 'description':'Package to update)'},
+            {'name' : '--local', 'description':'Use a local directory instead of the shinken.io version', 'type': 'bool'},
+            ],
+        'description' : 'Grab and update a package from shinken.io. Only the code and doc, NOT the configuration part! Do not update an not installed package.'
         },
     do_inventory  : {'keywords': ['inventory'], 'args': [],
        'description': 'List locally installed packages'

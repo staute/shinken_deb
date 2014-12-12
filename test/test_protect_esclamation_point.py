@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -47,7 +47,7 @@ class TestProtectEscalmationPoint(ShinkenTest):
         svc.act_depend_of = []  # no hostchecks on critical checkresults
 
         print svc.check_command.args
-        self.assert_(u'ti!ti' in svc.check_command.args)
+        self.assertIn(u'ti!ti', svc.check_command.args)
 
 if __name__ == '__main__':
     unittest.main()

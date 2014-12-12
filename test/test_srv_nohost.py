@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -31,7 +31,7 @@ class TestServiceWhitNoHost(ShinkenTest):
 
     # Nagios allow service with no host to exist, it will just drop them
     def test_ServiceWhitNoHost(self):
-        self.assert_(self.sched.conf.is_correct)
+        self.assertTrue(self.sched.conf.is_correct)
 
 
 if __name__ == '__main__':

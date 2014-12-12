@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -24,13 +24,13 @@
 #
 
 from shinken_test import *
-time_hacker.set_real_time()
 
 
 
 class TestStrangeCaracterInCommands(ShinkenTest):
     def setUp(self):
         self.setup_with_file('etc/shinken_strange_characters_commands.cfg')
+        time_hacker.set_real_time()
 
     # Try to call check dummy with very strange caracters and co, see if it run or
     # failed badly
@@ -53,24 +53,24 @@ class TestStrangeCaracterInCommands(ShinkenTest):
         svc.checks_in_progress = []
         svc.act_depend_of = []  # no hostchecks on critical checkresults
         #self.scheduler_loop(2, [[host, 0, 'UP | value1=1 value2=2'], [router, 0, 'UP | rtt=10'], [svc, 2, 'BAD | value1=0 value2=0']])
-        #self.assert_(host.state == 'UP')
-        #self.assert_(host.state_type == 'HARD')
+        #self.assertEqual('UP', host.state)
+        #self.assertEqual('HARD', host.state_type)
         print svc.check_command
-        self.assert_(len(svc.checks_in_progress) == 0)
+        self.assertEqual(0, len(svc.checks_in_progress))
         svc.launch_check(time.time())
         print svc.checks_in_progress
-        self.assert_(len(svc.checks_in_progress) == 1)
+        self.assertEqual(1, len(svc.checks_in_progress))
         c = svc.checks_in_progress.pop()
         #print c
         c.execute()
         time.sleep(0.5)
         c.check_finished(8000)
         print c.status
-        self.assert_(c.status == 'done')
-        self.assert_(c.output == '£°é§')
+        self.assertEqual('done', c.status)
+        self.assertEqual('£°é§', c.output)
         print "Done with good output, that's great"
         svc.consume_result(c)
-        self.assert_(svc.output == unicode('£°é§'.decode('utf8')))
+        self.assertEqual(unicode('£°é§'.decode('utf8')), svc.output)
 
 
 

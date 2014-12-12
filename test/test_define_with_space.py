@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -33,7 +33,7 @@ class TestDefineWithSpaces(ShinkenTest):
     # We got a problem with define    host for example, the type read was "" and not host
     def testdefine_with_spaces(self):
         host = self.sched.hosts.find_by_name("test_host_0")
-        self.assert_(host is not None)
+        self.assertIsNot(host, None)
 
 
 if __name__ == '__main__':

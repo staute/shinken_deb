@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -47,7 +47,7 @@ class TestConfig(ShinkenTest):
         svc.checks_in_progress = []
         svc.act_depend_of = []  # no hostchecks on critical checkresults
         print svc.event_handler.args
-        self.assert_('sudo -s pkill toto ; cd /my/path && ./toto' in svc.event_handler.args)
+        self.assertIn('sudo -s pkill toto ; cd /my/path && ./toto', svc.event_handler.args)
 
 
 if __name__ == '__main__':

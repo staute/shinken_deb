@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -24,8 +24,6 @@
 #
 
 from shinken_test import *
-# we have an external process, so we must un-fake time functions
-time_hacker.set_real_time()
 
 from shinken.worker import Worker
 from multiprocessing import Queue, Manager
@@ -37,7 +35,9 @@ modconf = Module()
 
 class TestTimeout(ShinkenTest):
     def setUp(self):
+        # we have an external process, so we must un-fake time functions
         self.setup_with_file('etc/shinken_check_timeout.cfg')
+        time_hacker.set_real_time()
 
     def test_notification_timeout(self):
         if os.name == 'nt':
@@ -92,9 +92,9 @@ class TestTimeout(ShinkenTest):
         # with a timeout
         o = from_queue.get()
 
-        self.assert_(o.status == 'timeout')
-        self.assert_(o.exit_status == 3)
-        self.assert_(o.execution_time < n.timeout+1)
+        self.assertEqual('timeout', o.status)
+        self.assertEqual(3, o.exit_status)
+        self.assertLess(o.execution_time, n.timeout+1)
 
         # Be a good poller and clean up.
         to_queue.close()
@@ -104,7 +104,7 @@ class TestTimeout(ShinkenTest):
         self.sched.actions[n.id] = n
         self.sched.put_results(o)
         self.show_logs()
-        self.assert_(self.any_log_match("Contact mr.schinken service notification command 'libexec/sleep_command.sh 7 ' timed out after 2 seconds"))
+        self.assert_any_log_match("Contact mr.schinken service notification command 'libexec/sleep_command.sh 7 ' timed out after 2 seconds")
 
 
 
@@ -124,11 +124,11 @@ class TestTimeout(ShinkenTest):
         svc = self.sched.services.find_srv_by_name_and_hostname("test_host_0", "test_ok_0")
         print svc.checks_in_progress
         cs = svc.checks_in_progress
-        self.assert_(len(cs) == 1)
+        self.assertEqual(1, len(cs))
         c = cs.pop()
         print c
         print c.timeout
-        self.assert_(c.timeout == 5)
+        self.assertEqual(5, c.timeout)
 
 
 if __name__ == '__main__':

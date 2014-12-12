@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (C) 2009-2010:
+# Copyright (C) 2009-2014:
 #    Gabes Jean, naparuba@gmail.com
 #    Gerhard Lausser, Gerhard.Lausser@consol.de
 #
@@ -32,10 +32,10 @@ class TestWarnAboutNoBrokerInRealm(ShinkenTest):
 
     def test_no_broker_in_realm_warning(self):
         dist = self.conf.realms.find_by_name("Distant")
-        self.assert_(dist is not None)
+        self.assertIsNot(dist, None)
         sched = self.conf.schedulers.find_by_name("Scheduler-distant")
-        self.assert_(sched is not None)
-        self.assert_(len(sched.realm.potential_brokers) == 0)
+        self.assertIsNot(sched, None)
+        self.assertEqual(0, len(sched.realm.potential_brokers))
 
 
 if __name__ == '__main__':
