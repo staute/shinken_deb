@@ -14,12 +14,12 @@ Claiming copyright on configuration: Oh!
  bin/init.d/shinken-scheduler   | 21 ---------------------
  8 files changed, 169 deletions(-)
 
-diff --git a/bin/default/shinken.in b/bin/default/shinken.in
-index 63bee1d..d7a7527 100644
---- a/bin/default/shinken.in
-+++ b/bin/default/shinken.in
+Index: shinken/bin/default/shinken.in
+===================================================================
+--- shinken.orig/bin/default/shinken.in
++++ shinken/bin/default/shinken.in
 @@ -1,25 +1,3 @@
--# Copyright (C) 2009-2011:
+-# Copyright (C) 2009-2014:
 -#    Gabes Jean, naparuba@gmail.com
 -#    Gerhard Lausser, Gerhard.Lausser@consol.de
 -#    Gregory Starck, g.starck@gmail.com
@@ -44,14 +44,14 @@ index 63bee1d..d7a7527 100644
  # /etc/default/shinken
  # $ETC$ is where we put all configuration files
  # $VAR$ is where we put some variables files (replaced by $RUN$ and $LOG$ for now)
-diff --git a/bin/init.d/shinken b/bin/init.d/shinken
-index ed45652..9b80701 100755
---- a/bin/init.d/shinken
-+++ b/bin/init.d/shinken
+Index: shinken/bin/init.d/shinken
+===================================================================
+--- shinken.orig/bin/init.d/shinken
++++ shinken/bin/init.d/shinken
 @@ -1,26 +1,5 @@
  #!/bin/sh
  
--# Copyright (C) 2009-2011:
+-# Copyright (C) 2009-2014:
 -#    Gabes Jean, naparuba@gmail.com
 -#    Gerhard Lausser, Gerhard.Lausser@consol.de
 -#    Gregory Starck, g.starck@gmail.com
@@ -75,14 +75,14 @@ index ed45652..9b80701 100755
  ### BEGIN INIT INFO
  # Provides:          shinken
  # Required-Start:    $network $remote_fs
-diff --git a/bin/init.d/shinken-arbiter b/bin/init.d/shinken-arbiter
-index 02ca504..1a850d2 100755
---- a/bin/init.d/shinken-arbiter
-+++ b/bin/init.d/shinken-arbiter
+Index: shinken/bin/init.d/shinken-arbiter
+===================================================================
+--- shinken.orig/bin/init.d/shinken-arbiter
++++ shinken/bin/init.d/shinken-arbiter
 @@ -1,26 +1,5 @@
  #! /bin/sh
  
--# Copyright (C) 2009-2011:
+-# Copyright (C) 2009-2014:
 -#    Gabes Jean, naparuba@gmail.com
 -#    Gerhard Lausser, Gerhard.Lausser@consol.de
 -#    Gregory Starck, g.starck@gmail.com
@@ -106,14 +106,14 @@ index 02ca504..1a850d2 100755
  ### BEGIN INIT INFO
  # Provides:          shinken-arbiter
  # Required-Start:    $all
-diff --git a/bin/init.d/shinken-broker b/bin/init.d/shinken-broker
-index b92f0ad..1a51246 100755
---- a/bin/init.d/shinken-broker
-+++ b/bin/init.d/shinken-broker
+Index: shinken/bin/init.d/shinken-broker
+===================================================================
+--- shinken.orig/bin/init.d/shinken-broker
++++ shinken/bin/init.d/shinken-broker
 @@ -1,26 +1,5 @@
  #! /bin/sh
  
--# Copyright (C) 2009-2011:
+-# Copyright (C) 2009-2014:
 -#    Gabes Jean, naparuba@gmail.com
 -#    Gerhard Lausser, Gerhard.Lausser@consol.de
 -#    Gregory Starck, g.starck@gmail.com
@@ -137,14 +137,14 @@ index b92f0ad..1a51246 100755
  ### BEGIN INIT INFO
  # Provides:          shinken-broker
  # Required-Start:    $all
-diff --git a/bin/init.d/shinken-poller b/bin/init.d/shinken-poller
-index 04a6cfa..2422c4a 100755
---- a/bin/init.d/shinken-poller
-+++ b/bin/init.d/shinken-poller
+Index: shinken/bin/init.d/shinken-poller
+===================================================================
+--- shinken.orig/bin/init.d/shinken-poller
++++ shinken/bin/init.d/shinken-poller
 @@ -1,26 +1,5 @@
  #! /bin/sh
  
--# Copyright (C) 2009-2011:
+-# Copyright (C) 2009-2014:
 -#    Gabes Jean, naparuba@gmail.com
 -#    Gerhard Lausser, Gerhard.Lausser@consol.de
 -#    Gregory Starck, g.starck@gmail.com
@@ -168,14 +168,14 @@ index 04a6cfa..2422c4a 100755
  ### BEGIN INIT INFO
  # Provides:          shinken-poller
  # Required-Start:    $all
-diff --git a/bin/init.d/shinken-reactionner b/bin/init.d/shinken-reactionner
-index db29e3e..8c182c4 100755
---- a/bin/init.d/shinken-reactionner
-+++ b/bin/init.d/shinken-reactionner
+Index: shinken/bin/init.d/shinken-reactionner
+===================================================================
+--- shinken.orig/bin/init.d/shinken-reactionner
++++ shinken/bin/init.d/shinken-reactionner
 @@ -1,26 +1,5 @@
  #! /bin/sh
  
--# Copyright (C) 2009-2011:
+-# Copyright (C) 2009-2014:
 -#    Gabes Jean, naparuba@gmail.com
 -#    Gerhard Lausser, Gerhard.Lausser@consol.de
 -#    Gregory Starck, g.starck@gmail.com
@@ -199,14 +199,14 @@ index db29e3e..8c182c4 100755
  ### BEGIN INIT INFO
  # Provides:          shinken-reactionner
  # Required-Start:    $all
-diff --git a/bin/init.d/shinken-receiver b/bin/init.d/shinken-receiver
-index e7b8b5f..342f4ee 100755
---- a/bin/init.d/shinken-receiver
-+++ b/bin/init.d/shinken-receiver
+Index: shinken/bin/init.d/shinken-receiver
+===================================================================
+--- shinken.orig/bin/init.d/shinken-receiver
++++ shinken/bin/init.d/shinken-receiver
 @@ -1,26 +1,5 @@
  #! /bin/sh
  
--# Copyright (C) 2009-2011:
+-# Copyright (C) 2009-2014:
 -#    Gabes Jean, naparuba@gmail.com
 -#    Gerhard Lausser, Gerhard.Lausser@consol.de
 -#    Gregory Starck, g.starck@gmail.com
@@ -230,14 +230,14 @@ index e7b8b5f..342f4ee 100755
  ### BEGIN INIT INFO
  # Provides:          shinken-receiver
  # Required-Start:    $all
-diff --git a/bin/init.d/shinken-scheduler b/bin/init.d/shinken-scheduler
-index 5af33ff..3347067 100755
---- a/bin/init.d/shinken-scheduler
-+++ b/bin/init.d/shinken-scheduler
+Index: shinken/bin/init.d/shinken-scheduler
+===================================================================
+--- shinken.orig/bin/init.d/shinken-scheduler
++++ shinken/bin/init.d/shinken-scheduler
 @@ -1,26 +1,5 @@
  #! /bin/sh
  
--# Copyright (C) 2009-2011:
+-# Copyright (C) 2009-2014:
 -#    Gabes Jean, naparuba@gmail.com
 -#    Gerhard Lausser, Gerhard.Lausser@consol.de
 -#    Gregory Starck, g.starck@gmail.com

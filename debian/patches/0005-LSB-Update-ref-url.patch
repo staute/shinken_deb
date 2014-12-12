@@ -6,19 +6,15 @@ Subject: LSB: Update ref url
  bin/init.d/shinken | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bin/init.d/shinken b/bin/init.d/shinken
-index 4951d9a..ed45652 100755
---- a/bin/init.d/shinken
-+++ b/bin/init.d/shinken
-@@ -37,9 +16,10 @@
- #     - receiver    : manage all passive data
- ### END INIT INFO
-
--# Deadlink :(
--# http://refspecs.freestandards.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
-+# Reference:
-+# http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
-
+Index: shinken/bin/init.d/shinken
+===================================================================
+--- shinken.orig/bin/init.d/shinken
++++ shinken/bin/init.d/shinken
+@@ -46,6 +46,7 @@
+ # Reference:
+ # http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
+ 
 +. /lib/lsb/init-functions
-
+ 
  NAME="shinken"
+ 
