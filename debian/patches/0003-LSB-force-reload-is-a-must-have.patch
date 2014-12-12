@@ -10,7 +10,7 @@ Index: shinken/bin/init.d/shinken
 ===================================================================
 --- shinken.orig/bin/init.d/shinken
 +++ shinken/bin/init.d/shinken
-@@ -538,6 +538,9 @@ do_cmd_on() {
+@@ -550,6 +550,9 @@ do_cmd_on() {
  ############################
  ## Main:
  
@@ -18,5 +18,5 @@ Index: shinken/bin/init.d/shinken
 +    CMD=restart
 +fi
  case "$CMD" in
-     start|stop|restart|status)
+     start|stop|restart|status|force-reload)
          do_cmd_on "$CMD" "$SUBMODULES"
