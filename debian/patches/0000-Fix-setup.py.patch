@@ -1,8 +1,8 @@
-diff --git a/setup.py b/setup.py
-index 54a37e2..ae27a40 100755
---- a/setup.py
-+++ b/setup.py
-@@ -180,6 +180,15 @@ parser.add_option('--record',
+Index: shinken/setup.py
+===================================================================
+--- shinken.orig/setup.py
++++ shinken/setup.py
+@@ -179,6 +179,15 @@ parser.add_option('--record',
  parser.add_option('--single-version-externally-managed',
                    dest="single_version", action='store_true',
                    help='I really dont know, this option is for pip only')
@@ -18,7 +18,7 @@ index 54a37e2..ae27a40 100755
  
  
  old_error = parser.error
-@@ -194,20 +203,7 @@ root = opts.proot or ''
+@@ -193,20 +202,7 @@ root = opts.proot or ''
  
  # We try to see if we are in a full install or an update process
  is_update = False
@@ -40,7 +40,7 @@ index 54a37e2..ae27a40 100755
  
  if '--update' in args or opts.upgrade or '--upgrade' in args:
      print "Shinken Lib Updating process only"
-@@ -341,7 +337,9 @@ else:
+@@ -340,7 +336,9 @@ else:
  # Change paths if need
  #if root:
  #    for (k,v) in default_paths.iteritems():
