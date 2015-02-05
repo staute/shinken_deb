@@ -4,6 +4,13 @@ shinken (2.2-1) unstable; urgency=medium
 
  -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Sat, 07 Feb 2015 12:16:00 -0500
 
+shinken (2.0.3-4) unstable; urgency=medium
+
+  * Reintroduce transitional shinken-core package for smooth upgrades from
+    wheezy.  (Closes: #776489)
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 28 Jan 2015 16:44:19 +0100
+
 shinken (2.0.3-3) unstable; urgency=medium
 
   [ Thibault Cohen ]

@@ -49,3 +49,9 @@ Description: Flexible monitoring tool - Documentation
  Shinken is a new, Nagios compatible monitoring tool, written in Python. The
  main goal of Shinken is to allow users to have a fully flexible architecture
  for their monitoring system that can easily scale to large environments.
+
+Package: shinken-core
+Architecture: all
+Depends: ${misc:Depends}
+Description: transitional dummy package to ensure smooth upgrades to wheezy
+ This empty package can be safely removed.
