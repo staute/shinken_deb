@@ -239,6 +239,7 @@ class Scheduler(object):
         except Exception, exp:
             logger.error("Error in writing the dump file %s : %s", p, str(exp))
 
+
     def dump_config(self):
         d = tempfile.gettempdir()
         p = os.path.join(d, 'scheduler-conf-dump-%d' % time.time())
@@ -533,54 +534,54 @@ class Scheduler(object):
     # Each second we search for master notification that are scatterisable and we do the job
     # we take the sons and we put them into our actions queue
     def scatter_master_notifications(self):
-            now = time.time()
-            for a in self.actions.values():
-                # We only want notifications
-                if a.is_a != 'notification':
-                    continue
-                if a.status == 'scheduled' and a.is_launchable(now):
-                    if not a.contact:
-                        # This is a "master" notification created by create_notifications.
-                        # It wont sent itself because it has no contact.
-                        # We use it to create "child" notifications (for the contacts and
-                        # notification_commands) which are executed in the reactionner.
-                        item = a.ref
-                        childnotifications = []
-                        if not item.notification_is_blocked_by_item(a.type, now):
-                            # If it is possible to send notifications of this type at the current time, then create
-                            # a single notification for each contact of this item.
-                            childnotifications = item.scatter_notification(a)
-                            for c in childnotifications:
-                                c.status = 'scheduled'
-                                self.add(c)  # this will send a brok
+        now = time.time()
+        for a in self.actions.values():
+            # We only want notifications
+            if a.is_a != 'notification':
+                continue
+            if a.status == 'scheduled' and a.is_launchable(now):
+                if not a.contact:
+                    # This is a "master" notification created by create_notifications.
+                    # It wont sent itself because it has no contact.
+                    # We use it to create "child" notifications (for the contacts and
+                    # notification_commands) which are executed in the reactionner.
+                    item = a.ref
+                    childnotifications = []
+                    if not item.notification_is_blocked_by_item(a.type, now):
+                        # If it is possible to send notifications of this type at the current time, then create
+                        # a single notification for each contact of this item.
+                        childnotifications = item.scatter_notification(a)
+                        for c in childnotifications:
+                            c.status = 'scheduled'
+                            self.add(c)  # this will send a brok
 
-                        # If we have notification_interval then schedule the next notification (problems only)
-                        if a.type == 'PROBLEM':
-                            # Update the ref notif number after raise the one of the notification
-                            if len(childnotifications) != 0:
-                                # notif_nb of the master notification was already current_notification_number+1.
-                                # If notifications were sent, then host/service-counter will also be incremented
-                                item.current_notification_number = a.notif_nb
+                    # If we have notification_interval then schedule the next notification (problems only)
+                    if a.type == 'PROBLEM':
+                        # Update the ref notif number after raise the one of the notification
+                        if len(childnotifications) != 0:
+                            # notif_nb of the master notification was already current_notification_number+1.
+                            # If notifications were sent, then host/service-counter will also be incremented
+                            item.current_notification_number = a.notif_nb
 
-                            if item.notification_interval != 0 and a.t_to_go is not None:
-                                # We must continue to send notifications.
-                                # Just leave it in the actions list and set it to "scheduled" and it will be found again later
-                                # Ask the service/host to compute the next notif time. It can be just
-                                # a.t_to_go + item.notification_interval * item.__class__.interval_length
-                                # or maybe before because we have an escalation that need to raise up before
-                                a.t_to_go = item.get_next_notification_time(a)
+                        if item.notification_interval != 0 and a.t_to_go is not None:
+                            # We must continue to send notifications.
+                            # Just leave it in the actions list and set it to "scheduled" and it will be found again later
+                            # Ask the service/host to compute the next notif time. It can be just
+                            # a.t_to_go + item.notification_interval * item.__class__.interval_length
+                            # or maybe before because we have an escalation that need to raise up before
+                            a.t_to_go = item.get_next_notification_time(a)
 
-                                a.notif_nb = item.current_notification_number + 1
-                                a.status = 'scheduled'
-                            else:
-                                # Wipe out this master notification. One problem notification is enough.
-                                item.remove_in_progress_notification(a)
-                                self.actions[a.id].status = 'zombie'
-
+                            a.notif_nb = item.current_notification_number + 1
+                            a.status = 'scheduled'
                         else:
-                            # Wipe out this master notification. We don't repeat recover/downtime/flap/etc...
+                            # Wipe out this master notification. One problem notification is enough.
                             item.remove_in_progress_notification(a)
                             self.actions[a.id].status = 'zombie'
+
+                    else:
+                        # Wipe out this master notification. We don't repeat recover/downtime/flap/etc...
+                        item.remove_in_progress_notification(a)
+                        self.actions[a.id].status = 'zombie'
 
 
     # Called by poller to get checks
@@ -835,7 +836,7 @@ class Scheduler(object):
     # We should get returns from satellites
     def get_actions_from_passives_satellites(self):
         # We loop for our passive pollers
-        for p in filter(lambda p: p['passive'], self.pollers.values()):
+        for p in [p for p in self.pollers.values() if p['passive']]:
             logger.debug("I will get actions from the poller %s", str(p))
             con = p['con']
             poller_tags = p['poller_tags']
@@ -845,7 +846,19 @@ class Scheduler(object):
                     # Before ask a call that can be long, do a simple ping to be sure it is alive
                     con.get('ping')
                     results = con.get('get_returns', {'sched_id':self.instance_id}, wait='long')
-                    results = cPickle.loads(str(results))
+                    try:
+                        results = str(results)
+                    except UnicodeEncodeError: # ascii not working, switch to utf8 so
+                        results = results.encode("utf8", 'ignore') # if not eally utf8 will be a real problem
+                        # and data will be invalid, socatch by the pickle.
+                    
+                    # now go the cpickle pass, and catch possible errors from it
+                    try:
+                        results = cPickle.loads(results)
+                    except Exception, exp:
+                        logger.error('Cannot load passive results from satellite %s : %s' % (p['name'], str(exp)))
+                        continue
+
                     nb_received = len(results)
                     self.nb_check_received += nb_received
                     logger.debug("Received %d passive results", nb_received)
@@ -856,16 +869,16 @@ class Scheduler(object):
                 except HTTPExceptions, exp:
                     logger.warning("Connection problem to the %s %s: %s", type, p['name'], str(exp))
                     p['con'] = None
-                    return
+                    continue
                 except KeyError, exp:
                     logger.warning("The %s '%s' is not initialized: %s", type, p['name'], str(exp))
                     p['con'] = None
-                    return
+                    continue
             else:  # no connection, try reinit
                 self.pynag_con_init(p['instance_id'], type='poller')
 
         # We loop for our passive reactionners
-        for p in filter(lambda p: p['passive'], self.reactionners.values()):
+        for p in [p for p in self.reactionners.values() if p['passive']]:
             logger.debug("I will get actions from the reactionner %s", str(p))
             con = p['con']
             reactionner_tags = p['reactionner_tags']
@@ -1007,7 +1020,7 @@ class Scheduler(object):
 
                 for prop, entry in properties.items():
                     # We save the value only if the attribute is selected for retention AND has been modified.
-                    if entry.retention and DICT_MODATTR['prop'].value & s.modified_attributes:
+                    if entry.retention and not (prop in DICT_MODATTR and not DICT_MODATTR[prop].value & s.modified_attributes ):
                         v = getattr(s, prop)
                         # Maybe we should "prepare" the data before saving it
                         # like get only names instead of the whole objects
@@ -1573,6 +1586,9 @@ class Scheduler(object):
         for p_id in self.pollers:
             self.pynag_con_init(p_id, type='poller')
 
+        for r_id in self.reactionners:
+            self.pynag_con_init(r_id, type='reactionner')
+
         # Ticks are for recurrent function call like consume
         # del zombies etc
         ticks = 0
@@ -1668,7 +1684,7 @@ class Scheduler(object):
                 self.dump_config()
                 self.need_objects_dump = False
 
-        
+
 
         # WE must save the retention at the quit BY OURSELF
         # because our daemon will not be able to do it for us

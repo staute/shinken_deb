@@ -51,8 +51,8 @@ class SatelliteLink(Item):
         'check_interval':  IntegerProp(default=60, fill_brok=['full_status']),
         'max_check_attempts': IntegerProp(default=3, fill_brok=['full_status']),
         'spare':              BoolProp(default=False, fill_brok=['full_status']),
-        'manage_sub_realms':  BoolProp(default=1, fill_brok=['full_status']),
-        'manage_arbiters':    BoolProp(default=0, fill_brok=['full_status'], to_send=True),
+        'manage_sub_realms':  BoolProp(default=True, fill_brok=['full_status']),
+        'manage_arbiters':    BoolProp(default=False, fill_brok=['full_status'], to_send=True),
         'modules':            ListProp(default=[''], to_send=True, split_on_coma=True),
         'polling_interval':   IntegerProp(default=1, fill_brok=['full_status'], to_send=True),
         'use_timezone':       StringProp(default='NOTSET', to_send=True),
@@ -60,7 +60,7 @@ class SatelliteLink(Item):
         'satellitemap':       DictProp(default={}, elts_prop=AddrProp, to_send=True, override=True),
         'use_ssl':            BoolProp(default=False, fill_brok=['full_status']),
         'hard_ssl_name_check':BoolProp(default=True, fill_brok=['full_status']),
-        'passive':            BoolProp(default=True, fill_brok=['full_status'], to_send=True),
+        'passive':            BoolProp(default=False, fill_brok=['full_status'], to_send=True),
     })
 
     running_properties = Item.running_properties.copy()

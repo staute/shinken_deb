@@ -259,6 +259,8 @@ class Config(Item):
         # More a running value in fact
         'resource_macros_names': ListProp(default=[]),
 
+        'http_backend': StringProp(default='auto'),
+
         # SSL PART
         # global boolean for know if we use ssl or not
         'use_ssl':               BoolProp(default=False, class_inherit=[(SchedulerLink, None), (ReactionnerLink, None),
@@ -447,7 +449,6 @@ class Config(Item):
 
     def load_params(self, params):
         clean_params = self.clean_params(params)
-        #self.params = Item.pythonize(Config, var)
 
         for key, value in clean_params.items():
 
@@ -456,6 +457,8 @@ class Config(Item):
             elif key in self.running_properties:
                 logger.warning("using a the running property %s in a config file", key)
                 val = self.running_properties[key].pythonize(clean_params[key])
+            elif key.startswith('$') or key in ['cfg_file', 'cfg_dir']: # it's a macro or a useless now param, we don't touch this
+                val = value
             else:
                 logger.warning("Guessing the property %s type because it is not in %s object properties",
                                key, self.__class__.__name__)
@@ -542,11 +545,7 @@ class Config(Item):
                     self.packs_dirs.append(cfg_dir_name)
 
                     # Now walk for it.
-                    # BEWARE : we can follow symlinks only for python 2.6 and higher
-                    args = {}
-                    if sys.version_info >= (2, 6):
-                        args['followlinks'] = True
-                    for root, dirs, files in os.walk(cfg_dir_name, **args):
+                    for root, dirs, files in os.walk(cfg_dir_name, followlinks=True):
                         for file in files:
                             if re.search("\.cfg$", file):
                                 if self.read_config_silent == 0:
@@ -916,8 +915,7 @@ class Config(Item):
         self.hostgroups.prepare_for_sending()
         t1 = time.time()
         logger.info('[Arbiter] Serializing the configurations...')
-
-
+        
         # There are two ways of configuration serializing
         # One if to use the serial way, the other is with use_multiprocesses_serializer
         # to call to sub-wrokers to do the job.
@@ -930,13 +928,13 @@ class Config(Item):
                     conf.hostgroups.prepare_for_sending()
                     logger.debug('[%s] Serializing the configuration %d', r.get_name(), i)
                     t0 = time.time()
-                    r.serialized_confs[i] = cPickle.dumps(conf, cPickle.HIGHEST_PROTOCOL)
-                    logger.debug("[config] time to serialize the conf %s:%s is %s", r.get_name(), i, time.time() - t0)
+                    r.serialized_confs[i] = cPickle.dumps(conf, 0)#cPickle.HIGHEST_PROTOCOL)
+                    logger.debug("[config] time to serialize the conf %s:%s is %s (size:%s)", r.get_name(), i, time.time() - t0, len(r.serialized_confs[i]))
                     logger.debug("PICKLE LEN : %d", len(r.serialized_confs[i]))
             # Now pickle the whole conf, for easy and quick spare send
             t0 = time.time()
             whole_conf_pack = cPickle.dumps(self, cPickle.HIGHEST_PROTOCOL)
-            logger.debug("[config] time to serialize the global conf : %s", time.time() - t0)
+            logger.debug("[config] time to serialize the global conf : %s (size:%)", time.time() - t0, len(whole_conf_pack))
             self.whole_conf_pack = whole_conf_pack
             print "TOTAL serializing in", time.time() - t1
 
@@ -959,7 +957,7 @@ class Config(Item):
                         logger.debug('[%s] Serializing the configuration %d', rname, i)
                         t0 = time.time()
                         res = cPickle.dumps(conf, cPickle.HIGHEST_PROTOCOL)
-                        logger.debug("[config] time to serialize the conf %s:%s is %s", rname, i, time.time() - t0)
+                        logger.debug("[config] time to serialize the conf %s:%s is %s (size:%s)", rname, i, time.time() - t0, len(res))
                         q.append((i, res))
 
                     # Prepare a sub-process that will manage the pickle computation
@@ -988,8 +986,7 @@ class Config(Item):
                 # Now get the serialized configuration and saved them into self
                 for (i, cfg) in q:
                     r.serialized_confs[i] = cfg
-            print "TOTAL TIME", time.time() - t1
-
+            
             # Now pickle the whole configuration into one big pickle object, for the arbiter spares
             whole_queue = m.list()
             t0 = time.time()
@@ -1012,10 +1009,11 @@ class Config(Item):
 
             #Get it and save it
             self.whole_conf_pack = whole_queue.pop()
-            logger.debug("[config] time to serialize the global conf : %s", time.time() - t0)
+            logger.debug("[config] time to serialize the global conf : %s (size:%s)", time.time() - t0, len(self.whole_conf_pack))
 
             # Shutdown the manager, the sub-process should be gone now
             m.shutdown()
+
 
     # It's used to warn about useless parameter and print why it's not use.
     def notice_about_useless_parameters(self):
@@ -1047,9 +1045,11 @@ class Config(Item):
 
             logger.warning("Unmanaged configuration statement, do you really need it? Ask for it on the developer mailinglist %s or submit a pull request on the Shinken github ", mailing_list_uri)
 
+
     # Overrides specific instances properties
     def override_properties(self):
         self.services.override_properties(self.hosts)
+
 
     # Use to fill groups values on hosts and create new services
     # (for host group ones)
@@ -1093,11 +1093,13 @@ class Config(Item):
         #print "Realms"
         self.realms.explode()
 
+
     # Dependencies are important for scheduling
     # This function create dependencies linked between elements.
     def apply_dependencies(self):
         self.hosts.apply_dependencies()
         self.services.apply_dependencies()
+
 
     # Use to apply inheritance (template and implicit ones)
     # So elements will have their configured properties
@@ -1125,10 +1127,12 @@ class Config(Item):
         self.hostescalations.apply_inheritance()
         self.escalations.apply_inheritance()
 
+
     # Use to apply implicit inheritance
     def apply_implicit_inheritance(self):
         #print "Services"
         self.services.apply_implicit_inheritance(self.hosts)
+
 
     # will fill properties for elements so they will have all theirs properties
     def fill_default(self):
@@ -1458,6 +1462,7 @@ class Config(Item):
         self.serviceescalations.linkify_templates()
         self.hostescalations.linkify_templates()
 
+
     # Some parameters are just not managed like O*HP commands
     # and regexp capabilities
     # True: OK
@@ -1474,6 +1479,7 @@ class Config(Item):
         #    logger.error("ocsp_command parameter is not managed.")
         #    r &= False
         return r
+
 
     # check if elements are correct or not (fill with defaults, etc)
     # Warning: this function call be called from a Arbiter AND
@@ -1591,6 +1597,7 @@ class Config(Item):
         for cls in clss:
             cls.load_global_conf(self)
 
+
     # Clean useless elements like templates because they are not needed anymore
     def remove_templates(self):
         self.hosts.remove_templates()
@@ -1602,10 +1609,12 @@ class Config(Item):
         self.discoveryrules.remove_templates()
         self.discoveryruns.remove_templates()
 
+
     # We will compute simple element md5hash, so we can know
     # if they changed or not between the restart
     def compute_hash(self):
         self.hosts.compute_hash()
+
 
     # Add an error in the configuration error list so we can print them
     # all in one place
@@ -1615,10 +1624,12 @@ class Config(Item):
 
         self.conf_is_correct = False
 
+
     # Now it's time to show all configuration errors
     def show_errors(self):
         for err in self.configuration_errors:
             logger.error(err)
+
 
     # Create packs of hosts and services so in a pack,
     # all dependencies are resolved
@@ -1832,6 +1843,7 @@ class Config(Item):
                            "been ignored"
                            % (len(self.hosts), nb_elements_all_realms))
 
+
     # Use the self.conf and make nb_parts new confs.
     # nbparts is equal to the number of schedulerlink
     # New confs are independent with checks. The only communication
@@ -1933,6 +1945,17 @@ class Config(Item):
                 for h in cfg.hosts:
                     if h.id in mbrs_id:
                         hg.members.append(h)
+
+            # And also relink the hosts with the valid hostgroups
+            for h in cfg.hosts:
+                orig_hgs = h.hostgroups
+                nhgs = []
+                for ohg in orig_hgs:
+                    nhg = cfg.hostgroups.find_by_name(ohg.get_name())
+                    nhgs.append(nhg)
+                h.hostgroups = nhgs
+                        
+
             # Fill servicegroup
             for ori_sg in self.servicegroups:
                 sg = cfg.servicegroups.find_by_name(ori_sg.get_name())
@@ -1945,6 +1968,16 @@ class Config(Item):
                     if s.id in mbrs_id:
                         sg.members.append(s)
 
+            # And also relink the services with the valid servicegroups
+            for h in cfg.services:
+                orig_hgs = h.servicegroups
+                nhgs = []
+                for ohg in orig_hgs:
+                    nhg = cfg.servicegroups.find_by_name(ohg.get_name())
+                    nhgs.append(nhg)
+                h.servicegroups = nhgs
+
+
         # Now we fill other_elements by host (service are with their host
         # so they are not tagged)
         for i in self.confs:
@@ -1956,6 +1989,7 @@ class Config(Item):
         for i in self.confs:
             self.confs[i].instance_id = i
             random.seed(time.time())
+
 
     def dump(self, f=None):
         dmp = {}
@@ -2007,6 +2041,7 @@ class Config(Item):
         )
         if close is True:
             f.close()
+
 
 # ...
 def lazy():

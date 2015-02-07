@@ -214,6 +214,7 @@ class TestConfig(PropertiesTester, ShinkenTest):
         ('ca_cert', 'etc/certs/ca.pem'),
         ('server_cert', 'etc/certs/server.cert'),
         ('hard_ssl_name_check', False),
+        ('http_backend', 'auto'),
 
         ('human_timestamp_log', False),
 
@@ -584,7 +585,7 @@ class TestHost(PropertiesTester, ShinkenTest):
         ('business_rule_smart_notifications', False),
         ('business_rule_downtime_as_ack', False),
         ('labels', []),
-        ('snapshot_interval', 300),
+        ('snapshot_interval', 5),
         ('snapshot_command', ''),
         ('snapshot_enabled', False),
         ('snapshot_period', ''),
@@ -887,7 +888,7 @@ class TestService(PropertiesTester, ShinkenTest):
         ('business_rule_smart_notifications', False),
         ('business_rule_downtime_as_ack', False),
         ('labels', []),
-        ('snapshot_interval', 300),
+        ('snapshot_interval', 5),
         ('snapshot_command', ''),
         ('snapshot_enabled', False),
         ('snapshot_period', ''),

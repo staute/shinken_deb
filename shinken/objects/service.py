@@ -169,7 +169,7 @@ class Service(SchedulingItem):
         'snapshot_command':        StringProp(default=''),
         'snapshot_period':         StringProp(default=''),
         'snapshot_criteria':       ListProp(default=['w','c','u'], fill_brok=['full_status'], merging='join'),
-        'snapshot_interval':       IntegerProp(default=300),
+        'snapshot_interval':       IntegerProp(default=5),
 
     })
 
@@ -1040,6 +1040,9 @@ class Service(SchedulingItem):
         else:
             return self.state
 
+    def get_downtime(self):
+        return str(self.scheduled_downtime_depth)
+
 
 # Class for list of services. It's mainly, mainly for configuration part
 class Services(Items):
@@ -1059,7 +1062,7 @@ class Services(Items):
         hname = getattr(tpl, 'host_name', '')
         if not name and not hname:
             mesg = "a %s template has been defined without name nor " \
-                   "host_name%s" % (objcls, tpl.get_source())
+                   "host_name%s" % (objcls, self.get_source(tpl))
             tpl.configuration_errors.append(mesg)
         elif name:
             tpl = self.index_template(tpl)

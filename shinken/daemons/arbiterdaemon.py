@@ -132,17 +132,21 @@ class IForArbiter(Interface):
                 cls = d.__class__
                 e = {}
                 ds = [cls.properties, cls.running_properties]
+
                 for _d in ds:
                     for prop in _d:
                         if hasattr(d, prop):
                             v = getattr(d, prop)
+                            if prop == "realm":
+                                if hasattr(v,"realm_name"):
+                                    e[prop] = v.realm_name
                             # give a try to a json able object
                             try:
                                 json.dumps(v)
                                 e[prop] = v
                             except Exception, exp:
                                 logger.debug('%s', exp)
-                    lst.append(e)
+                lst.append(e)
         return res
     get_all_states.doc = doc
 
@@ -696,6 +700,9 @@ class Arbiter(Daemon):
             now = time.time()
             if now - self.last_master_speack > master_timeout:
                 logger.info("Arbiter Master is dead. The arbiter %s take the lead", self.me.get_name())
+                for arb in self.conf.arbiters:
+                    if not arb.spare:
+                        arb.alive = False                
                 self.must_run = True
                 break
 

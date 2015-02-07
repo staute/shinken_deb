@@ -164,7 +164,7 @@ class Host(SchedulingItem):
         'snapshot_command':        StringProp(default=''),
         'snapshot_period':         StringProp(default=''),
         'snapshot_criteria':       ListProp(default=['d','u'], fill_brok=['full_status'], merging='join'),
-        'snapshot_interval':       IntegerProp(default=300),
+        'snapshot_interval':       IntegerProp(default=5),
     })
 
     # properties set only for running purpose
@@ -1106,6 +1106,9 @@ class Host(SchedulingItem):
             return mapping.get(self.business_rule.get_state(), "n/a")
         else:
             return self.state
+
+    def get_downtime(self):
+        return str(self.scheduled_downtime_depth)
 
 
 # CLass for the hosts lists. It's mainly for configuration
