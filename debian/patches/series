@@ -24,3 +24,4 @@
 0023-shinken-cli.patch
 fix_init_script_dependency.patch
 0024_fix_mathjax_dep
+0025_fix_modernizr_dep
