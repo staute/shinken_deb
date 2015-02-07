@@ -1,2 +1,3 @@
 etc/shinken/modules
 var/lib/shinken/cli
+usr/share/pyshared/shinken/modules
