@@ -1,2 +1,3 @@
-usr/share/javascript/jquery/jquery.js         usr/share/doc/shinken-doc/html/_static/jquery.js
-usr/share/javascript/underscore/underscore.js usr/share/doc/shinken-doc/html/_static/underscore.js
+usr/share/javascript/jquery/jquery.js            usr/share/doc/shinken-doc/html/_static/jquery.js
+usr/share/javascript/underscore/underscore.js   usr/share/doc/shinken-doc/html/_static/underscore.js
+usr/share/javascript/mathjax/MathJax.js         usr/share/doc/shinken-doc/html/_static/MathJax.js

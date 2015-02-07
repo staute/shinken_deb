@@ -1,0 +1,10 @@
+--- a/doc/source/conf.py
++++ b/doc/source/conf.py
+@@ -67,6 +67,7 @@
+ except ImportError:
+    pass
+ 
++mathjax_path = "js/MathJax.js"
+ 
+ # Add any paths that contain templates here, relative to this directory.
+ templates_path = ['_templates']

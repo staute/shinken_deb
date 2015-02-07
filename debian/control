@@ -42,7 +42,7 @@ Description: Flexible monitoring tool - Common files
 Package: shinken-doc
 Section: doc
 Architecture: all
-Depends: ${misc:Depends}, libjs-jquery, libjs-underscore
+Depends: ${misc:Depends}, libjs-jquery, libjs-underscore, libjs-mathjax
 Description: Flexible monitoring tool - Documentation
  Shinken documentation.
  .
