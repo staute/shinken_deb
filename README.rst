@@ -9,6 +9,9 @@ Welcome to the Shinken project.
     :alt: Version
 .. image:: https://api.travis-ci.org/naparuba/shinken.svg?branch=master
   :target: https://travis-ci.org/naparuba/shinken
+.. image:: https://pypip.in/d/Shinken/badge.png
+  :target: https://pypi.python.org/pypi//Shinken/
+
 
 Shinken is a modern, Nagios compatible monitoring framework, written in
 Python. Its main goal is to give users a flexible architecture for
@@ -116,3 +119,105 @@ When filing a new bug, please remember to include:
 
 __ https://github.com/naparuba/shinken/issues/
 __ https://gist.github.com/
+
+
+Install Shinken as python lib
+=============================
+
+In  avirtualenv ::
+
+  virtualenv env
+  source env/bin/activate
+  python setup.py install_lib
+  python -c 'from shinken.bin import VERSION; print(VERSION)'
+
+Or directly on your system::
+
+  sudo python setup.py install_lib
+  python -c 'from shinken.bin import VERSION; print(VERSION)'
+
+
+Get Shinken dev environment
+===========================
+
+
+To setup Shinken dev environment::
+
+  virtualenv env
+  source env/bin/activate
+  python setup.py develop
+  python setup.py install_data
+
+If you want to use init scripts in your virtualenv you have to REsource ``activate``::
+
+  source env/bin/activate
+
+
+Folders
+-------
+
+env/etc: Configuration folder
+
+env/var/lib/shinken/modules: Modules folder
+
+env/var/log/shinken: Logs folder
+
+env/var/run/shinken: Pid files folder
+
+Launch daemons
+--------------
+
+With binaries
+~~~~~~~~~~~~~
+
+Arbiter::
+
+  shinken-arbiter -c env/etc/shinken/shinken.cfg
+
+Broker::
+
+  shinken-broker -c env/etc/shinken/daemons/brokerd.ini
+
+Scheduler::
+
+  shinken-scheduler -c env/etc/shinken/daemons/schedulerd.ini
+
+Poller::
+
+  shinken-poller -c env/etc/shinken/daemons/pollerd.ini
+
+Reactionner::
+
+  shinken-reactionner -c env/etc/shinken/daemons/reactionnerd.ini
+
+Receiver::
+
+  shinken-receiver -c env/etc/shinken/daemons/receiverd.ini
+
+
+With init scripts
+~~~~~~~~~~~~~~~~~
+
+Arbiter::
+
+  env/etc/init.d/shinken-arbiter start
+
+Broker::
+
+  env/etc/init.d/shinken-broker start
+
+Scheduler::
+
+  env/etc/init.d/shinken-scheduler start
+
+Poller::
+
+  env/etc/init.d/shinken-poller start
+
+Reactionner::
+
+  env/etc/init.d/shinken-reactionner start
+
+Receiver::
+
+  env/etc/init.d/shinken-receiver start

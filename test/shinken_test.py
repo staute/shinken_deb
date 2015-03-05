@@ -36,12 +36,12 @@ from shinken.macroresolver import MacroResolver
 from shinken.external_command import ExternalCommandManager, ExternalCommand
 from shinken.check import Check
 from shinken.message import Message
-from shinken.arbiterlink import ArbiterLink
-from shinken.schedulerlink import SchedulerLink
-from shinken.pollerlink import PollerLink
-from shinken.reactionnerlink import ReactionnerLink
-from shinken.brokerlink import BrokerLink
-from shinken.satellitelink import SatelliteLink
+from shinken.objects.arbiterlink import ArbiterLink
+from shinken.objects.schedulerlink import SchedulerLink
+from shinken.objects.pollerlink import PollerLink
+from shinken.objects.reactionnerlink import ReactionnerLink
+from shinken.objects.brokerlink import BrokerLink
+from shinken.objects.satellitelink import SatelliteLink
 from shinken.notification import Notification
 from shinken.modulesmanager import ModulesManager
 from shinken.basemodule import BaseModule
@@ -59,11 +59,8 @@ from logging import ERROR
 myself = os.path.abspath(__file__)
 
 global modules_dir
-modules_dir = "modules"
+modules_dir = os.environ.get('SHINKEN_MODULES_DIR', "modules")
 
-def define_modules_dir(val):
-    global modules_dir
-    modules_dir = val
 
 class __DUMMY:
     def add(self, obj):
@@ -176,41 +173,8 @@ class Pluginconf(object):
     pass
 
 
-class _Unittest2CompatMixIn:
-    """
-    Mixin for simulating methods new in unittest2 resp. Python 2.7.
 
-    Every test-case should inherit this *after* unittest.TestCase to
-    make the compatiblity-methods available if they are not defined in
-    unittest.TestCase already. Example::
-
-       class MyTestCase(unittest.TestCase, Unittest2CompatMixIn):
-           ...
-    In our case, it's better to always inherit from ShinkenTest
-
-    """
-    if False:
-        def assertNotIn(self, member, container, msg=None):
-           self.assertTrue(member not in container, msg)
-
-        def assertIn(self, member, container, msg=None):
-            self.assertTrue(member in container)
-
-        def assertIsInstance(self, obj, cls, msg=None):
-            self.assertTrue(isinstance(obj, cls))
-
-        def assertRegexpMatches(self, line, pattern):
-            r = re.search(pattern, line)
-            self.assertTrue(r is not None)
-
-        def assertIs(self, obj, cmp, msg=None):
-            self.assertTrue(obj is cmp, msg or "%r __is not__ %r !" % (obj, cmp))
-
-        def assertIsNot(self, obj, cmp, msg=None):
-            self.assertTrue(obj is not cmp, msg or "%r __is__ %r " % (obj, cmp))
-
-
-class ShinkenTest(unittest.TestCase, _Unittest2CompatMixIn):
+class ShinkenTest(unittest.TestCase):
     def setUp(self):
         self.setup_with_file('etc/shinken_1r_1h_1s.cfg')
 
@@ -267,9 +231,8 @@ class ShinkenTest(unittest.TestCase, _Unittest2CompatMixIn):
         self.dispatcher = Dispatcher(self.conf, self.me)
 
         scheddaemon = Shinken(None, False, False, False, None, None)
-        self.sched = Scheduler(scheddaemon)
-
-        scheddaemon.sched = self.sched
+        self.scheddaemon = scheddaemon
+        self.sched = scheddaemon.sched
         scheddaemon.modules_dir = modules_dir
         scheddaemon.load_modules_manager()
         # Remember to clean the logs we just created before launching tests
@@ -457,7 +420,7 @@ class ShinkenTest(unittest.TestCase, _Unittest2CompatMixIn):
             self.assertGreaterEqual(self.count_logs(), index)
         regex = re.compile(pattern)
         lognum = 1
-        broks = sorted(self.sched.broks.values(), lambda x, y: x.id - y.id)
+        broks = sorted(self.sched.broks.values(), key=lambda x: x.id)
         for brok in broks:
             if brok.type == 'log':
                 brok.prepare()
@@ -467,11 +430,15 @@ class ShinkenTest(unittest.TestCase, _Unittest2CompatMixIn):
                 lognum += 1
         self.assertTrue(no_match, "%s found a matched log line in broks :\n"
                                "index=%s pattern=%r\n"
-                               "broks=%r" % (
+                               "broks_logs=[[[\n%s\n]]]" % (
             '*HAVE*' if no_match else 'Not',
-            index, pattern, broks
+            index, pattern, '\n'.join(
+                '\t%s=%s' % (idx, b.strip())
+                for idx, b in enumerate(
+                    (b.data['log'] for b in broks if b.type == 'log'),
+                    1)
+            )
         ))
-
 
     def _any_log_match(self, pattern, assert_not):
         regex = re.compile(pattern)

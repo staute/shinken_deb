@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 # -*- coding: utf-8 -*-
 
 # Copyright (C) 2009-2014:
@@ -27,7 +26,6 @@ import sys
 import os
 import time
 import traceback
-from Queue import Empty
 import socket
 import traceback
 import cStringIO
@@ -44,6 +42,7 @@ from shinken.stats import statsmgr
 from shinken.brok import Brok
 from shinken.external_command import ExternalCommand
 from shinken.property import BoolProp
+from shinken.util import jsonify_r
 
 # Interface for the other Arbiter
 # It connects, and together we decide who's the Master and who's the Slave, etc.
@@ -65,7 +64,6 @@ class IForArbiter(Interface):
     doc = 'Put a new configuration to the daemon'
     # The master Arbiter is sending us a new conf in a pickle way. Ok, we take it
     def put_conf(self, conf):
-        conf = cPickle.loads(conf)
         super(IForArbiter, self).put_conf(conf)
         self.app.must_run = False
     put_conf.method = 'POST'
@@ -83,7 +81,8 @@ class IForArbiter(Interface):
     def do_not_run(self):
         # If I'm the master, ignore the command
         if self.app.is_master:
-            logger.debug("Received message to not run. I am the Master, ignore and continue to run.")
+            logger.debug("Received message to not run. "
+                         "I am the Master, ignore and continue to run.")
         # Else, I'm just a spare, so I listen to my master
         else:
             logger.debug("Received message to not run. I am the spare, stopping.")
@@ -128,7 +127,7 @@ class IForArbiter(Interface):
                   'broker']:
             lst = []
             res[t] = lst
-            for d in getattr(self.app.conf, t+'s'):
+            for d in getattr(self.app.conf, t + 's'):
                 cls = d.__class__
                 e = {}
                 ds = [cls.properties, cls.running_properties]
@@ -138,7 +137,7 @@ class IForArbiter(Interface):
                         if hasattr(d, prop):
                             v = getattr(d, prop)
                             if prop == "realm":
-                                if hasattr(v,"realm_name"):
+                                if hasattr(v, "realm_name"):
                                     e[prop] = v.realm_name
                             # give a try to a json able object
                             try:
@@ -152,7 +151,8 @@ class IForArbiter(Interface):
 
 
     # Try to give some properties of our objects
-    doc = 'Dump all objects of the type in [hosts, services, contacts, commands, hostgroups, servicegroups]'
+    doc = 'Dump all objects of the type in [hosts, services, contacts, ' \
+          'commands, hostgroups, servicegroups]'
     def get_objects_properties(self, table):
         logger.debug('ASK:: table= %s', str(table))
         objs = getattr(self.app.conf, table, None)
@@ -170,9 +170,11 @@ class IForArbiter(Interface):
 # Main Arbiter Class
 class Arbiter(Daemon):
 
-    def __init__(self, config_files, is_daemon, do_replace, verify_only, debug, debug_file, profile=None, analyse=None, migrate=None, arb_name=''):
+    def __init__(self, config_files, is_daemon, do_replace, verify_only, debug,
+                 debug_file, profile=None, analyse=None, migrate=None, arb_name=''):
 
-        super(Arbiter, self).__init__('arbiter', config_files[0], is_daemon, do_replace, debug, debug_file)
+        super(Arbiter, self).__init__('arbiter', config_files[0], is_daemon, do_replace,
+                                      debug, debug_file)
 
         self.config_files = config_files
         self.verify_only = verify_only
@@ -239,7 +241,7 @@ class Arbiter(Daemon):
     # Our links to satellites can raise broks. We must send them
     def get_broks_from_satellitelinks(self):
         tabs = [self.conf.brokers, self.conf.schedulers,
-                    self.conf.pollers, self.conf.reactionners,
+                self.conf.pollers, self.conf.reactionners,
                 self.conf.receivers]
         for tab in tabs:
             for s in tab:
@@ -302,9 +304,10 @@ class Arbiter(Daemon):
                 statsd_port = getattr(self.conf, 'statsd_port', 8125)
                 statsd_prefix = getattr(self.conf, 'statsd_prefix', 'shinken')
                 statsd_enabled = getattr(self.conf, 'statsd_enabled', False)
-                statsmgr.register(self, arb.get_name(), 'arbiter', 
+                statsmgr.register(self, arb.get_name(), 'arbiter',
                                   api_key=api_key, secret=secret, http_proxy=http_proxy,
-                                  statsd_host=statsd_host, statsd_port=statsd_port, statsd_prefix=statsd_prefix, statsd_enabled=statsd_enabled)
+                                  statsd_host=statsd_host, statsd_port=statsd_port,
+                                  statsd_prefix=statsd_prefix, statsd_enabled=statsd_enabled)
 
                 # Set myself as alive ;)
                 self.me.alive = True
@@ -336,13 +339,14 @@ class Arbiter(Daemon):
         # Now we ask for configuration modules if they
         # got items for us
         for inst in self.modules_manager.instances:
-            #TODO : clean
+            # TODO : clean
             if hasattr(inst, 'get_objects'):
                 _t = time.time()
                 try:
                     r = inst.get_objects()
                 except Exception, exp:
-                    logger.error("Instance %s raised an exception %s. Log and continue to run", inst.get_name(), str(exp))
+                    logger.error("Instance %s raised an exception %s. Log and continue to run",
+                                 inst.get_name(), str(exp))
                     output = cStringIO.StringIO()
                     traceback.print_exc(file=output)
                     logger.error("Back trace of this remove: %s", output.getvalue())
@@ -355,18 +359,20 @@ class Arbiter(Daemon):
                     if prop in r:
                         for x in r[prop]:
                             # test if raw_objects[k] are already set - if not, add empty array
-                            if not k in raw_objects:
+                            if k not in raw_objects:
                                 raw_objects[k] = []
                             # now append the object
                             raw_objects[k].append(x)
-                        logger.debug("Added %i objects to %s from module %s", len(r[prop]), k, inst.get_name())
+                        logger.debug("Added %i objects to %s from module %s",
+                                     len(r[prop]), k, inst.get_name())
 
-        ### Resume standard operations ###
+        # Resume standard operations ###
         self.conf.create_objects(raw_objects)
 
         # Maybe conf is already invalid
         if not self.conf.conf_is_correct:
-            sys.exit("***> One or more problems was encountered while processing the config files...")
+            sys.exit("***> One or more problems was encountered "
+                     "while processing the config files...")
 
         # Manage all post-conf modules
         self.hook_point('early_configuration')
@@ -429,7 +435,6 @@ class Arbiter(Daemon):
         # And link them
         self.conf.create_business_rules_dependencies()
 
-
         # Warn about useless parameters in Shinken
         if self.verify_only:
             self.conf.notice_about_useless_parameters()
@@ -459,7 +464,8 @@ class Arbiter(Daemon):
             logger.error(err)
             sys.exit(err)
 
-        logger.info('Things look okay - No serious problems were detected during the pre-flight check')
+        logger.info('Things look okay - No serious problems were detected '
+                    'during the pre-flight check')
 
         # Clean objects of temporary/unnecessary attributes for live work:
         self.conf.clean()
@@ -501,7 +507,7 @@ class Arbiter(Daemon):
         else:
             self.workdir = self.conf.workdir
 
-        ##  We need to set self.host & self.port to be used by do_daemon_init_and_start
+        #  We need to set self.host & self.port to be used by do_daemon_init_and_start
         self.host = self.me.address
         self.port = self.me.port
 
@@ -509,11 +515,6 @@ class Arbiter(Daemon):
 
 
     def launch_analyse(self):
-        try:
-            import json
-        except ImportError:
-            logger.error("Error: json is need for statistics file saving. Please update your python version to 2.6")
-            sys.exit(2)
 
         logger.info("We are doing an statistic analysis on the dump file %s", self.analyse)
         stats = {}
@@ -538,9 +539,9 @@ class Arbiter(Daemon):
 
 
     def go_migrate(self):
-        print "***********"*5
+        print "***********" * 5
         print "WARNING : this feature is NOT supported in this version!"
-        print "***********"*5
+        print "***********" * 5
 
         migration_module_name = self.migrate.strip()
         mig_mod = self.conf.modules.find_by_name(migration_module_name)
@@ -557,7 +558,7 @@ class Arbiter(Daemon):
             print "Error during the initialization of the import module. Bailing out"
             sys.exit(2)
         print "Configuration migrating in progress..."
-        mod  = self.modules_manager.instances[0]
+        mod = self.modules_manager.instances[0]
         f = getattr(mod, 'import_objects', None)
         if not f or not callable(f):
             print "Import module is missing the import_objects function. Bailing out"
@@ -586,7 +587,7 @@ class Arbiter(Daemon):
             # Force the debug level if the daemon is said to start with such level
             if self.debug:
                 logger.setLevel('DEBUG')
-            
+
             # Log will be broks
             for line in self.get_header():
                 logger.info(line)
@@ -600,7 +601,7 @@ class Arbiter(Daemon):
             # Look if we are enabled or not. If ok, start the daemon mode
             self.look_for_early_exit()
             self.do_daemon_init_and_start()
-            
+
             self.uri_arb = self.http_daemon.register(self.interface)
 
             # ok we are now fully daemonized (if requested)
@@ -610,7 +611,7 @@ class Arbiter(Daemon):
             # Ok now we can load the retention data
             self.hook_point('load_retention')
 
-            ## And go for the main loop
+            # And go for the main loop
             self.do_mainloop()
         except SystemExit, exp:
             # With a 2.4 interpreter the sys.exit() in load_config_file
@@ -624,6 +625,9 @@ class Arbiter(Daemon):
     def setup_new_conf(self):
         """ Setup a new conf received from a Master arbiter. """
         conf = self.new_conf
+        if not conf:
+            return
+        conf = cPickle.loads(conf)
         self.new_conf = None
         self.cur_conf = conf
         self.conf = conf
@@ -645,24 +649,6 @@ class Arbiter(Daemon):
         if self.must_run:
             # Main loop
             self.run()
-
-
-    # Get 'objects' from external modules
-    # It can be used to get external commands for example
-    def get_objects_from_from_queues(self):
-        for f in self.modules_manager.get_external_from_queues():
-            #print "Groking from module instance %s" % f
-            while True:
-                try:
-                    o = f.get(block=False)
-                    self.add(o)
-                except Empty:
-                    break
-                # Maybe the queue had problems
-                # log it and quit it
-                except (IOError, EOFError), exp:
-                    logger.error("An external module queue got a problem '%s'", str(exp))
-                    break
 
 
     # We wait (block) for arbiter to send us something
@@ -699,10 +685,11 @@ class Arbiter(Daemon):
             # Now check if master is dead or not
             now = time.time()
             if now - self.last_master_speack > master_timeout:
-                logger.info("Arbiter Master is dead. The arbiter %s take the lead", self.me.get_name())
+                logger.info("Arbiter Master is dead. The arbiter %s take the lead",
+                            self.me.get_name())
                 for arb in self.conf.arbiters:
                     if not arb.spare:
-                        arb.alive = False                
+                        arb.alive = False
                 self.must_run = True
                 break
 
@@ -827,7 +814,7 @@ class Arbiter(Daemon):
             # we must give him our broks
             self.push_broks_to_broker()
             self.get_external_commands_from_satellites()
-            #self.get_external_commands_from_receivers()
+            # self.get_external_commands_from_receivers()
             # send_conf_to_schedulers()
 
             if self.nb_broks_send != 0:
@@ -876,12 +863,12 @@ class Arbiter(Daemon):
         now = int(time.time())
         # call the daemon one
         res = super(Arbiter, self).get_stats_struct()
-        res.update( {'name':self.me.get_name(), 'type':'arbiter'} )
+        res.update({'name': self.me.get_name(), 'type': 'arbiter'})
         res['hosts'] = len(self.conf.hosts)
         res['services'] = len(self.conf.services)
         metrics = res['metrics']
         # metrics specific
-        metrics.append( 'arbiter.%s.external-commands.queue %d %d' % (self.me.get_name(), len(self.external_commands), now) )
+        metrics.append('arbiter.%s.external-commands.queue %d %d' %
+                       (self.me.get_name(), len(self.external_commands), now))
 
         return res
-
