@@ -1,3 +1,9 @@
+shinken (2.4-BETA1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+
+ -- Thibault Cohen <tcohen@tcohen-pc.mtl.sfl>  Thu, 05 Mar 2015 15:27:10 -0500
+
 shinken (2.2-1) unstable; urgency=medium
 
   * New upstream version
