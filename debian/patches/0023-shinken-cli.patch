@@ -1,16 +1,3 @@
-Index: shinken/bin/shinken
-===================================================================
---- shinken.orig/bin/shinken
-+++ shinken/bin/shinken
-@@ -123,7 +123,7 @@ class CLICommander(object):
- # the Linux Standard Base''',
-             'values'  : [('etc', '/etc/shinken'), ('lib','/var/lib/shinken'),
-                          ('share', '%(lib)s/share'), ('cli','%(lib)s/cli'),
--                         ('packs', '%(etc)s/packs'), ('modules', '%(lib)s/modules'),
-+                         ('packs', '%(etc)s/packs'), ('modules', '/usr/share/pyshared/shinken/modules'),
-                          ('doc', '%(lib)s/doc'), ('inventory', '%(lib)s/inventory'),
-                          ('libexec', '%(lib)s/libexec'),
-                          ]}
 Index: shinken/cli/desc/cli.py
 ===================================================================
 --- shinken.orig/cli/desc/cli.py

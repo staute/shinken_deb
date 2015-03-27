@@ -1,4 +1,3 @@
-0000-Fix-setup.py.patch
 #0001-LSB-shinken-requires-remote_fs-because-it-is-in-usr-.patch
 #0002-LSB-S-runlevel-is-not-a-real-one.patch
 0003-LSB-force-reload-is-a-must-have.patch

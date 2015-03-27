@@ -75,8 +75,8 @@ Index: shinken/etc/shinken.cfg
 ===================================================================
 --- shinken.orig/etc/shinken.cfg
 +++ shinken/etc/shinken.cfg
-@@ -116,7 +116,7 @@ shinken_user=shinken
- shinken_group=shinken
+@@ -116,7 +116,7 @@ local_log=/var/log/shinken/arbiterd.log
+ #shinken_group=shinken
  
  # The path to the modules directory
 -modules_dir=/var/lib/shinken/modules
@@ -84,3 +84,16 @@ Index: shinken/etc/shinken.cfg
  
  # Set to 0 if you want to make this daemon (arbiter) NOT run
  daemon_enabled=1
+Index: shinken/shinken/bin/shinken_cli.py
+===================================================================
+--- shinken.orig/shinken/bin/shinken_cli.py
++++ shinken/shinken/bin/shinken_cli.py
+@@ -127,7 +127,7 @@ class CLICommander(object):
+                                          '''Defaults follow # the Linux Standard Base''',
+                               'values': [('etc', '/etc/shinken'), ('lib', '/var/lib/shinken'),
+                                          ('share', '%(lib)s/share'), ('cli', '%(lib)s/cli'),
+-                                         ('packs', '%(etc)s/packs'), ('modules', '%(lib)s/modules'),
++                                         ('packs', '%(etc)s/packs'), ('modules', '/usr/share/pyshared/shinken/modules'),
+                                          ('doc', '%(lib)s/doc'), ('inventory', '%(lib)s/inventory'),
+                                          ('libexec', '%(lib)s/libexec'),
+                                          ]
