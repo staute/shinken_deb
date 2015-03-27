@@ -1096,14 +1096,17 @@ class Items(object):
                 pass
 
     def apply_inheritance(self):
+        """ For all items and templates inherite properties and custom
+            variables.
+        """
         # We check for all Class properties if the host has it
         # if not, it check all host templates for a value
         cls = self.inner_class
         for prop in cls.properties:
             self.apply_partial_inheritance(prop)
-        for i in self:
+        for i in itertools.chain(self.items.itervalues(),
+                                 self.templates.itervalues()):
             i.get_customs_properties_by_inheritance()
-
 
     # We've got a contacts property with , separated contacts names
     # and we want have a list of Contacts
@@ -1254,8 +1257,7 @@ class Items(object):
     def linkify_command_list_with_commands(self, commands, prop):
         for i in self:
             if hasattr(i, prop):
-                coms = getattr(i, prop).split(',')
-                coms = strip_and_uniq(coms)
+                coms = strip_and_uniq(getattr(i, prop))
                 com_list = []
                 for com in coms:
                     if com != '':
