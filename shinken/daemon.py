@@ -108,7 +108,7 @@ class Interface(object):
         )
 
 
-    doc = 'Test the connexion to the daemon. Returns: pong'
+    doc = 'Test the connection to the daemon. Returns: pong'
     def ping(self):
         return "pong"
     ping.need_lock = False
@@ -732,7 +732,7 @@ class Daemon(object):
         logger.info("Modules directory: %s", modules_dir)
         if not os.path.exists(modules_dir):
             raise RuntimeError("The modules directory '%s' is missing! Bailing out."
-                               "Please fix your configuration", modules_dir)
+                               "Please fix your configuration" % (modules_dir,))
         return modules_dir
 
 

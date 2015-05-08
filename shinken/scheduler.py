@@ -305,7 +305,7 @@ class Scheduler(object):
                     broks[brok.id] = brok
             else:  # no brokers? maybe at startup for logs
                 # we will put in global queue, that the first broker
-                # connexion will get all
+                # connection will get all
                 self.broks[brok.id] = brok
 
 
@@ -1568,7 +1568,7 @@ class Scheduler(object):
                        (self.instance_name, len(self.broks), now))
         metrics.append('scheduler.%s.downtimes %d %d' %
                        (self.instance_name, len(self.downtimes), now))
-        metrics.append('scheduler.%s.comments %d %d'
+        metrics.append('scheduler.%s.comments %d %d' %
                        (self.instance_name, len(self.comments), now))
         if lat_min:
             metrics.append('scheduler.%s.latency.min %f %d' % (self.instance_name, lat_min, now))

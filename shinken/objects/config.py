@@ -1157,6 +1157,8 @@ class Config(Item):
         self.linkify_one_command_with_commands(self.commands, 'ochp_command')
         self.linkify_one_command_with_commands(self.commands, 'host_perfdata_command')
         self.linkify_one_command_with_commands(self.commands, 'service_perfdata_command')
+        self.linkify_one_command_with_commands(self.commands, 'global_host_event_handler')
+        self.linkify_one_command_with_commands(self.commands, 'global_service_event_handler')
 
         # print "Hosts"
         # link hosts with timeperiods and commands
@@ -1260,7 +1262,8 @@ class Config(Item):
     # the real commands
     def late_linkify(self):
         props = ['ocsp_command', 'ochp_command',
-                 'service_perfdata_command', 'host_perfdata_command']
+                 'service_perfdata_command', 'host_perfdata_command',
+                 'global_host_event_handler', 'global_service_event_handler']
         for prop in props:
             cc = getattr(self, prop, None)
             if cc:
@@ -1307,7 +1310,7 @@ class Config(Item):
             logger.debug("[config] time to serialize the global conf : %s (size:%s)",
                          time.time() - t0, len(whole_conf_pack))
             self.whole_conf_pack = whole_conf_pack
-            print "TOTAL serializing in", time.time() - t1
+            logger.debug("[config]serializing total: %s" % (time.time() - t1))
 
         else:
             logger.info('Using the multiprocessing serialization pass')
