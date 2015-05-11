@@ -84,10 +84,10 @@ Index: shinken/etc/shinken.cfg
  
  # Set to 0 if you want to make this daemon (arbiter) NOT run
  daemon_enabled=1
-Index: shinken/shinken/bin/shinken_cli.py
+Index: shinken/bin/shinken
 ===================================================================
---- shinken.orig/shinken/bin/shinken_cli.py
-+++ shinken/shinken/bin/shinken_cli.py
+--- shinken.orig/bin/shinken
++++ shinken/bin/shinken
 @@ -127,7 +127,7 @@ class CLICommander(object):
                                           '''Defaults follow # the Linux Standard Base''',
                                'values': [('etc', '/etc/shinken'), ('lib', '/var/lib/shinken'),

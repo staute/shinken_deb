@@ -1,5 +1,6 @@
 #0001-LSB-shinken-requires-remote_fs-because-it-is-in-usr-.patch
 #0002-LSB-S-runlevel-is-not-a-real-one.patch
+0000-Fix-setup.py.patch
 0003-LSB-force-reload-is-a-must-have.patch
 #0004-LSB-Mention-the-reload-and-force-reload-commands.patch
 0005-LSB-Update-ref-url.patch
@@ -24,3 +25,4 @@
 fix_init_script_dependency.patch
 0024_fix_mathjax_dep
 0025_fix_modernizr_dep
+0026_revert_fix_launch_bin.patch

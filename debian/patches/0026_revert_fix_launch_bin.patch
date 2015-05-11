@@ -1,0 +1,231 @@
+From 7b568da5a98ba2d4cec41172a60326775908d031 Mon Sep 17 00:00:00 2001
+From: aviau <alexandre.viau@savoirfairelinux.com>
+Date: Fri, 13 Mar 2015 11:27:32 -0400
+Subject: [PATCH] Fixed launch bin paths
+
+---
+ bin/launch_all.sh               | 4 ----
+ bin/launch_arbiter.sh           | 4 ++--
+ bin/launch_arbiter_debug.sh     | 4 ++--
+ bin/launch_broker.sh            | 4 ++--
+ bin/launch_broker_debug.sh      | 4 ++--
+ bin/launch_poller.sh            | 4 ++--
+ bin/launch_poller_debug.sh      | 4 ++--
+ bin/launch_reactionner.sh       | 4 ++--
+ bin/launch_reactionner_debug.sh | 4 ++--
+ bin/launch_receiver.sh          | 4 ++--
+ bin/launch_receiver_debug.sh    | 4 ++--
+ bin/launch_scheduler.sh         | 4 ++--
+ bin/launch_scheduler_debug.sh   | 4 ++--
+ 13 files changed, 24 insertions(+), 28 deletions(-)
+
+Index: shinken/bin/launch_all.sh
+===================================================================
+--- shinken.orig/bin/launch_all.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_all.sh	2015-05-11 20:16:28.109556974 +0000
+@@ -25,6 +25,10 @@
+ DIR="$(cd $(dirname "$0"); pwd)"
+ echo "Going to dir $DIR"
+ 
++# Prepare the launch by cleaning var/log directories
++. $DIR/preparedev
++
++
+ cd "$DIR"/..
+ 
+ export LANG=us_US.UTF-8
+Index: shinken/bin/launch_arbiter.sh
+===================================================================
+--- shinken.orig/bin/launch_arbiter.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_arbiter.sh	2015-05-11 20:16:28.109556974 +0000
+@@ -23,7 +23,7 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ 
+ # Need to change directory to .../var because arbiter doesn't have a
+@@ -31,4 +31,4 @@
+ cd "$DIR/../var"
+ 
+ echo "Launching Arbiter (which reads configuration and dispatches it)"
+-"$BIN"/shinken_arbiter.py -d -c "$ETC"/shinken.cfg
++"$BIN"/shinken-arbiter -d -c "$ETC"/shinken.cfg
+Index: shinken/bin/launch_arbiter_debug.sh
+===================================================================
+--- shinken.orig/bin/launch_arbiter_debug.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_arbiter_debug.sh	2015-05-11 20:16:28.109556974 +0000
+@@ -23,7 +23,7 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ DEBUG_PATH="/tmp/arbiter.debug"
+ 
+@@ -34,6 +34,6 @@
+ echo "Launching Arbiter (which reads configuration and dispatches it) " \
+     "in debug mode to the file $DEBUG_PATH"
+ 
+-"$BIN"/shinken_arbiter.py -d \
++"$BIN"/shinken-arbiter -d \
+     -c "$ETC"/shinken.cfg  -c "$ETC"/sample.cfg -c "$ETC"/dev.cfg\
+     --debug "$DEBUG_PATH" -p /tmp/arbiter.profile
+Index: shinken/bin/launch_broker.sh
+===================================================================
+--- shinken.orig/bin/launch_broker.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_broker.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,8 +23,8 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ 
+ echo "Launching Broker (which exports all data)"
+-"$BIN"/shinken_broker.py -d -c "$ETC"/daemons/brokerd.ini
++"$BIN"/shinken-broker -d -c "$ETC"/daemons/brokerd.ini
+Index: shinken/bin/launch_broker_debug.sh
+===================================================================
+--- shinken.orig/bin/launch_broker_debug.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_broker_debug.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,9 +23,9 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ DEBUG_PATH="/tmp/broker.debug"
+ 
+ echo "Launching Broker (which exports all data) in debug mode to the file $DEBUG_PATH"
+-"$BIN"/shinken_broker.py -d -c "$ETC"/daemons/brokerd.ini --debug "$DEBUG_PATH" --profile /tmp/broker.profile
++"$BIN"/shinken-broker -d -c "$ETC"/daemons/brokerd.ini --debug "$DEBUG_PATH" --profile /tmp/broker.profile
+Index: shinken/bin/launch_poller.sh
+===================================================================
+--- shinken.orig/bin/launch_poller.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_poller.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,8 +23,8 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ 
+ echo "Launching Poller (which launches checks)"
+-"$BIN"/shinken_poller.py -d -c "$ETC"/daemons/pollerd.ini
++"$BIN"/shinken-poller -d -c "$ETC"/daemons/pollerd.ini
+Index: shinken/bin/launch_poller_debug.sh
+===================================================================
+--- shinken.orig/bin/launch_poller_debug.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_poller_debug.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,9 +23,9 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ DEBUG_PATH="/tmp/poller.debug"
+ 
+ echo "Launching Poller (which launches checks) in debug mode to the file $DEBUG_PATH"
+-"$BIN"/shinken_poller.py -d -c "$ETC"/daemons/pollerd.ini --debug "$DEBUG_PATH" --profile /tmp/poller.profile
++"$BIN"/shinken-poller -d -c "$ETC"/daemons/pollerd.ini --debug "$DEBUG_PATH" --profile /tmp/poller.profile
+Index: shinken/bin/launch_reactionner.sh
+===================================================================
+--- shinken.orig/bin/launch_reactionner.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_reactionner.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,8 +23,8 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ 
+ echo "Launching Reactionner (which sends notifications)"
+-"$BIN"/shinken_reactionner.py -d -c "$ETC"/daemons/reactionnerd.ini
++"$BIN"/shinken-reactionner -d -c "$ETC"/daemons/reactionnerd.ini
+Index: shinken/bin/launch_reactionner_debug.sh
+===================================================================
+--- shinken.orig/bin/launch_reactionner_debug.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_reactionner_debug.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,9 +23,9 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ DEBUG_PATH="/tmp/reactionner.debug"
+ 
+ echo "Launching Reactionner (which sends notifications) in debug mode to the file $DEBUG_PATH"
+-"$BIN"/shinken_reactionner.py -d -c "$ETC"/daemons/reactionnerd.ini --debug "$DEBUG_PATH"
++"$BIN"/shinken-reactionner -d -c "$ETC"/daemons/reactionnerd.ini --debug "$DEBUG_PATH"
+Index: shinken/bin/launch_receiver.sh
+===================================================================
+--- shinken.orig/bin/launch_receiver.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_receiver.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,8 +23,8 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ 
+ echo "Launching Receiver (which manages passive data)"
+-"$BIN"/shinken_receiver.py -d -c "$ETC"/daemons/receiverd.ini
++"$BIN"/shinken-receiver -d -c "$ETC"/daemons/receiverd.ini
+Index: shinken/bin/launch_receiver_debug.sh
+===================================================================
+--- shinken.orig/bin/launch_receiver_debug.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_receiver_debug.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,9 +23,9 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ DEBUG_PATH="/tmp/receiver.debug"
+ 
+ echo "Launching receiver (which manages passive data) in debug mode to the file $DEBUG_PATH"
+-"$BIN"/shinken_receiver.py -d -c "$ETC"/daemons/receiverd.ini --debug "$DEBUG_PATH"
++"$BIN"/shinken-receiver -d -c "$ETC"/daemons/receiverd.ini --debug "$DEBUG_PATH"
+Index: shinken/bin/launch_scheduler.sh
+===================================================================
+--- shinken.orig/bin/launch_scheduler.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_scheduler.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,8 +23,8 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ 
+ echo "Launching Scheduler (that is only in charge of scheduling)"
+-"$BIN"/shinken_scheduler.py -d -c "$ETC"/daemons/schedulerd.ini
++"$BIN"/shinken-scheduler -d -c "$ETC"/daemons/schedulerd.ini
+Index: shinken/bin/launch_scheduler_debug.sh
+===================================================================
+--- shinken.orig/bin/launch_scheduler_debug.sh	2015-05-11 20:10:54.089527274 +0000
++++ shinken/bin/launch_scheduler_debug.sh	2015-05-11 20:16:28.110556998 +0000
+@@ -23,9 +23,9 @@
+ 
+ 
+ DIR="$(cd $(dirname "$0"); pwd)"
+-BIN="$DIR"/../shinken/bin
++BIN="$DIR"/../bin
+ ETC="$DIR"/../etc
+ DEBUG_PATH="/tmp/scheduler.debug"
+ 
+ echo "Launching Scheduler (that is only in charge of scheduling) in debug mode to the file $DEBUG_PATH"
+-"$BIN"/shinken_scheduler.py -d -c "$ETC"/daemons/schedulerd.ini --debug "$DEBUG_PATH"  --profile /tmp/scheduler.profile
++"$BIN"/shinken-scheduler -d -c "$ETC"/daemons/schedulerd.ini --debug "$DEBUG_PATH"  --profile /tmp/scheduler.profile
