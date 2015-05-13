@@ -23,6 +23,7 @@ debian/etc/packs etc/shinken/
 usr/lib/python2.7/dist-packages/*.egg-info
 usr/lib/python2.7/dist-packages/shinken/*.py
 usr/lib/python2.7/dist-packages/shinken/clients/*
+usr/lib/python2.7/dist-packages/shinken/bin/*
 usr/lib/python2.7/dist-packages/shinken/daemons/*
 usr/lib/python2.7/dist-packages/shinken/discovery/*
 usr/lib/python2.7/dist-packages/shinken/misc/*
