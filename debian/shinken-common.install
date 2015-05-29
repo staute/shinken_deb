@@ -21,6 +21,7 @@ debian/etc/timeperiods.cfg etc/shinken/
 debian/etc/hosts etc/shinken/
 debian/etc/packs etc/shinken/
 usr/lib/python2.7/dist-packages/*.egg-info
+usr/lib/python2.7/dist-packages/modules/__init__.py usr/lib/python2.7/dist-packages/shinken/modules/
 usr/lib/python2.7/dist-packages/shinken/*.py
 usr/lib/python2.7/dist-packages/shinken/clients/*
 usr/lib/python2.7/dist-packages/shinken/bin/*
