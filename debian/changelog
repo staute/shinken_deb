@@ -4,12 +4,6 @@ shinken (2.4.1-1) unstable; urgency=medium
 
  -- Sebastien Coavoux <sebastien.coavoux@savoirfairelinux.com>  Wed, 12 Aug 2015 13:27:30 -0500
 
-shinken (2.4-1) unstable; urgency=medium
-
-  * New upstream version.
-
- -- Sebastien Coavoux <sebastien.coavoux@savoirfairelinux.com>  Fri, 08 May 2015 14:34:10 -0500
-
 shinken (2.2-1) unstable; urgency=medium
 
   * New upstream version
