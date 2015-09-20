@@ -1,8 +1,11 @@
 shinken (2.4.1-1) unstable; urgency=medium
 
+  [ Sebastien Coavoux ]
   * New upstream version.
+  [ Mathieu Parent ]
+  * Removed me from maintainers
 
- -- Sebastien Coavoux <sebastien.coavoux@savoirfairelinux.com>  Wed, 12 Aug 2015 13:27:30 -0500
+ -- Mathieu Parent <sathieu@debian.org>  Sun, 20 Sep 2015 02:18:46 +0200
 
 shinken (2.2-1) unstable; urgency=medium
 
