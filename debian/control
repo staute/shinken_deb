@@ -1,6 +1,7 @@
 Source: shinken
-Maintainer: Shinken Debian packages maintainers <pkg-shinken-maint@lists.alioth.debian.org>
-Uploaders: Thibault Cohen <thibault.cohen@savoirfairelinux.com>, Sebastien Coavoux <sebastien.coavoux@savoirfairelinux.com>
+Maintainer: PLANET IC GmbH <technik@planet-ic.de>
+XSBC-Original-Maintainer: Shinken Debian packages maintainers <pkg-shinken-maint@lists.alioth.debian.org>
+Uploaders: Thibault Cohen <thibault.cohen@savoirfairelinux.com>, Sebastien Coavoux <sebastien.coavoux@savoirfairelinux.com>, Stefan Taute <taute@planet-ic.de>
 Section: net
 Priority: optional
 Vcs-Git: git://anonscm.debian.org/pkg-shinken/shinken.git
@@ -13,8 +14,10 @@ Homepage: http://www.shinken-monitoring.org
 Package: shinken
 Architecture: all
 Depends: ${misc:Depends}, shinken-common (= ${binary:Version}),
- shinken-mod-webui, shinken-mod-pickle-retention-file-generic,
- shinken-mod-sqlitedb, shinken-mod-auth-cfg-password
+ shinken-mod-livestatus, shinken-mod-pickle-retention-file-generic,
+ shinken-mod-logstore-mongodb, shinken-mod-booster-nrpe,
+ shinken-mod-npcdmod, shinken-mod-retention-redis,
+ shinken-mod-syslog-sink, shinken-mod-named-pipe
 Suggests: shinken-doc
 Description: Flexible monitoring tool - Meta-package
  This metapackage install a minimal and fully functionnal monitoring solution
@@ -30,7 +33,7 @@ Breaks: shinken-core (<< 1.4), shinken (<< 1.4)
 Replaces: shinken-arbiter, shinken-broker, shinken-discovery,
  shinken-poller, shinken-reactionner, shinken-receiver,
  shinken-scheduler, shinken-core
-Depends: ${misc:Depends}, ${python:Depends}, python-pycurl, adduser
+Depends: ${misc:Depends}, ${python:Depends}, python-pycurl, python-openssl, adduser
 Recommends: monitoring-plugins-basic, bsd-mailx | mailx, python-cherrypy3
 Description: Flexible monitoring tool - Common files
  Common files for shinken monitoring.
