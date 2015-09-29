@@ -1,0 +1,20 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Fri, 31 Jan 2014 12:11:25 +0100
+Subject: LSB: Update ref url
+
+---
+ bin/init.d/shinken | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: shinken/bin/init.d/shinken
+===================================================================
+--- shinken.orig/bin/init.d/shinken
++++ shinken/bin/init.d/shinken
+@@ -46,6 +46,7 @@
+ # Reference:
+ # http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
+ 
++. /lib/lsb/init-functions
+ 
+ NAME="shinken"
+ 

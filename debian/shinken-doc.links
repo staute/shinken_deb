@@ -1,0 +1,6 @@
+usr/share/javascript/jquery/jquery.js            usr/share/doc/shinken-doc/html/_static/jquery.js
+usr/share/javascript/underscore/underscore.js   usr/share/doc/shinken-doc/html/_static/underscore.js
+usr/share/javascript/modernizr/modernizr.min.js usr/share/doc/shinken-doc/html/_static/js/modernizr.min.js
+usr/share/javascript/mathjax                    usr/share/doc/shinken-doc/html/_static/js/mathjax
+usr/share/fonts/woff/font-awesome/fontawesome-webfont.woff usr/share/doc/shinken-doc/html/_static/font/fontawesome_webfont.woff
+usr/share/fonts/truetype/font-awesome/fontawesome-webfont.ttf usr/share/doc/shinken-doc/html/_static/font/fontawesome_webfont.ttf

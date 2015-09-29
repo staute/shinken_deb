@@ -1,0 +1,22 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Fri, 31 Jan 2014 13:31:59 +0100
+Subject: init script: Fix bashism
+
+sleep only takes one integer
+---
+ bin/init.d/shinken | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: shinken/bin/init.d/shinken
+===================================================================
+--- shinken.orig/bin/init.d/shinken
++++ shinken/bin/init.d/shinken
+@@ -302,7 +302,7 @@ do_stop() {
+     }
+     if [ ! -z "$pid" ]; then
+         kill "$pid"
+-        sleep 0.5
++        sleep 1
+         ## TODO: instead of 'sleep 1': wait up to when pid file is removed (with timeout)?
+         for i in 1 2 3
+         do

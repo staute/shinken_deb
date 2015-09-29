@@ -1,0 +1,19 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Thu, 20 Feb 2014 13:30:18 +0100
+Subject: Fix nagios plugin directory path
+
+---
+ etc/resource.d/paths.cfg | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/etc/resource.d/paths.cfg b/etc/resource.d/paths.cfg
+index a332b25..a243e26 100644
+--- a/etc/resource.d/paths.cfg
++++ b/etc/resource.d/paths.cfg
+@@ -3,5 +3,5 @@ $USER1$=$NAGIOSPLUGINSDIR$
+ $NAGIOSPLUGINSDIR$=/usr/lib/nagios/plugins
+ 
+ #-- Location of the plugins for Shinken
+-$PLUGINSDIR$=/var/lib/shinken/libexec
++$PLUGINSDIR$=/usr/lib/shinken/libexec
+ 

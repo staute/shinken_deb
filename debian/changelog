@@ -1,0 +1,176 @@
+shinken (2.4.1-1) unstable; urgency=medium
+
+  [ Sebastien Coavoux ]
+  * New upstream version.
+  [ Mathieu Parent ]
+  * Removed me from maintainers
+
+ -- Mathieu Parent <sathieu@debian.org>  Sun, 20 Sep 2015 02:18:46 +0200
+
+shinken (2.2-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Sat, 07 Feb 2015 12:16:00 -0500
+
+shinken (2.0.3-4) unstable; urgency=medium
+
+  * Reintroduce transitional shinken-core package for smooth upgrades from
+    wheezy.  (Closes: #776489)
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 28 Jan 2015 16:44:19 +0100
+
+shinken (2.0.3-3) unstable; urgency=medium
+
+  [ Thibault Cohen ]
+  * Remove /var/log/shinken in purge. (Closes: #739791)
+
+ -- Thibault Cohen <tcohen@tcohen-pc.mtl.sfl>  Tue, 11 Nov 2014 10:29:50 -0500
+
+shinken (2.0.3-2) unstable; urgency=medium
+
+  * Upload to unstable
+  * Update copyright
+
+ -- Mathieu Parent <sathieu@debian.org>  Mon, 06 Oct 2014 22:04:01 +0200
+
+shinken (2.0.3-1) experimental; urgency=medium
+
+  [ Mathieu Parent ]
+  * Init script are already installed by setup.py, remove from
+    shinken-common.install
+  * Install files from setup.py
+  * Removing all patches (integrated upstream, except 11_shinken_init.patch
+  * Remove modules, they are now in separate git repos
+  * Remove in d/rules things done by setup.py
+  * Move doc to a separate package
+  * Compile doc (html, txt) and install it
+  * Move to dh compat 9
+  * Lintian: W: shinken source: debhelper-but-no-misc-depends shinken-doc
+  * Set pkg-shinken-maint as Maintainer, and add me as Uploader
+  * Don't require any module
+  * Everything is arch:all
+  * update copyright format URL
+  * Lintian: I: shinken: capitalization-error-in-description meta-package
+    metapackage
+  * Add shinken-doc.doc-base
+  * Remove shinken-common.default (not needed anymore)
+  * Replace embedded JS libraries in -doc by symlinks
+  * init script patches
+  * Suggests shinken-mod and shinken-pack virtual packages
+  * Install the shinken bin
+  * Remove debconf question as shinken/instructions doesn't exist
+  * Start the receiver on boot too (as stated in LSB headers)
+  * Clean up maintscripts
+  * Fix dpkg-statoverride usage
+  * Purge directories on purge (and not on remove)
+  * useradd/adduser is usually done in postinst
+  * Use adduser/addgroup instead of useradd usermod
+  * More refactoring
+  * Remove duplicate call update-rc.d
+  * Don't manage the shinken init script
+  * Install webui
+  * Create the /var/lib/shinken/modules dir
+  * Create an empty /etc/shinken/modules dir
+  * Install egg-info
+  * Stop lintian from complaining about updaterc.d
+  * Lintian: W: shinken-common: executable-not-elf-or-script
+    etc/shinken/modules/.placeholder
+  * Install images + templates
+  * Fix nagios plugin directory path and modules_dir
+  * Fix modules_dir for all daemons
+  * Fix Vcs-*, and move to Priority: optional
+  * broker-master.cfg: Try to load modules Livestatus, Simple-log, WebUI by
+    default
+  * Recommends: shinken-module-livestatus, shinken-module-simple-log,
+    shinken-module-webui
+  * Add missing service templates referenced by discrovery rules
+
+  [ Thibault Cohen ]
+  * New upstream version (Closes: #745458)
+    - Refresh patches
+    - Fix build-dependencies
+  * Fix Python-Version (Closes: #755347)
+  * Change config folder structure
+  * Add manpages
+  * Update dependencies of the shinken package
+  * Clean up README
+  * Fix dependencies
+  * Fix shinken cli
+  * Update debian watch
+  * Update module names
+
+ -- Mathieu Parent <sathieu@debian.org>  Thu, 28 Aug 2014 22:26:37 +0200
+
+shinken (1.4-3) unstable; urgency=low
+
+  * Delete useless debconf files. Closes: #736395
+  * Delete sourceless flash file. Closes: #736789
+  * Add source for sourceless file. Closes: #736784
+  * Fix mongodb dependencies. Closes: #732556
+  * Add a new uploader
+
+ -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Tue, 28 Jan 2014 18:30:59 -0500
+
+shinken (1.4-2) unstable; urgency=low
+
+  * Shinken-common now breaks old Shinken-core. Closes: #729702 
+  * Add new package shinken-module-broker-webui-graphite. Closes: #730765
+  * Change config files to respet Debian policy. Closes: #729700
+  * Package cleaning. Thanks to Mathieu Parent.
+
+ -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Thu, 16 Jan 2014 11:35:12 -0500
+
+shinken (1.4-1) unstable; urgency=low
+
+  * New upstream release (#672496)
+  * Refactor of the build process
+  * Split modules in separate packages
+  * Shinken package is now a package which configures Shinken elements to have
+    a ready-to-go solution
+  * Fix licences in debian/copyright
+  * Add javascripts sources
+  * Update shinken init script
+  * Fix ws_arbiter dependencies
+  * Change ini paths
+
+  [ Sylvestre Ledru ]
+  * Standards-Version updated to 3.9.5
+  * watch file added
+
+ -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Fri, 21 Jun 2013 15:07:56 +0200
+
+shinken (1.0-1) unstable; urgency=low
+
+  * Upgrade to 1.0
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Tue, 28 Feb 2012 18:37:34 +0100
+
+shinken (0.8.5-1) unstable; urgency=low
+
+  * Update to 0.8.5
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Mon, 06 Feb 2012 18:19:46 +0100
+
+shinken (0.8.1-1) unstable; urgency=low
+
+  * 0.8 version of shinken
+  * Major feature:
+    * WebUI
+  * For other things please see
+    https://github.com/naparuba/shinken/blob/master/Changelog
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Sat, 12 Nov 2011 15:10:17 +0100
+
+shinken (0.6.5-2) unstable; urgency=low
+
+  * Fixing long description (Closes: #642254)
+  * Fix init scripts (Closes: #642297)
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Thu, 22 Sep 2011 22:42:39 +0200
+
+shinken (0.6.5-1) unstable; urgency=low
+
+  * Initial release (Closes: #599073) 
+
+ -- Arthur Gautier <superbaloo+debian@superbaloo.net>  Thu, 15 Sep 2011 14:00:09 +0200

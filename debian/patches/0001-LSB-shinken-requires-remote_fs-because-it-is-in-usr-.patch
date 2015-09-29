@@ -1,0 +1,24 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Thu, 30 Jan 2014 11:20:01 +0100
+Subject: LSB: shinken requires $remote_fs because it is in /usr which may be
+ on remote fs
+
+---
+ bin/init.d/shinken | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bin/init.d/shinken b/bin/init.d/shinken
+index d4f3214..37e3050 100755
+--- a/bin/init.d/shinken
++++ b/bin/init.d/shinken
+@@ -23,8 +23,8 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides:          shinken
+-# Required-Start:    $local_fs
+-# Required-Stop:     $local_fs
++# Required-Start:    $remote_fs
++# Required-Stop:     $remote_fs
+ # Default-Start:     2 3 4 5
+ # Default-Stop:      S 0 1 6
+ # Short-Description: Shinken monitoring daemon

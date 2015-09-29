@@ -1,0 +1,263 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Fri, 31 Jan 2014 13:29:04 +0100
+Subject: Remove copyright from config/init files
+
+Claiming copyright on configuration: Oh!
+---
+ bin/default/shinken.in         | 22 ----------------------
+ bin/init.d/shinken             | 21 ---------------------
+ bin/init.d/shinken-arbiter     | 21 ---------------------
+ bin/init.d/shinken-broker      | 21 ---------------------
+ bin/init.d/shinken-poller      | 21 ---------------------
+ bin/init.d/shinken-reactionner | 21 ---------------------
+ bin/init.d/shinken-receiver    | 21 ---------------------
+ bin/init.d/shinken-scheduler   | 21 ---------------------
+ 8 files changed, 169 deletions(-)
+
+Index: shinken/bin/default/shinken.in
+===================================================================
+--- shinken.orig/bin/default/shinken.in
++++ shinken/bin/default/shinken.in
+@@ -1,25 +1,3 @@
+-# Copyright (C) 2009-2014:
+-#    Gabes Jean, naparuba@gmail.com
+-#    Gerhard Lausser, Gerhard.Lausser@consol.de
+-#    Gregory Starck, g.starck@gmail.com
+-#    Hartmut Goebel, h.goebel@goebel-consult.de
+-#
+-# This file is part of Shinken.
+-#
+-# Shinken is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# Shinken is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
+-
+-
+ # /etc/default/shinken
+ # $ETC$ is where we put all configuration files
+ # $VAR$ is where we put some variables files (replaced by $RUN$ and $LOG$ for now)
+Index: shinken/bin/init.d/shinken
+===================================================================
+--- shinken.orig/bin/init.d/shinken
++++ shinken/bin/init.d/shinken
+@@ -1,26 +1,5 @@
+ #!/bin/sh
+ 
+-# Copyright (C) 2009-2014:
+-#    Gabes Jean, naparuba@gmail.com
+-#    Gerhard Lausser, Gerhard.Lausser@consol.de
+-#    Gregory Starck, g.starck@gmail.com
+-#    Hartmut Goebel, h.goebel@goebel-consult.de
+-#
+-# This file is part of Shinken.
+-#
+-# Shinken is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# Shinken is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
+-
+ ### BEGIN INIT INFO
+ # Provides:          shinken
+ # Required-Start:    $network $remote_fs
+Index: shinken/bin/init.d/shinken-arbiter
+===================================================================
+--- shinken.orig/bin/init.d/shinken-arbiter
++++ shinken/bin/init.d/shinken-arbiter
+@@ -1,26 +1,5 @@
+ #! /bin/sh
+ 
+-# Copyright (C) 2009-2014:
+-#    Gabes Jean, naparuba@gmail.com
+-#    Gerhard Lausser, Gerhard.Lausser@consol.de
+-#    Gregory Starck, g.starck@gmail.com
+-#    Hartmut Goebel, h.goebel@goebel-consult.de
+-#
+-# This file is part of Shinken.
+-#
+-# Shinken is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# Shinken is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
+-
+ ### BEGIN INIT INFO
+ # Provides:          shinken-arbiter
+ # Required-Start:    $all
+Index: shinken/bin/init.d/shinken-broker
+===================================================================
+--- shinken.orig/bin/init.d/shinken-broker
++++ shinken/bin/init.d/shinken-broker
+@@ -1,26 +1,5 @@
+ #! /bin/sh
+ 
+-# Copyright (C) 2009-2014:
+-#    Gabes Jean, naparuba@gmail.com
+-#    Gerhard Lausser, Gerhard.Lausser@consol.de
+-#    Gregory Starck, g.starck@gmail.com
+-#    Hartmut Goebel, h.goebel@goebel-consult.de
+-#
+-# This file is part of Shinken.
+-#
+-# Shinken is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# Shinken is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
+-
+ ### BEGIN INIT INFO
+ # Provides:          shinken-broker
+ # Required-Start:    $all
+Index: shinken/bin/init.d/shinken-poller
+===================================================================
+--- shinken.orig/bin/init.d/shinken-poller
++++ shinken/bin/init.d/shinken-poller
+@@ -1,26 +1,5 @@
+ #! /bin/sh
+ 
+-# Copyright (C) 2009-2014:
+-#    Gabes Jean, naparuba@gmail.com
+-#    Gerhard Lausser, Gerhard.Lausser@consol.de
+-#    Gregory Starck, g.starck@gmail.com
+-#    Hartmut Goebel, h.goebel@goebel-consult.de
+-#
+-# This file is part of Shinken.
+-#
+-# Shinken is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# Shinken is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
+-
+ ### BEGIN INIT INFO
+ # Provides:          shinken-poller
+ # Required-Start:    $all
+Index: shinken/bin/init.d/shinken-reactionner
+===================================================================
+--- shinken.orig/bin/init.d/shinken-reactionner
++++ shinken/bin/init.d/shinken-reactionner
+@@ -1,26 +1,5 @@
+ #! /bin/sh
+ 
+-# Copyright (C) 2009-2014:
+-#    Gabes Jean, naparuba@gmail.com
+-#    Gerhard Lausser, Gerhard.Lausser@consol.de
+-#    Gregory Starck, g.starck@gmail.com
+-#    Hartmut Goebel, h.goebel@goebel-consult.de
+-#
+-# This file is part of Shinken.
+-#
+-# Shinken is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# Shinken is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
+-
+ ### BEGIN INIT INFO
+ # Provides:          shinken-reactionner
+ # Required-Start:    $all
+Index: shinken/bin/init.d/shinken-receiver
+===================================================================
+--- shinken.orig/bin/init.d/shinken-receiver
++++ shinken/bin/init.d/shinken-receiver
+@@ -1,26 +1,5 @@
+ #! /bin/sh
+ 
+-# Copyright (C) 2009-2014:
+-#    Gabes Jean, naparuba@gmail.com
+-#    Gerhard Lausser, Gerhard.Lausser@consol.de
+-#    Gregory Starck, g.starck@gmail.com
+-#    Hartmut Goebel, h.goebel@goebel-consult.de
+-#
+-# This file is part of Shinken.
+-#
+-# Shinken is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# Shinken is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
+-
+ ### BEGIN INIT INFO
+ # Provides:          shinken-receiver
+ # Required-Start:    $all
+Index: shinken/bin/init.d/shinken-scheduler
+===================================================================
+--- shinken.orig/bin/init.d/shinken-scheduler
++++ shinken/bin/init.d/shinken-scheduler
+@@ -1,26 +1,5 @@
+ #! /bin/sh
+ 
+-# Copyright (C) 2009-2014:
+-#    Gabes Jean, naparuba@gmail.com
+-#    Gerhard Lausser, Gerhard.Lausser@consol.de
+-#    Gregory Starck, g.starck@gmail.com
+-#    Hartmut Goebel, h.goebel@goebel-consult.de
+-#
+-# This file is part of Shinken.
+-#
+-# Shinken is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU Affero General Public License as published by
+-# the Free Software Foundation, either version 3 of the License, or
+-# (at your option) any later version.
+-#
+-# Shinken is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with Shinken.  If not, see <http://www.gnu.org/licenses/>.
+-
+ ### BEGIN INIT INFO
+ # Provides:          shinken-scheduler
+ # Required-Start:    $all

@@ -1,0 +1,28 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with python2 --install-layout=deb,quilt
+
+override_dh_clean:
+	rm -rf ./build
+	rm -rf ./Shinken.egg-info
+	dh_clean
+
+override_dh_installdirs:
+	dh_installdirs
+	install -m 0644 $(CURDIR)/debian/placeholder $(CURDIR)/debian/shinken-common/etc/shinken/modules/.placeholder
+
+override_dh_installinit:
+	dh_installinit --no-start --name=shinken
+
+override_dh_installdocs:
+	make --directory=doc html
+	dh_installdocs
+	# embedded-javascript-library (replaced by symlinks with dh_link)
+	rm $(CURDIR)/debian/shinken-doc/usr/share/doc/shinken-doc/html/_static/jquery.js
+	rm $(CURDIR)/debian/shinken-doc/usr/share/doc/shinken-doc/html/_static/underscore.js
+
+make_dfsg:
+	find windows -name '*.exe' -o -name '*.dll' -delete
+	rm doc.old/architecture.fla
+	rm doc.old/architecture.swf

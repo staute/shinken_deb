@@ -1,0 +1,25 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Wed, 12 Feb 2014 18:10:40 +0100
+Subject: Add missing RH chkconfig
+
+---
+ bin/init.d/shinken.in      | 6 ++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+Index: shinken/bin/init.d/shinken.in
+===================================================================
+--- shinken.orig/bin/init.d/shinken.in
++++ shinken/bin/init.d/shinken.in
+@@ -16,6 +16,12 @@
+ #     - receiver    : manage all passive data
+ ### END INIT INFO
+ 
++### Chkconfig Header
++# Shinken        Starts Shinken daemons
++#
++# chkconfig: 345 99 01
++# description: Start Shinken daemons
++
+ # Reference:
+ # http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
+ 

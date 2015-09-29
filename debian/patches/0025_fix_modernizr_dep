@@ -1,0 +1,11 @@
+--- a/doc/theme/sphinx_rtd_theme/layout.html
++++ b/doc/theme/sphinx_rtd_theme/layout.html
+@@ -85,7 +85,7 @@
+   {%- endblock %}
+   {%- block extrahead %} {% endblock %}
+ 
+-  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
++  <script src="_static/js/modernizr.min.js"></script>
+ 
+ </head>
+ 

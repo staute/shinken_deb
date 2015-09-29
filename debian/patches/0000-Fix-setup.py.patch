@@ -1,0 +1,52 @@
+Index: shinken/setup.py
+===================================================================
+--- shinken.orig/setup.py
++++ shinken/setup.py
+@@ -179,6 +179,15 @@ parser.add_option('--record',
+ parser.add_option('--single-version-externally-managed',
+                   dest="single_version", action='store_true',
+                   help='I really dont know, this option is for pip only')
++parser.add_option('--no-compile',
++                  dest="no_compile", action='store_true',
++                  help='')
++parser.add_option('--force',
++                  dest='force', action='store_true',
++                  help='')
++parser.add_option('--install-layout',
++                  dest='install_layout',
++                  help='')
+ 
+ 
+ old_error = parser.error
+@@ -193,20 +202,7 @@ root = opts.proot or ''
+ 
+ # We try to see if we are in a full install or an update process
+ is_update = False
+-# Try to import shinekn but not the local one. If avialable, we are in 
+-# and upgrade phase, not a classic install
+-try:
+-    if '.' in sys.path:
+-        sys.path.remove('.')
+-    if os.path.abspath('.') in sys.path:
+-        sys.path.remove(os.path.abspath('.'))
+-    if '' in sys.path:
+-        sys.path.remove('')
+-    import shinken
+-    is_update = True
+-    print "Previous Shinken lib detected (%s)" % shinken.__file__
+-except ImportError:
+-    pass
++
+ 
+ if '--update' in args or opts.upgrade or '--upgrade' in args:
+     print "Shinken Lib Updating process only"
+@@ -340,7 +336,9 @@ else:
+ # Change paths if need
+ #if root:
+ #    for (k,v) in default_paths.iteritems():
++#        print "CHANGING", v[1:],
+ #        default_paths[k] = os.path.join(root, v[1:])
++#        print "FOR ", default_paths[k]
+ 
+ 
+ # Beware to install scripts in the bin dir

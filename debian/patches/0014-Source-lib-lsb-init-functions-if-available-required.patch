@@ -1,0 +1,105 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Wed, 12 Feb 2014 18:06:21 +0100
+Subject: Source /lib/lsb/init-functions if available (required)
+
+---
+ bin/init.d/shinken-arbiter     | 4 ++++
+ bin/init.d/shinken-broker      | 4 ++++
+ bin/init.d/shinken-poller      | 4 ++++
+ bin/init.d/shinken-reactionner | 4 ++++
+ bin/init.d/shinken-receiver    | 4 ++++
+ bin/init.d/shinken-scheduler   | 4 ++++
+ bin/init.d/shinken.in          | 4 +++-
+ 7 files changed, 27 insertions(+), 1 deletion(-)
+
+--- a/bin/init.d/shinken-arbiter
++++ b/bin/init.d/shinken-arbiter
+@@ -29,6 +29,10 @@
+ 
+ export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
+ 
++if [ -f /lib/lsb/init-functions ]; then
++. /lib/lsb/init-functions
++fi
++
+ case "$1" in
+     start|stop|reload|restart|force-reload|status|check|checkconfig)
+         "$curdir/shinken" $@ "$SHORTNAME"
+--- a/bin/init.d/shinken-poller
++++ b/bin/init.d/shinken-poller
+@@ -30,6 +30,10 @@
+ 
+ export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
+ 
++if [ -f /lib/lsb/init-functions ]; then
++. /lib/lsb/init-functions
++fi
++
+ case "$1" in
+     start|stop|reload|restart|force-reload|status|check|checkconfig)
+         "$curdir/shinken" $@ "$SHORTNAME"
+--- a/bin/init.d/shinken-reactionner
++++ b/bin/init.d/shinken-reactionner
+@@ -29,6 +29,10 @@
+ 
+ export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
+ 
++if [ -f /lib/lsb/init-functions ]; then
++. /lib/lsb/init-functions
++fi
++
+ case "$1" in
+     start|stop|reload|restart|force-reload|status|check|checkconfig)
+         "$curdir/shinken" $@ "$SHORTNAME"
+--- a/bin/init.d/shinken-receiver
++++ b/bin/init.d/shinken-receiver
+@@ -29,6 +29,10 @@
+ 
+ export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
+ 
++if [ -f /lib/lsb/init-functions ]; then
++. /lib/lsb/init-functions
++fi
++
+ case "$1" in
+     start|stop|reload|restart|force-reload|status|check|checkconfig)
+         "$curdir/shinken" $@ "$SHORTNAME"
+--- a/bin/init.d/shinken-scheduler
++++ b/bin/init.d/shinken-scheduler
+@@ -29,6 +29,10 @@
+ 
+ export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
+ 
++if [ -f /lib/lsb/init-functions ]; then
++. /lib/lsb/init-functions
++fi
++
+ case "$1" in
+     start|stop|reload|restart|force-reload|status|check|checkconfig)
+         "$curdir/shinken" $@ "$SHORTNAME"
+--- a/bin/init.d/shinken.in
++++ b/bin/init.d/shinken.in
+@@ -170,7 +170,9 @@
+ # Source function library.
+ [ -f /etc/rc.d/init.d/functions ] && . /etc/rc.d/init.d/functions
+ 
+-[ -f /lib/lsb/init-functions ] && . /lib/lsb/init-functions
++if [ -f /lib/lsb/init-functions ]; then
++. /lib/lsb/init-functions
++fi
+ 
+ 
+ 
+--- a/bin/init.d/shinken-broker
++++ b/bin/init.d/shinken-broker
+@@ -29,6 +29,10 @@
+ 
+ export SHINKEN_MODULE_FILE="$NAME"  ## for 'shinken' init script to see that it's called by us
+ 
++if [ -f /lib/lsb/init-functions ]; then
++. /lib/lsb/init-functions
++fi
++
+ case "$1" in
+     start|stop|reload|restart|force-reload|status|check|checkconfig)
+         "$curdir/shinken" $@ "$SHORTNAME"

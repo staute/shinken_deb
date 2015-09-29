@@ -1,0 +1,22 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Tue, 25 Feb 2014 09:16:12 +0100
+Subject: broker-master.cfg: Try to load modules Livestatus, Simple-log,
+ WebUI by default
+
+---
+ etc/brokers/broker-master.cfg | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/etc/brokers/broker-master.cfg b/etc/brokers/broker-master.cfg
+index c992c1e..bf42455 100644
+--- a/etc/brokers/broker-master.cfg
++++ b/etc/brokers/broker-master.cfg
+@@ -37,7 +37,7 @@ define broker {
+     # - graphite                = Use a Graphite time series DB for perfdata
+     # - webui                   = Shinken Web interface
+     # - glpidb                  = Save data in GLPI MySQL database
+-    modules     
++    modules     Livestatus, Simple-log, WebUI
+ 
+     # Enable https or not
+     use_ssl	          0

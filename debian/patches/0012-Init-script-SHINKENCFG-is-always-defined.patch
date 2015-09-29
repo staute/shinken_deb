@@ -1,0 +1,25 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Fri, 31 Jan 2014 14:52:34 +0100
+Subject: Init script: SHINKENCFG is always defined
+
+---
+ bin/init.d/shinken.in | 6 ------
+ 1 file changed, 6 deletions(-)
+
+Index: shinken/bin/init.d/shinken.in
+===================================================================
+--- shinken.orig/bin/init.d/shinken.in
++++ shinken/bin/init.d/shinken.in
+@@ -138,12 +138,6 @@ else
+     done
+ fi
+ 
+-# Now look if some required variables are pre defined:
+-if ! test "$SHINKENCFG"
+-then
+-    SHINKENCFG="$ETC/shinken.cfg"
+-fi
+-
+ # If var or run dir is missing, create them and chown them
+ [ ! -d $VAR ] && mkdir -p $VAR && chown $SHINKENUSER:$SHINKENGROUP $VAR
+ [ ! -d $RUN ] && mkdir -p $RUN && chown $SHINKENUSER:$SHINKENGROUP $RUN

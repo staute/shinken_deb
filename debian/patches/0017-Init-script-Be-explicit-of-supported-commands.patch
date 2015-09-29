@@ -1,0 +1,140 @@
+From: Mathieu Parent <math.parent@gmail.com>
+Date: Wed, 12 Feb 2014 18:25:51 +0100
+Subject: Init script: Be explicit of supported commands
+
+This help autocompletion helpers and make Lintian happy
+---
+ bin/init.d/shinken-arbiter     | 13 ++++++++++---
+ bin/init.d/shinken-broker      | 13 ++++++++++---
+ bin/init.d/shinken-poller      | 13 ++++++++++---
+ bin/init.d/shinken-reactionner | 13 ++++++++++---
+ bin/init.d/shinken-receiver    | 13 ++++++++++---
+ bin/init.d/shinken-scheduler   | 13 ++++++++++---
+ 6 files changed, 60 insertions(+), 18 deletions(-)
+
+diff --git a/bin/init.d/shinken-arbiter b/bin/init.d/shinken-arbiter
+index 644c147..e7814a0 100755
+--- a/bin/init.d/shinken-arbiter
++++ b/bin/init.d/shinken-arbiter
+@@ -33,6 +33,13 @@ if [ -f /lib/lsb/init-functions ]; then
+ . /lib/lsb/init-functions
+ fi
+ 
+-"$curdir/shinken" $@ "$SHORTNAME"
+-
+-exit $?
++case "$1" in
++    start|stop|reload|restart|force-reload|status|check|checkconfig)
++        "$curdir/shinken" $@ "$SHORTNAME"
++        exit $?
++        ;;
++    *)
++        echo "Usage: /etc/init.d/$NAME [-d] {start|stop|reload|restart|force-reload|status|check}"
++        exit 1
++        ;;
++esac
+diff --git a/bin/init.d/shinken-broker b/bin/init.d/shinken-broker
+index d272355..7d4996e 100755
+--- a/bin/init.d/shinken-broker
++++ b/bin/init.d/shinken-broker
+@@ -33,6 +33,13 @@ if [ -f /lib/lsb/init-functions ]; then
+ . /lib/lsb/init-functions
+ fi
+ 
+-"$curdir/shinken" $@ "$SHORTNAME"
+-
+-exit $?
++case "$1" in
++    start|stop|reload|restart|force-reload|status|check|checkconfig)
++        "$curdir/shinken" $@ "$SHORTNAME"
++        exit $?
++        ;;
++    *)
++        echo "Usage: /etc/init.d/$NAME [-d] {start|stop|reload|restart|force-reload|status|check}"
++        exit 1
++        ;;
++esac
+diff --git a/bin/init.d/shinken-poller b/bin/init.d/shinken-poller
+index 563ff41..394d4aa 100755
+--- a/bin/init.d/shinken-poller
++++ b/bin/init.d/shinken-poller
+@@ -34,6 +34,13 @@ if [ -f /lib/lsb/init-functions ]; then
+ . /lib/lsb/init-functions
+ fi
+ 
+-"$curdir/shinken" $@ "$SHORTNAME"
+-
+-exit $?
++case "$1" in
++    start|stop|reload|restart|force-reload|status|check|checkconfig)
++        "$curdir/shinken" $@ "$SHORTNAME"
++        exit $?
++        ;;
++    *)
++        echo "Usage: /etc/init.d/$NAME [-d] {start|stop|reload|restart|force-reload|status|check}"
++        exit 1
++        ;;
++esac
+diff --git a/bin/init.d/shinken-reactionner b/bin/init.d/shinken-reactionner
+index 1d41440..174842c 100755
+--- a/bin/init.d/shinken-reactionner
++++ b/bin/init.d/shinken-reactionner
+@@ -33,6 +33,13 @@ if [ -f /lib/lsb/init-functions ]; then
+ . /lib/lsb/init-functions
+ fi
+ 
+-"$curdir/shinken" $@ "$SHORTNAME"
+-
+-exit $?
++case "$1" in
++    start|stop|reload|restart|force-reload|status|check|checkconfig)
++        "$curdir/shinken" $@ "$SHORTNAME"
++        exit $?
++        ;;
++    *)
++        echo "Usage: /etc/init.d/$NAME [-d] {start|stop|reload|restart|force-reload|status|check}"
++        exit 1
++        ;;
++esac
+diff --git a/bin/init.d/shinken-receiver b/bin/init.d/shinken-receiver
+index f589966..4def13a 100755
+--- a/bin/init.d/shinken-receiver
++++ b/bin/init.d/shinken-receiver
+@@ -33,6 +33,13 @@ if [ -f /lib/lsb/init-functions ]; then
+ . /lib/lsb/init-functions
+ fi
+ 
+-"$curdir/shinken" $@ "$SHORTNAME"
+-
+-exit $?
++case "$1" in
++    start|stop|reload|restart|force-reload|status|check|checkconfig)
++        "$curdir/shinken" $@ "$SHORTNAME"
++        exit $?
++        ;;
++    *)
++        echo "Usage: /etc/init.d/$NAME [-d] {start|stop|reload|restart|force-reload|status|check}"
++        exit 1
++        ;;
++esac
+diff --git a/bin/init.d/shinken-scheduler b/bin/init.d/shinken-scheduler
+index 8047bc0..4cfdad3 100755
+--- a/bin/init.d/shinken-scheduler
++++ b/bin/init.d/shinken-scheduler
+@@ -33,6 +33,13 @@ if [ -f /lib/lsb/init-functions ]; then
+ . /lib/lsb/init-functions
+ fi
+ 
+-"$curdir/shinken" $@ "$SHORTNAME"
+-
+-exit $?
++case "$1" in
++    start|stop|reload|restart|force-reload|status|check|checkconfig)
++        "$curdir/shinken" $@ "$SHORTNAME"
++        exit $?
++        ;;
++    *)
++        echo "Usage: /etc/init.d/$NAME [-d] {start|stop|reload|restart|force-reload|status|check}"
++        exit 1
++        ;;
++esac
