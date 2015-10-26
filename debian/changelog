@@ -1,3 +1,13 @@
+shinken (2.4.1-1+PIC001) unstable; urgency=medium
+
+  * Changes to build Package for PLANET IC GmbH:
+    - added specific PIC-Templates to debian/etc/templates.cfg
+    - added 'var/lib/shinken/spool' to debian/shinken-common.dirs
+    - change depending Shinken-Module-Packages
+    - shinken-common depends now on python-openssl
+
+ -- Stefan Taute (PLANET IC GmbH) <taute@planet-ic.de>  Tue, 29 Sep 2015 15:22:44 +0200
+
 shinken (2.4.1-1) unstable; urgency=medium
 
   [ Sebastien Coavoux ]

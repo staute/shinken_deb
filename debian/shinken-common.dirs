@@ -4,3 +4,4 @@ usr/share/pyshared/shinken/modules
 var/lib/shinken/share
 var/lib/shinken/doc
 var/lib/shinken/inventory
+var/lib/shinken/spool
