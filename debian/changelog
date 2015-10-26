@@ -6,7 +6,7 @@ shinken (2.4.1-1+PIC001) unstable; urgency=medium
     - change depending Shinken-Module-Packages
     - shinken-common depends now on python-openssl
 
- -- Stefan Taute (PLANET IC GmbH) <taute@planet-ic.de>  Tue, 29 Sep 2015 15:22:44 +0200
+ -- Stefan Taute (PLANET IC GmbH) <taute@planet-ic.de>  Tue, 29 Sep 2015 14:42:54 +0200
 
 shinken (2.4.1-1) unstable; urgency=medium
 
